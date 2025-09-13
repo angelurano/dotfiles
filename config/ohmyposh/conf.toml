@@ -1,0 +1,78 @@
+version = 3
+final_space = true
+
+[upgrade]
+  source = 'cdn'
+  interval = '168h'
+  auto = false
+  notice = false
+
+[[blocks]]
+  type = 'prompt'
+  alignment = 'left'
+
+  [[blocks.segments]]
+    type = 'os'
+    style = 'plain'
+    foreground = 'p:fg'
+    template = '<p:accent>┏[</>{{ .Icon }} '
+
+  [[blocks.segments]]
+    type = 'session'
+    style = 'plain'
+    foreground = 'p:fg'
+    template = '{{ .UserName }}<p:accent>]</>'
+
+  [[blocks.segments]]
+    type = 'git'
+    style = 'plain'
+    foreground = 'p:fg'
+    template = '<p:accent>[</>{{ .HEAD }}<p:accent>]</>'
+
+  [[blocks.segments]]
+    type = 'root'
+    style = 'plain'
+    foreground = 'p:fg'
+    template = '<p:accept>[</><p:accept>]</>'
+
+  [[blocks.segments]]
+    type = 'status'
+    style = 'plain'
+    foreground = 'p:fg'
+    template = '<p:accent>[x</>{{ reason .Code }}<p:accent>]</>'
+
+[[blocks]]
+  type = 'prompt'
+  alignment = 'left'
+  newline = true
+
+  [[blocks.segments]]
+    type = 'path'
+    style = 'plain'
+    foreground = 'p:fg'
+    template = '<p:accent>┖[</>{{ .Path }}<p:accent>]></>'
+
+    [blocks.segments.properties]
+      style = 'full'
+
+[error_line]
+    foreground = "p:ok"
+    template   = "<p:accent>[× </>" 
+
+[transient_prompt]
+    foreground = 'p:fg'
+    template = "<p:accent>[> </>"
+
+[valid_line]
+    foreground = "p:ok"
+    template   = "<p:accent>[> </>" 
+
+[secondary_prompt]
+    type = 'path'
+    foreground = 'p:fg'
+    template = '<p:accent> > </>'
+
+[palette]
+    fg = '#ffffff'
+    accent = '#CB4B16'
+

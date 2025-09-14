@@ -1,12 +1,12 @@
 { config, pkgs, lib, ... }:
 {
 
-  xdg.configFile."ohmyposh/conf.toml".source = ../../config/ohmyposh/conf.toml;
+  xdg.configFile."ohmyposh/conf.toml".source = ../config/ohmyposh/conf.toml;
 
   programs.zsh = {
     enable = true;
 
-    dotDir = "${config.xdg.configHome}/zsh";
+    dotDir = ".config/zsh";# "${config.xdg.configHome}/zsh";
 
     enableCompletion = true;
     autosuggestion.enable = true;

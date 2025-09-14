@@ -2,14 +2,24 @@
 {
   home.shellAliases = {
     sudo = "sudo ";
+    vi = "vim";
     ls = "eza --icons --group-directories-first --git";
     la = "ls -Ah";
     ll = "ls -lAh";
     man = "BAT_THEME='Monokai Extended' batman";
+    wget = "wget --hsts-file='${config.xdg.cacheHome}/wget-hsts'";
   };
 
   home.sessionVariables = {
     EDITOR = lib.mkDefault "nvim";
+    _ZO_ECHO = "1";
+  };
+
+  programs.direnv = {
+    enable = true;
+    enableBashIntegration = true;
+    enableZshIntegration = true;
+    nix-direnv.enable = true;
   };
 
   programs.fzf = {
@@ -40,7 +50,7 @@
     enable = true;
     enableBashIntegration = true;
     enableZshIntegration = true;
-    options = [ "--cmd" "z" ];
+    options = [ "--cmd z" "--hook pwd" ];
   };
 
   programs.bat = {

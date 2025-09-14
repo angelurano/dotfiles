@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 {
   xdg.configFile."nvim" = {
-    source = ../../config/nvim;
+    source = ../config/nvim;
     recursive = true;
   };
 
@@ -51,6 +51,5 @@
   home.activation.ensureVimStateDirs = lib.mkAfter ''
     mkdir -p "${config.xdg.stateHome}/vim"/{swap,undo,backup}
   '';
-
 }
 

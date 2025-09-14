@@ -12,7 +12,8 @@
 
     neovim
 
-    fastfetch ripgrep fd fzf eza bat 
+    fastfetch ripgrep fd fzf eza bat
+    wget direnv
 
     oh-my-posh oh-my-zsh
   ];
@@ -22,11 +23,5 @@
   };
 
   programs.home-manager.enable = true;
-
-  imports = [
-    ./modules/shell.nix
-    ./modules/zsh.nix
-    ./modules/git.nix
-    ./modules/nvim.nix
-  ];
 }
+

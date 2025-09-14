@@ -11,6 +11,10 @@
     aliases = {
       branches = "log --oneline --graph --decorate --all --color=always";
     };
+    ignores = [
+      "flake.nix" "flake.log" ".envrc"
+      # git add -f instead
+    ];
   };
 
   programs.gh = {

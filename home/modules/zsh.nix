@@ -1,10 +1,13 @@
 { config, pkgs, lib, ... }:
 {
+
+  xdg.configFile."ohmyposh/conf.toml".source = ../../config/ohmyposh/conf.toml;
+
   programs.zsh = {
     enable = true;
 
     dotDir = "${config.xdg.configHome}/zsh";
-    
+
     enableCompletion = true;
     autosuggestion.enable = true;
 
@@ -27,7 +30,7 @@
     };
 
     initContent = lib.mkOrder 1500 ''
-      eval "$(${pkgs.oh-my-posh}/bin/oh-my-posh init zsh --config $HOME/dotfiles/config/ohmyposh/conf.toml)"
+      eval "$(${pkgs.oh-my-posh}/bin/oh-my-posh init zsh --config ${config.xdg.configHome}/ohmyposh/conf.toml)"
     '';
 
     loginExtra = ''

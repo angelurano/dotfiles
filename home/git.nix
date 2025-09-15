@@ -13,7 +13,8 @@
     };
     ignores = [
       "flake.nix" "flake.log" ".envrc"
-      # git add -f instead
+      # git add --intent-to-add -f flake.nix flake.lock && \
+      # git update-index --assume-unchanged flake.nix flake.lock
     ];
   };
 

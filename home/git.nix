@@ -12,7 +12,7 @@
       branches = "log --oneline --graph --decorate --all --color=always";
     };
     ignores = [
-      "flake.nix" "flake.log" ".envrc"
+      "flake.nix" "flake.log" ".envrc" ".direnv"
       # git add --intent-to-add -f flake.nix flake.lock && \
       # git update-index --assume-unchanged flake.nix flake.lock
     ];

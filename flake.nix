@@ -1,5 +1,5 @@
 {
-  description = "Home Manager configuration of angeldeb";
+  description = "Dotfiles configuration of angelurano";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
@@ -13,25 +13,30 @@
   };
 
   outputs = { self, nixpkgs, home-manager, ... }:
-    let
-      system = "x86_64-linux";
-      pkgs = import nixpkgs { inherit system; };
-    in {
-      homeConfigurations.angeldeb = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
+  let
+    system = "x86_64-linux";
+    pkgs = import nixpkgs { inherit system; };
+  in
+  {
+    homeConfigurations.angeldeb = home-manager.lib.homeManagerConfiguration {
+      inherit pkgs;
 
-        modules = [
-          ./home/home.nix
+      modules = [
+        ./home/home.nix
 
-          ./home/shell.nix
-          ./home/zsh.nix
-          ./home/git.nix
-          ./home/nvim.nix
-        ];
+        ./home/shell.nix
+        ./home/zsh.nix
+        ./home/git.nix
+        ./home/nvim.nix
+      ];
 
-        # Optionally use extraSpecialArgs
-        # to pass through arguments to home.nix
-        # extraSpecialArgs = { inherit system; };
-      };
+      # Optionally use extraSpecialArgs
+      # to pass through arguments to home.nix
+      # extraSpecialArgs = { inherit system; };
     };
+
+    lib = {
+      mkDevShells = import ./lib/devshells;
+    };
+  };
 }

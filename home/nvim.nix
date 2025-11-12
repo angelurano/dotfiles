@@ -30,6 +30,7 @@
     extraConfig = ''
       set clipboard=unnamedplus
 
+      set belloff=all
       set noerrorbells
       set visualbell
       set t_vb=

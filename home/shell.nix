@@ -8,6 +8,7 @@
     ll = "ls -lAh";
     man = "BAT_THEME='Monokai Extended' batman";
     wget = "wget --hsts-file='${config.xdg.cacheHome}/wget-hsts'";
+    cat = "bat";
   };
 
   home.sessionVariables = {

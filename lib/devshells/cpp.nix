@@ -1,6 +1,6 @@
 { pkgs }:
 {
-  cShell = { extra ? {} }:
+  cppShell = { extra ? {} }:
   let
     basePkgs = with pkgs; [ gcc gnumake pkg-config valgrind ];
   in
@@ -19,3 +19,4 @@
     '';
   };
 }
+

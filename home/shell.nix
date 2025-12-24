@@ -12,9 +12,15 @@
   };
 
   home.sessionVariables = {
+    NPM_CONFIG_PREFIX = "${config.home.homeDirectory}/.npm-global";
+
     EDITOR = lib.mkDefault "nvim";
     _ZO_ECHO = "1";
   };
+
+  home.sessionPath = [
+    "${config.home.homeDirectory}/.npm-global/bin"
+  ];
 
   programs.direnv = {
     enable = true;

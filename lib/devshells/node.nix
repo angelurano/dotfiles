@@ -9,6 +9,11 @@ let
 
     shellHook = ''
       echo "[node] node: $(node -v) npm: $(npm -v)"
+
+      export NPM_CONFIG_PREFIX="$HOME/.npm-global"
+      export PATH="$PATH:$NPM_CONFIG_PREFIX/bin"
+      mkdir -p "$NPM_CONFIG_PREFIX"
+
       export npm_config_cache="$XDG_CACHE_HOME/npm"
 
       ${extra.shellHook or ""}

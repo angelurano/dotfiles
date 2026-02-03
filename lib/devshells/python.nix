@@ -2,7 +2,7 @@
 {
   pythonShell = { pythonPackage ? pkgs.python314, extra ? {} }:
   let
-    basePkgs =  [ pythonPackage ];
+    basePkgs =  [ pythonPackage ] ++ (with pkgs; [ uv ]);
   in
   pkgs.mkShell {
     packages = basePkgs ++ (extra.packages or []);

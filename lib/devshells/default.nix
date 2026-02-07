@@ -4,4 +4,5 @@
   // (import ./node.nix { inherit pkgs; })
   // (import ./bun.nix { inherit pkgs; })
   // (import ./python.nix { inherit pkgs; })
+  // (import ./conda.nix { inherit pkgs; })
 

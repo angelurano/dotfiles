@@ -1,4 +1,4 @@
-{ pkgs }:
+{ pkgs, xdg }:
 let
   mkBase = { nodePackage ? pkgs.nodejs_24, extra ? {} }:
   let
@@ -10,11 +10,12 @@ let
     shellHook = ''
       echo "[node] node: $(node -v) npm: $(npm -v)"
 
-      export NPM_CONFIG_PREFIX="$HOME/.npm-global"
+      export NPM_CONFIG_PREFIX="${xdg.dataHome}/npm"
       export PATH="$PATH:$NPM_CONFIG_PREFIX/bin"
-      mkdir -p "$NPM_CONFIG_PREFIX"
 
-      export npm_config_cache="$XDG_CACHE_HOME/npm"
+      export npm_config_cache="${xdg.cacheHome}/npm"
+
+      mkdir -p "$NPM_CONFIG_PREFIX" "$npm_config_cache"
 
       ${extra.shellHook or ""}
     '';
@@ -34,10 +35,11 @@ in
     extra = {
       packages = (with pkgs; [ pnpm ]) ++ (fromExtra.packages or []);
       shellHook = ''
-        export PNPM_HOME="$XDG_DATA_HOME/pnpm"
+        export PNPM_HOME="${xdg.dataHome}/pnpm"
         export PATH="$PNPM_HOME:$PATH"
 
-        _want_store="$XDG_DATA_HOME/pnpm/store"
+        _want_store="${xdg.dataHome}/pnpm/store"
+
         _cur_store="$(pnpm store path 2>/dev/null || true)"
         if [ -n "$_want_store" ] && [ "$_cur_store" != "$_want_store" ]; then
           mkdir -p "$_want_store"

@@ -1,4 +1,4 @@
-{ pkgs }:
+{ pkgs, xdg }:
 {
   bunShell = { extra ? {} }:
   let
@@ -8,7 +8,10 @@
     packages = basePkgs ++ (extra.packages or []);
 
     shellHook = ''
+      export BUN_INTALL="${xdg.dataHome}/bun"
+
       echo "[bun] version: $(bun -v)"
+
       ${extra.shellHook or ""}
     '';
   };

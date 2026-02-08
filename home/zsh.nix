@@ -21,7 +21,7 @@
 
     oh-my-zsh = {
       enable = true;
-      plugins = [ "git" "fzf" "zoxide" ];
+      plugins = [ "git" ];
       theme = "";
       extraConfig = ''
         export ZSH_COMPDUMP="$ZSH_CACHE_DIR/.zcompdump-$HOST-$ZSH_VERSION"

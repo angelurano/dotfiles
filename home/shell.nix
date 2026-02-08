@@ -34,7 +34,7 @@
     enableBashIntegration = true;
     enableZshIntegration = true;
     defaultCommand = 
-      "fd --hidden --strip-cwd-prefix --exclude .git";
+      "fd --hidden --strip-cwd-prefix --exclude .git .conda .mamba .direnv node_modules";
     defaultOptions = [
       "--height 40%"
       "--layout=reverse"

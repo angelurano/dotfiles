@@ -1,8 +1,20 @@
-{ pkgs }:
-  (import ./c.nix { inherit pkgs; })
-  // (import ./cpp.nix { inherit pkgs; })
-  // (import ./node.nix { inherit pkgs; })
-  // (import ./bun.nix { inherit pkgs; })
-  // (import ./python.nix { inherit pkgs; })
-  // (import ./conda.nix { inherit pkgs; })
+{ pkgs, xdg ? null }:
+let
+  args = {
+    inherit pkgs;
+
+    xdg = if xdg != null then xdg else {
+      cacheHome = "$HOME/.cache";
+      configHome = "$HOME/.config";
+      dataHome = "$HOME/.local/share";
+      stateHome = "$HOME/.local/state";
+    };
+  };
+in
+  (import ./c.nix args) //
+  (import ./cpp.nix args) //
+  (import ./node.nix args) //
+  (import ./bun.nix args) //
+  (import ./python.nix args) //
+  (import ./conda.nix args)
 

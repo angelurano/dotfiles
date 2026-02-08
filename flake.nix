@@ -16,9 +16,8 @@
   let
     system = "x86_64-linux";
     pkgs = import nixpkgs { inherit system; };
-  in
-  {
-    homeConfigurations.angeldeb = home-manager.lib.homeManagerConfiguration {
+
+    hm = home-manager.lib.homeManagerConfiguration {
       inherit pkgs;
 
       modules = [
@@ -35,8 +34,13 @@
       # extraSpecialArgs = { inherit system; };
     };
 
-    lib = {
-      mkDevShells = import ./lib/devshells;
+    mkDevShells = { pkgs, xdg ? hm.config.xdg }: import ./lib/devshells {
+      inherit pkgs xdg;
     };
+  in
+  {
+    homeConfigurations.angeldeb = hm;
+
+    lib.mkDevShells = mkDevShells;
   };
 }

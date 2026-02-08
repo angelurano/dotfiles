@@ -1,4 +1,4 @@
-{ pkgs }:
+{ pkgs, xdg }:
 {
   cppShell = { extra ? {} }:
   let

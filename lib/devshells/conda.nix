@@ -1,8 +1,8 @@
-{ pkgs }:
+{ pkgs, xdg }:
 {
   condaShell = {
     envName ? "main",
-    pythonVersion ? "3.11",
+    pythonVersion ? "3.13",
     condaPackages ? [], # ["numpy" "pandas"]
     extra ? {}
   }:
@@ -26,11 +26,20 @@
     };
 
     shellHook = ''
+      export MAMBA_EXTRACT_THREADS=1
+
       export MAMBA_ROOT_PREFIX="$PWD/.mamba"
 
-      export CONDA_PKGS_DIRS="$HOME/.cache/mamba/pkgs"
-
+      export CONDA_PKGS_DIRS="${xdg.cacheHome}/mamba/pkgs"
       mkdir -p "$CONDA_PKGS_DIRS"
+
+      # Python
+      export PYTHON_HISTORY="${xdg.stateHome}/python_history"
+      export PYTHONPYCACHEPREFIX="${xdg.cacheHome}/python"
+      export PYTHONUSERBASE="${xdg.dataHome}/python"
+      export JUPYTER_CONFIG_DIR="${xdg.configHome}"/jupyter
+      export JUPYTER_PLATFORM_DIRS="1"
+      export IPYTHONDIR="${xdg.configHome}/ipython"
 
       eval "$(${pkgs.micromamba}/bin/micromamba shell hook --shell bash)"
 

@@ -31,7 +31,7 @@ config.window_padding = {
 }
 
 config.use_fancy_tab_bar = false
-config.hide_tab_bar_if_only_one_tab = true
+config.hide_tab_bar_if_only_one_tab = false
 config.colors = {
 	tab_bar = {
 		background = "#0f0c29",
@@ -158,8 +158,19 @@ config.launch_menu = {
 		domain = { DomainName = "local" },
 	},
 }
-config.default_prog = { "pwsh.exe" }
-config.default_domain = "local"
+-- config.default_prog = { "" }
+-- config.default_domain = "WSL:Debian"
+local function is_admin()
+	local success, stdout, stderr = wezterm.run_child_process { "cmd.exe", "/c", "net session" }
+	return success
+end
+
+if is_admin() then
+	config.default_domain = "local"
+	config.default_prog = { "pwsh.exe", "-NoLogo" }
+else
+	config.default_domain = "WSL:Debian"
+end
 
 -- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::: key bindings
 

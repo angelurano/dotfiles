@@ -12,14 +12,15 @@
   };
 
   home.sessionVariables = {
-    NPM_CONFIG_PREFIX = "${config.home.homeDirectory}/.npm-global";
+    # NPM_CONFIG_PREFIX = "${xdg.dataHome}/npm";
+    # npm_config_cache = "${xdg.cacheHome}/npm";
 
     EDITOR = lib.mkDefault "nvim";
     _ZO_ECHO = "1";
   };
 
   home.sessionPath = [
-    "${config.home.homeDirectory}/.npm-global/bin"
+    # "${xdg.dataHome}/npm"
   ];
 
   programs.direnv = {

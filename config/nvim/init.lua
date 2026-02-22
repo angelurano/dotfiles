@@ -2,10 +2,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 vim.o.showmode = true
-
 vim.o.scrolloff = 10
-
-vim.o.undofile = true
 
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
@@ -25,15 +22,22 @@ vim.o.ignorecase = true
 vim.o.smartcase = true
 
 if not vim.g.vscode then
-	vim.g.have_nerd_font = true
-	vim.o.number = true
-	vim.o.relativenumber = true
+  vim.o.undofile = true
 
-	vim.o.breakindent = true
+  vim.opt.tabstop = 4
+  vim.opt.shiftwidth = 4
+  vim.opt.expandtab = true
+  vim.opt.smartindent = true
 
-	vim.o.list = true
-	vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
-	vim.o.cursorline = true
+  vim.g.have_nerd_font = true
+  vim.o.number = true
+  vim.o.relativenumber = true
+
+  vim.o.breakindent = true
+
+  vim.o.list = true
+  vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+  vim.o.cursorline = true
 end
 
 -- in vscode, there are default shortcuts:
@@ -102,5 +106,10 @@ require('lazy').setup({
     },
     vscode = false,
   },
+  {
+    'willothy/wezterm.nvim',
+    config = true,
+    vscode = false
+  }
 })
 

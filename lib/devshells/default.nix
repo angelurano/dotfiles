@@ -16,5 +16,6 @@ in
   (import ./node.nix args) //
   (import ./bun.nix args) //
   (import ./python.nix args) //
-  (import ./conda.nix args)
+  (import ./conda.nix args) //
+  (import ./java.nix args)
 

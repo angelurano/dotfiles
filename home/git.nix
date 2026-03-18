@@ -2,14 +2,18 @@
 {
   programs.git = {
     enable = true;
-    userEmail = "angelurano00@gmail.com";
-    userName = "Miguel Angel Garcia Beltran";
-    extraConfig = {
-      init.defaultBranch = "main";
+    settings = {
+      user = {
+        email = "angelurano00@gmail.com";
+        name = "Miguel Angel Garcia Beltran";
+      };
+      alias = {
+        branches = "log --oneline --graph --decorate --all --color=always";
+      };
+      init = {
+        defaultBranch = "main";
+      };
       core.pager = "";
-    };
-    aliases = {
-      branches = "log --oneline --graph --decorate --all --color=always";
     };
     ignores = [
       "flake.nix" "flake.log" ".envrc" ".direnv"

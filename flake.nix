@@ -27,6 +27,7 @@
         ./home/zsh.nix
         ./home/git.nix
         ./home/nvim.nix
+        ./home/node.nix
       ];
 
       # Optionally use extraSpecialArgs

@@ -17,6 +17,8 @@ let
 
       mkdir -p "$NPM_CONFIG_PREFIX" "$npm_config_cache"
 
+      export NPM_CONFIG_IGNORE_SCRIPTS="true"
+
       ${extra.shellHook or ""}
     '';
   };

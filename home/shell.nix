@@ -12,16 +12,9 @@
   };
 
   home.sessionVariables = {
-    # NPM_CONFIG_PREFIX = "${xdg.dataHome}/npm";
-    # npm_config_cache = "${xdg.cacheHome}/npm";
-
     EDITOR = lib.mkDefault "nvim";
     _ZO_ECHO = "1";
   };
-
-  home.sessionPath = [
-    # "${xdg.dataHome}/npm"
-  ];
 
   programs.direnv = {
     enable = true;

@@ -12,7 +12,6 @@
   };
 
   home.sessionVariables = {
-    EDITOR = lib.mkDefault "nvim";
     _ZO_ECHO = "1";
   };
 

@@ -1,5 +1,9 @@
 { config, pkgs, lib, ... }:
 {
+  home.sessionVariables = {
+    EDITOR = lib.mkDefault "nvim";
+  };
+
   xdg.configFile."nvim" = {
     source = ../config/nvim;
     recursive = true;

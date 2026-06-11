@@ -169,7 +169,9 @@ if is_admin() then
 	config.default_domain = "local"
 	config.default_prog = { "pwsh.exe", "-NoLogo" }
 else
-	config.default_domain = "WSL:Debian"
+	config.default_domain = "local"
+	config.default_prog = { "pwsh.exe", "-NoLogo" }
+	-- config.default_domain = "WSL:Debian"
 end
 
 -- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::: key bindings

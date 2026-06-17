@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, antigravity-cli, ... }:
 {
   home.username = "angeldeb";
   home.homeDirectory = "/home/angeldeb";
@@ -14,6 +14,8 @@
 
     fastfetch ripgrep fd fzf eza bat
     wget direnv
+
+    antigravity-cli
 
     oh-my-posh oh-my-zsh
 

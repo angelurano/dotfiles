@@ -5,8 +5,7 @@
   };
 
   xdg.configFile."nvim" = {
-    source = ../config/nvim;
-    recursive = true;
+    source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/config/nvim";
   };
 
   programs.neovim = {

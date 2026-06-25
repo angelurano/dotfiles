@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
   home.sessionVariables = {
     NPM_CONFIG_PREFIX = "${config.xdg.dataHome}/npm";

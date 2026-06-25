@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
   home.sessionVariables = {
     EDITOR = lib.mkDefault "nvim";
@@ -56,4 +61,3 @@
     mkdir -p "${config.xdg.stateHome}/vim"/{swap,undo,backup}
   '';
 }
-

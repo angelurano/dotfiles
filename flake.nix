@@ -17,38 +17,52 @@
     # nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
   };
 
-  outputs = { self, nixpkgs, home-manager, antigravity-nix, ... }:
-  let
-    system = "x86_64-linux";
-    pkgs = import nixpkgs { inherit system; };
+  outputs =
+    {
+      self,
+      nixpkgs,
+      home-manager,
+      antigravity-nix,
+      ...
+    }:
+    let
+      system = "x86_64-linux";
+      pkgs = import nixpkgs { inherit system; };
 
-    hm = home-manager.lib.homeManagerConfiguration {
-      inherit pkgs;
+      hm = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
 
-      modules = [
-        ./home/home.nix
+        modules = [
+          ./home/home.nix
 
-        ./home/shell.nix
-        ./home/zsh.nix
-        ./home/git.nix
-        ./home/nvim.nix
-        ./home/node.nix
-      ];
+          ./home/shell.nix
+          ./home/zsh.nix
+          ./home/git.nix
+          ./home/nvim.nix
+          ./home/node.nix
+        ];
 
-      # Optionally use extraSpecialArgs
-      # to pass through arguments to home.nix
-      extraSpecialArgs = {
-        antigravity-cli = antigravity-nix.packages.${system}.google-antigravity-cli;
+        # Optionally use extraSpecialArgs
+        # to pass through arguments to home.nix
+        extraSpecialArgs = {
+          antigravity-cli = antigravity-nix.packages.${system}.google-antigravity-cli;
+        };
       };
-    };
 
-    mkDevShells = { pkgs, xdg ? hm.config.xdg }: import ./lib/devshells {
-      inherit pkgs xdg;
-    };
-  in
-  {
-    homeConfigurations.angeldeb = hm;
+      mkDevShells =
+        {
+          pkgs,
+          xdg ? hm.config.xdg,
+        }:
+        import ./lib/devshells {
+          inherit pkgs xdg;
+        };
+    in
+    {
+      homeConfigurations.angeldeb = hm;
 
-    lib.mkDevShells = mkDevShells;
-  };
+      lib.mkDevShells = mkDevShells;
+
+      formatter.${system} = pkgs.nixfmt;
+    };
 }

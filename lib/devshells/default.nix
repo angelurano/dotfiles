@@ -1,14 +1,21 @@
-{ pkgs, xdg ? null }:
+{
+  pkgs,
+  xdg ? null,
+}:
 let
   args = {
     inherit pkgs;
 
-    xdg = if xdg != null then xdg else {
-      cacheHome = "$HOME/.cache";
-      configHome = "$HOME/.config";
-      dataHome = "$HOME/.local/share";
-      stateHome = "$HOME/.local/state";
-    };
+    xdg =
+      if xdg != null then
+        xdg
+      else
+        {
+          cacheHome = "$HOME/.cache";
+          configHome = "$HOME/.config";
+          dataHome = "$HOME/.local/share";
+          stateHome = "$HOME/.local/state";
+        };
   };
 in
 {
@@ -22,4 +29,3 @@ in
   condaShell = (import ./conda.nix args).condaShell;
   javaShell = (import ./java.nix args).javaShell;
 }
-

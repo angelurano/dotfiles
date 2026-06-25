@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
   home.shellAliases = {
     sudo = "sudo ";
@@ -27,15 +32,13 @@
     enable = true;
     enableBashIntegration = true;
     enableZshIntegration = true;
-    defaultCommand = 
-      "fd --hidden --strip-cwd-prefix --exclude .git .conda .mamba .direnv node_modules";
+    defaultCommand = "fd --hidden --strip-cwd-prefix --exclude .git .conda .mamba .direnv node_modules";
     defaultOptions = [
       "--height 40%"
       "--layout=reverse"
       "--border"
     ];
-    changeDirWidgetCommand = 
-      "fd --type=d --hidden --strip-cwd-prefix --exclude .git";
+    changeDirWidgetCommand = "fd --type=d --hidden --strip-cwd-prefix --exclude .git";
     changeDirWidgetOptions = [
       "--preview 'eza --tree --color=always {} | head -200'"
     ];
@@ -51,7 +54,10 @@
     enable = true;
     enableBashIntegration = true;
     enableZshIntegration = true;
-    options = [ "--cmd z" "--hook pwd" ];
+    options = [
+      "--cmd z"
+      "--hook pwd"
+    ];
   };
 
   programs.bat = {
@@ -68,7 +74,9 @@
     enable = true;
     historyFile = "${config.xdg.stateHome}/bash/history";
     historyControl = [
-      "ignoreboth" "erasedups" "ignoredups"
+      "ignoreboth"
+      "erasedups"
+      "ignoredups"
     ];
     bashrcExtra = ''
       bind 'set bell-style none'
@@ -92,4 +100,3 @@
     hsts-file = ${config.xdg.stateHome}/wget-hsts
   '';
 }
-

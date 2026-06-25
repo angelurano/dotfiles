@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
 
   xdg.configFile."ohmyposh/conf.toml".source = ../config/ohmyposh/conf.toml;
@@ -44,4 +49,3 @@
     '';
   };
 }
-

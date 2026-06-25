@@ -1,4 +1,10 @@
-{ config, pkgs, lib, antigravity-cli, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  antigravity-cli,
+  ...
+}:
 {
   home.username = "angeldeb";
   home.homeDirectory = "/home/angeldeb";
@@ -8,16 +14,24 @@
   home.preferXdgDirectories = true;
 
   home.packages = with pkgs; [
-    git gh
+    git
+    gh
 
     neovim
 
-    fastfetch ripgrep fd fzf eza bat
-    wget direnv
+    fastfetch
+    ripgrep
+    fd
+    fzf
+    eza
+    bat
+    wget
+    direnv
 
     antigravity-cli
 
-    oh-my-posh oh-my-zsh
+    oh-my-posh
+    oh-my-zsh
 
     nodejs_22
   ];
@@ -28,4 +42,3 @@
 
   programs.home-manager.enable = true;
 }
-

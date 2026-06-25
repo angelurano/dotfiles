@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
   programs.git = {
     enable = true;
@@ -16,7 +21,10 @@
       core.pager = "";
     };
     ignores = [
-      "flake.nix" "flake.log" ".envrc" ".direnv"
+      "flake.nix"
+      "flake.log"
+      ".envrc"
+      ".direnv"
       # git add --intent-to-add -f flake.nix flake.lock && \
       # git update-index --assume-unchanged flake.nix flake.lock
     ];
@@ -29,4 +37,3 @@
     };
   };
 }
-

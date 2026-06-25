@@ -39,17 +39,10 @@ in
       shellHook = ''
         export PNPM_HOME="${xdg.dataHome}/pnpm"
         export PATH="$PNPM_HOME:$PATH"
-
-        _want_store="${xdg.dataHome}/pnpm/store"
-
-        _cur_store="$(pnpm store path 2>/dev/null || true)"
-        if [ -n "$_want_store" ] && [ "$_cur_store" != "$_want_store" ]; then
-          mkdir -p "$_want_store"
-          pnpm config set store-dir "$_want_store" --global >/dev/null 2>&1 || true
-        fi
+        export PNPM_CONFIG_STORE_DIR="${xdg.dataHome}/pnpm/store"
 
         echo "[pnpm] version: $(pnpm -v) store: $(pnpm store path 2>/dev/null || echo n/a)"
-	'' + (fromExtra.shellHook or "");
+      '' + (fromExtra.shellHook or "");
     };
   };
 }

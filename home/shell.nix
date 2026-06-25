@@ -7,12 +7,13 @@
     la = "ls -Ah";
     ll = "ls -lAh";
     man = "BAT_THEME='Monokai Extended' batman";
-    wget = "wget --hsts-file='${config.xdg.cacheHome}/wget-hsts'";
     cat = "bat";
   };
 
   home.sessionVariables = {
     _ZO_ECHO = "1";
+    WGETRC = "${config.xdg.configHome}/wgetrc";
+    DOTNET_CLI_HOME = "${config.xdg.dataHome}/dotnet";
   };
 
   programs.direnv = {
@@ -85,6 +86,10 @@
 
   home.activation.ensureXdgDirs = lib.mkAfter ''
     mkdir -p "${config.xdg.stateHome}" "${config.xdg.cacheHome}" "${config.xdg.dataHome}" "${config.xdg.stateHome}/bash"
+  '';
+
+  xdg.configFile."wgetrc".text = ''
+    hsts-file = ${config.xdg.stateHome}/wget-hsts
   '';
 }
 

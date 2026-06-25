@@ -11,11 +11,15 @@ let
     };
   };
 in
-  (import ./c.nix args) //
-  (import ./cpp.nix args) //
-  (import ./node.nix args) //
-  (import ./bun.nix args) //
-  (import ./python.nix args) //
-  (import ./conda.nix args) //
-  (import ./java.nix args)
+{
+  cShell = (import ./c.nix args).cShell;
+  cppShell = (import ./cpp.nix args).cppShell;
+  nodeShell = (import ./node.nix args).nodeShell;
+  nodePnpmShell = (import ./node.nix args).nodePnpmShell;
+  bunShell = (import ./bun.nix args).bunShell;
+  pythonShell = (import ./python.nix args).pythonShell;
+  uvShell = (import ./python.nix args).uvShell;
+  condaShell = (import ./conda.nix args).condaShell;
+  javaShell = (import ./java.nix args).javaShell;
+}
 

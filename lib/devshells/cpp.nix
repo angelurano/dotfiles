@@ -8,7 +8,7 @@
     packages = basePkgs ++ (extra.packages or []);
 
     shellHook = ''
-      echo "[c] g++: $(g++ --version | head -1)"
+      echo "[c++] g++: $(g++ --version | head -1)"
 
       export CC=gcc
       export CXX=g++

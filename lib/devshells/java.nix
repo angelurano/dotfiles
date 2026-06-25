@@ -5,7 +5,7 @@
     basePkgs = [ jdkPackage ];
   in
   pkgs.mkShell {
-    packages = basePkgs ++ (extra.package or []);
+    packages = basePkgs ++ (extra.packages or []);
 
     shellHook = ''
       echo "[java] version: $(java -version 2>&1 | head -n 1)"

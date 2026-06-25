@@ -8,7 +8,7 @@
     packages = basePkgs ++ (extra.packages or []);
 
     shellHook = ''
-      export BUN_INTALL="${xdg.dataHome}/bun"
+      export BUN_INSTALL="${xdg.dataHome}/bun"
 
       echo "[bun] version: $(bun -v)"
 

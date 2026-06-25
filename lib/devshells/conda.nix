@@ -28,7 +28,7 @@
     shellHook = ''
       export MAMBA_EXTRACT_THREADS=1
 
-      export MAMBA_ROOT_PREFIX="$PWD/.mamba"
+      export MAMBA_ROOT_PREFIX="$(git rev-parse --show-toplevel 2>/dev/null || pwd)/.mamba"
 
       export CONDA_PKGS_DIRS="${xdg.cacheHome}/mamba/pkgs"
       mkdir -p "$CONDA_PKGS_DIRS"

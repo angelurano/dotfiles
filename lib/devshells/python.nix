@@ -16,11 +16,9 @@ let
     pkgs.mkShell {
       packages = basePkgs ++ (extra.packages or [ ]);
 
-      env = {
-        LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath systemLibs;
-      };
-
       shellHook = ''
+        export LD_LIBRARY_PATH="${pkgs.lib.makeLibraryPath systemLibs}''${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+
         echo "[python] $(python --version)"
 
         export PYTHON_HISTORY="${xdg.stateHome}/python_history"

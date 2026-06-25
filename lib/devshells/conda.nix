@@ -22,11 +22,9 @@
     pkgs.mkShell {
       packages = basePkgs ++ (extra.packages or [ ]);
 
-      env = {
-        LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath systemLibs;
-      };
-
       shellHook = ''
+        export LD_LIBRARY_PATH="${pkgs.lib.makeLibraryPath systemLibs}''${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+
         export MAMBA_EXTRACT_THREADS=1
 
         export MAMBA_ROOT_PREFIX="$(git rev-parse --show-toplevel 2>/dev/null || pwd)/.mamba"
@@ -46,12 +44,17 @@
 
         export CONDA_CHANNELS="conda-forge"
 
-        if [ ! -d "$MAMBA_ROOT_PREFIX/envs/${envName}" ]; then
-          echo "[mamba] Creating environment '${envName}'..."
-          micromamba create -n "${envName}" python=${pythonVersion} ${packagesString} -c conda-forge -y
+        _env_name="${envName}"
+        if [ "$_env_name" = "main" ]; then
+          _env_name="$(basename "$(git rev-parse --show-toplevel 2>/dev/null || pwd)")"
         fi
 
-        micromamba activate "${envName}"
+        if [ ! -d "$MAMBA_ROOT_PREFIX/envs/$_env_name" ]; then
+          echo "[mamba] Creating environment '$_env_name'..."
+          micromamba create -n "$_env_name" python=${pythonVersion} ${packagesString} -c conda-forge -y
+        fi
+
+        micromamba activate "$_env_name"
 
         ${extra.shellHook or ""}
       '';

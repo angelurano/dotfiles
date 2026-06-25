@@ -148,13 +148,13 @@ config.launch_menu = {
 		domain = { DomainName = "WSL:Ubuntu" },
 	},
 	{
-		label = "yazi (SSH:wsl.ubuntu)",
-		domain = { DomainName = "SSH:wsl.ubuntu" },
-		args = { "zsh", "-c", "yazi" },
+		label = "Command Prompt",
+		args = { "cmd.exe" },
+		domain = { DomainName = "local" },
 	},
 	{
-		label = "Git bash",
-		args = { "C:\\Users\\angel\\scoop\\shims\\bash.exe", "-i", "-l" },
+		label = "Git Bash",
+		args = { "bash.exe", "--login" },
 		domain = { DomainName = "local" },
 	},
 }

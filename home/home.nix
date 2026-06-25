@@ -19,7 +19,7 @@
 
     oh-my-posh oh-my-zsh
 
-    # nodejs_24 # config in shell.nix
+    nodejs_22
   ];
 
   home.sessionVariables = {

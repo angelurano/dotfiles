@@ -5,9 +5,9 @@
     npm_config_cache = "${config.xdg.cacheHome}/npm";
     NPM_CONFIG_USERCONFIG = "${config.xdg.configHome}/npm/npmrc";
   };
-  
+
   home.sessionPath = lib.mkAfter [
-    "${config.xdg.dataHome}/npm"
+    "${config.xdg.dataHome}/npm/bin"
   ];
 
   xdg.configFile."npm/npmrc".text = ''

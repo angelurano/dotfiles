@@ -1,5 +1,5 @@
 {
-  description = "Dotfiles configuration of angelurano";
+  description = "angelurano's dotfiles configuration";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
@@ -49,19 +49,9 @@
         };
       };
 
-      mkDevShells =
-        {
-          pkgs,
-          xdg ? hm.config.xdg,
-        }:
-        import ./lib/devshells {
-          inherit pkgs xdg;
-        };
     in
     {
       homeConfigurations.angeldeb = hm;
-
-      lib.mkDevShells = mkDevShells;
 
       templates = {
         bun = {

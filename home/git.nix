@@ -22,10 +22,14 @@
       core.pager = "";
     };
     ignores = [
+      ".direnv"
+      ".devenv"
+
+      ".pre-commit-config.yaml"
+
+      ".envrc"
       "flake.nix"
       "flake.lock"
-      ".envrc"
-      ".direnv"
       "devenv.nix"
       "devenv.lock"
       "devenv.yaml"

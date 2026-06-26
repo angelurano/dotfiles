@@ -19,6 +19,17 @@
     _ZO_ECHO = "1";
     WGETRC = "${config.xdg.configHome}/wgetrc";
     DOTNET_CLI_HOME = "${config.xdg.dataHome}/dotnet";
+
+    # XDG compliance configurations
+    NPM_CONFIG_USERCONFIG = "${config.xdg.configHome}/npm/npmrc";
+    NPM_CONFIG_CACHE = "${config.xdg.cacheHome}/npm";
+    NODE_REPL_HISTORY = "${config.xdg.stateHome}/node/node_repl_history";
+    PYTHONSTARTUP = "${config.xdg.configHome}/python/pythonstartup";
+    PYTHON_HISTORY = "${config.xdg.stateHome}/python/history";
+    PYTHONPYCACHEPREFIX = "${config.xdg.cacheHome}/python";
+    PYTHONUSERBASE = "${config.xdg.dataHome}/python";
+    BUN_INSTALL = "${config.xdg.dataHome}/bun";
+    INPUTRC = "${config.xdg.configHome}/readline/inputrc";
   };
 
   programs.direnv = {
@@ -98,5 +109,20 @@
 
   xdg.configFile."wgetrc".text = ''
     hsts-file = ${config.xdg.stateHome}/wget-hsts
+  '';
+
+  xdg.configFile."python/pythonstartup".text = ''
+    import atexit
+    import os
+    import readline
+
+    history = os.path.join(os.environ.get("XDG_STATE_HOME", os.path.expanduser("~/.local/state")), "python/history")
+    try:
+        os.makedirs(os.path.dirname(history), exist_ok=True)
+        readline.read_history_file(history)
+    except OSError:
+        pass
+
+    atexit.register(readline.write_history_file, history)
   '';
 }

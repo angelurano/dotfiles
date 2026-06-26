@@ -75,7 +75,7 @@ To keep project-level development environments clean and portable, this reposito
 
 ### Available Templates
 *   `bun`: Bun runtime, lockfiles, and environment checks.
-*   `c`: C/C++ compiler toolchain (`gcc`, `gnumake`, `cmake`).
+*   `c`: C/C++ compiler toolchain (`gcc`, `gnumake`).
 *   `node`: Node.js development (pinned to Node 22).
 *   `python`: Python interpreter and virtual environment managers.
 
@@ -120,6 +120,13 @@ Once a template is initialized in a project folder, the development environment 
     ```bash
     devenv tasks run devenv:git-hooks:run
     ```
+
+### Creating New Environments
+
+For bootstrapping new environments or generating custom configurations:
+
+*   **From Scratch**: Run `devenv init` inside a clean project directory to scaffold a default configuration (`devenv.nix`, `devenv.yaml`, etc.).
+*   **Via Web Interface**: Visit [devenv.new](https://devenv.new/) to interactively generate configuration files tailored to a specific tech stack.
 
 ## Windows & PowerShell Sync System
 

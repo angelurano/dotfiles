@@ -18,13 +18,17 @@
       init = {
         defaultBranch = "main";
       };
+      color.ui = "always";
       core.pager = "";
     };
     ignores = [
       "flake.nix"
-      "flake.log"
+      "flake.lock"
       ".envrc"
       ".direnv"
+      "devenv.nix"
+      "devenv.lock"
+      "devenv.yaml"
       # git add --intent-to-add -f flake.nix flake.lock && \
       # git update-index --assume-unchanged flake.nix flake.lock
     ];

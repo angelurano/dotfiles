@@ -139,3 +139,8 @@ zsdoc/data
 # Zunit tests' output
 /tests/_output/*
 !/tests/_output/.gitkeep
+
+# Devenv and Direnv
+.devenv/
+.direnv/
+.pre-commit-config.yaml

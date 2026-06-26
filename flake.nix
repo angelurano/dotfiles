@@ -63,6 +63,25 @@
 
       lib.mkDevShells = mkDevShells;
 
+      templates = {
+        bun = {
+          path = ./templates/bun;
+          description = "Bun development environment (Devenv)";
+        };
+        c = {
+          path = ./templates/c;
+          description = "C/C++ development environment (Devenv)";
+        };
+        python = {
+          path = ./templates/python;
+          description = "Python development environment (Devenv)";
+        };
+        node = {
+          path = ./templates/node;
+          description = "Node.js development environment (Devenv)";
+        };
+      };
+
       formatter.${system} = pkgs.nixfmt;
     };
 }

@@ -27,6 +27,7 @@
     bat
     wget
     direnv
+    devenv
 
     antigravity-cli
 

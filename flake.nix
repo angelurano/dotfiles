@@ -34,6 +34,10 @@
 
         modules = [
           ./home/home.nix
+          {
+            home.username = "angeldeb";
+            home.homeDirectory = "/home/angeldeb";
+          }
 
           ./home/shell.nix
           ./home/zsh.nix

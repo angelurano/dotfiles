@@ -6,8 +6,6 @@
   ...
 }:
 {
-  home.username = "angeldeb";
-  home.homeDirectory = "/home/angeldeb";
   home.stateVersion = "25.05";
 
   xdg.enable = true;

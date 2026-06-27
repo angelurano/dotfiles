@@ -75,7 +75,8 @@ To keep project-level development environments clean and portable, this reposito
 
 ### Available Templates
 *   `bun`: Bun runtime, lockfiles, and environment checks.
-*   `c`: C/C++ compiler toolchain (`gcc`, `gnumake`).
+*   `c`: C development environment (configured with `gcc`).
+*   `cpp`: C++ development environment (configured with `g++`).
 *   `node`: Node.js development (pinned to Node 22).
 *   `python`: Python interpreter and virtual environment managers.
 

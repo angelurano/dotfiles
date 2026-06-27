@@ -107,10 +107,5 @@ require('lazy').setup({
     },
     vscode = false,
   },
-  {
-    'willothy/wezterm.nvim',
-    config = true,
-    vscode = false
-  }
 })
 

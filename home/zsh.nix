@@ -40,7 +40,7 @@
     '';
 
     loginExtra = ''
-      _state_dir="$XDG_RUNTIME_DIR/zlogin-fastfetch"
+      _state_dir="''${XDG_RUNTIME_DIR:-/tmp/user-runtime-$UID}/zlogin-fastfetch"
       mkdir -p -- "$_state_dir"
       if [ ! -e "$_state_dir/once" ]; then
         command -v fastfetch >/dev/null 2>&1 && fastfetch

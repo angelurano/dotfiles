@@ -138,14 +138,9 @@ config.launch_menu = {
 	},
 	{
 		label = "zsh (WSL:Debian)",
-		cwd = "~",
-		domain = { DomainName = "WSL:Debian" },
-	},
-	{
-		label = "zsh (WSL:Ubuntu)",
 		-- args = { "zsh", "-l" },
 		cwd = "~",
-		domain = { DomainName = "WSL:Ubuntu" },
+		domain = { DomainName = "WSL:Debian" },
 	},
 	{
 		label = "Command Prompt",

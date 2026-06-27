@@ -13,14 +13,15 @@
     ll = "ls -lAh";
     man = "BAT_THEME='Monokai Extended' batman";
     cat = "bat";
+    xdg-open = "wsl-open";
   };
 
   home.sessionVariables = {
     _ZO_ECHO = "1";
-    WGETRC = "${config.xdg.configHome}/wgetrc";
-    DOTNET_CLI_HOME = "${config.xdg.dataHome}/dotnet";
 
     # XDG compliance configurations
+    WGETRC = "${config.xdg.configHome}/wgetrc";
+    DOTNET_CLI_HOME = "${config.xdg.dataHome}/dotnet";
     NPM_CONFIG_USERCONFIG = "${config.xdg.configHome}/npm/npmrc";
     NPM_CONFIG_CACHE = "${config.xdg.cacheHome}/npm";
     NODE_REPL_HISTORY = "${config.xdg.stateHome}/node/node_repl_history";
@@ -79,6 +80,13 @@
     extraPackages = with pkgs.bat-extras; [
       batman
     ];
+  };
+
+  programs.yazi = {
+    enable = true;
+    enableBashIntegration = true;
+    enableZshIntegration = true;
+    # TODO
   };
 
   programs.bash = {

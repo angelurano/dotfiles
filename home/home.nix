@@ -6,8 +6,6 @@
   ...
 }:
 {
-  home.stateVersion = "25.05";
-
   xdg.enable = true;
   home.preferXdgDirectories = true;
 
@@ -27,12 +25,19 @@
     direnv
     devenv
 
+    yazi
+    wsl-open
+
     antigravity-cli
 
     oh-my-posh
     oh-my-zsh
 
     nodejs_22
+
+    (writeShellScriptBin "xdg-open" ''
+      exec wsl-open "$@"
+    '')
   ];
 
   home.sessionVariables = {

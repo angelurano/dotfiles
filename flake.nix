@@ -37,6 +37,7 @@
           {
             home.username = "angeldeb";
             home.homeDirectory = "/home/angeldeb";
+            home.stateVersion = "26.05";
           }
 
           ./home/shell.nix

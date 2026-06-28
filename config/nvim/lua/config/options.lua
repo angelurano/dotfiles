@@ -9,6 +9,8 @@ vim.o.smartcase = true
 if not vim.g.vscode then
   vim.o.undofile = true
 
+  vim.o.title = true
+
   vim.opt.tabstop = 4
   vim.opt.shiftwidth = 4
   vim.opt.softtabstop = 4
@@ -24,8 +26,6 @@ if not vim.g.vscode then
   vim.o.list = true
   vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
-  vim.opt.timeoutlen = 1000
-  vim.opt.ttimeoutlen = 0
 end
 
 -- in vscode, there are default shortcuts:

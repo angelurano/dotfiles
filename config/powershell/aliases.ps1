@@ -5,6 +5,9 @@ Function ll { l -lAg @args }
 Set-Alias -Name ls -Value l
 
 # Neovim
+function nvim {
+    & "$HOME\scoop\apps\neovim\current\bin\nvim.exe" @args
+}
 Set-Alias -Name vim -Value nvim
 
 # Environment viewer helper
@@ -74,3 +77,4 @@ Function Sync-Dotfiles {
 
     Write-Host "¡Sincronización local XDG completada!" -ForegroundColor Green
 }
+

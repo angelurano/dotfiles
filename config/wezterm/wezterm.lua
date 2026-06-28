@@ -187,7 +187,7 @@ config.keys = {
 }
 
 local function is_nvim(pane)
-  return pane:get_user_vars().IS_NVIM == "true"
+  return pane:get_user_vars().IS_NVIM == "true" or pane:get_foreground_process_name():find("n?vim")
 end
 
 local function move_pane(direction, key)

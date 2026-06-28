@@ -10,7 +10,7 @@
     };
 
     antigravity-nix = {
-      url = "github:jacopone/antigravity-nix/v2.0.0-6324554176528384";
+      url = "github:jacopone/antigravity-nix/c9185eb03f60c2f1a25f78aa5941408ae1852dd3";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

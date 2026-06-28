@@ -24,14 +24,15 @@ vim.api.nvim_create_autocmd("User", {
       return b64
     end
 
+    -- Envío seguro y atómico usando io.stdout y vaciado inmediato (:flush)
     local function set_user_var(key, value)
-      io.write(string.format("\027]1337;SetUserVar=%s=%s\a", key, base64(value)))
+      if vim.g.vscode then return end
+      local seq = string.format("\027]1337;SetUserVar=%s=%s\027\\", key, base64(value))
+      io.stdout:write(seq)
+      io.stdout:flush()
     end
 
     local wezterm_cmd = "wezterm.exe"
-    -- if vim.fn.executable("wezterm") ~= 1 and vim.fn.executable("wezterm.exe") == 1 then
-    --   wezterm_cmd = "wezterm.exe"
-    -- end
 
     local function navigate(dir)
       return function()
@@ -57,10 +58,13 @@ vim.api.nvim_create_autocmd("User", {
       vim.keymap.set("n", "<C-" .. key .. ">", navigate(key), { desc = "Go to " .. dir .. " pane" })
     end
 
-    -- Limpieza absoluta al salir del editor
+    -- Limpieza absoluta al salir del editor usando el flujo correcto sin lags
     vim.api.nvim_create_autocmd("VimLeave", {
       callback = function()
-        io.write("\027]1337;SetUserVar=IS_NVIM=\a")
+        if vim.g.vscode then return end
+        local seq = "\027]1337;SetUserVar=IS_NVIM=\027\\"
+        io.stdout:write(seq)
+        io.stdout:flush()
       end,
     })
   end,

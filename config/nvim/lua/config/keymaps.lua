@@ -1,0 +1,68 @@
+vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+
+vim.api.nvim_create_autocmd("User", {
+  pattern = "VeryLazy",
+  callback = function()
+    local nav = { h = "Left", j = "Down", k = "Up", l = "Right" }
+
+    -- Codificación Base64 requerida por el protocolo de WezTerm
+    local function base64(data)
+      data = tostring(data)
+      local bit = require("bit")
+      local b64chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+      local b64, len = "", #data
+      for i = 1, len, 3 do
+        local a, b, c = data:byte(i, i + 2)
+        local buffer = bit.bor(bit.lshift(a, 16), bit.lshift(b or 0, 8), c or 0)
+        for j = 0, 3 do
+          local index = bit.rshift(buffer, (3 - j) * 6) % 64
+          b64 = b64 .. b64chars:sub(index + 1, index + 1)
+        end
+      end
+      local padding = (3 - len % 3) % 3
+      b64 = b64:sub(1, -1 - padding) .. ("="):rep(padding)
+      return b64
+    end
+
+    local function set_user_var(key, value)
+      io.write(string.format("\027]1337;SetUserVar=%s=%s\a", key, base64(value)))
+    end
+
+    local wezterm_cmd = "wezterm.exe"
+    -- if vim.fn.executable("wezterm") ~= 1 and vim.fn.executable("wezterm.exe") == 1 then
+    --   wezterm_cmd = "wezterm.exe"
+    -- end
+
+    local function navigate(dir)
+      return function()
+        local win = vim.api.nvim_get_current_win()
+        vim.cmd.wincmd(dir) -- Intenta moverse dentro de Neovim
+
+        -- Si después de wincmd seguimos en la misma ventana, es que tocamos el borde de Neovim
+        if win == vim.api.nvim_get_current_win() then
+          local pane_dir = nav[dir]
+          if vim.system then
+            -- Le ordenamos a Wezterm saltar fuera del editor
+            vim.system({ wezterm_cmd, "cli", "activate-pane-direction", pane_dir }, { text = true })
+          end
+        end
+      end
+    end
+
+    -- Inyectamos la variable en WezTerm al levantar el editor
+    set_user_var("IS_NVIM", "true")
+
+    -- Mapeamos Ctrl + hjkl
+    for key, dir in pairs(nav) do
+      vim.keymap.set("n", "<C-" .. key .. ">", navigate(key), { desc = "Go to " .. dir .. " pane" })
+    end
+
+    -- Limpieza absoluta al salir del editor
+    vim.api.nvim_create_autocmd("VimLeave", {
+      callback = function()
+        io.write("\027]1337;SetUserVar=IS_NVIM=\a")
+      end,
+    })
+  end,
+})
+

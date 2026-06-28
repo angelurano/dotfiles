@@ -186,6 +186,31 @@ config.keys = {
 	},
 }
 
+local function is_nvim(pane)
+  return pane:get_user_vars().IS_NVIM == "true"
+end
+
+local function move_pane(direction, key)
+  return wezterm.action_callback(function(window, pane)
+    if is_nvim(pane) then
+      window:perform_action(wezterm.action.SendKey({ key = key, mods = "CTRL" }), pane)
+    else
+      window:perform_action(wezterm.action.ActivatePaneDirection(direction), pane)
+    end
+  end)
+end
+
+local keys = {
+  { key = "h", mods = "CTRL", action = move_pane("Left", "h") },
+  { key = "j", mods = "CTRL", action = move_pane("Down", "j") },
+  { key = "k", mods = "CTRL", action = move_pane("Up", "k") },
+  { key = "l", mods = "CTRL", action = move_pane("Right", "l") },
+}
+
+for _, k in ipairs(keys) do
+  table.insert(config.keys, k)
+end
+
 for i = 1, 8 do
 	table.insert(config.keys, {
 		key = tostring(i),

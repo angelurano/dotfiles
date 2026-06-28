@@ -5,7 +5,7 @@ vim.api.nvim_create_autocmd("User", {
   callback = function()
     local nav = { h = "Left", j = "Down", k = "Up", l = "Right" }
 
-    -- Codificación Base64 requerida por el protocolo de WezTerm
+    -- Base64 encoding required by the WezTerm user variable protocol
     local function base64(data)
       data = tostring(data)
       local bit = require("bit")
@@ -24,7 +24,7 @@ vim.api.nvim_create_autocmd("User", {
       return b64
     end
 
-    -- Envío seguro y atómico usando io.stdout y vaciado inmediato (:flush)
+    -- Write to stdout and flush immediately for atomic transmission
     local function set_user_var(key, value)
       if vim.g.vscode then return end
       local seq = string.format("\027]1337;SetUserVar=%s=%s\027\\", key, base64(value))
@@ -37,28 +37,27 @@ vim.api.nvim_create_autocmd("User", {
     local function navigate(dir)
       return function()
         local win = vim.api.nvim_get_current_win()
-        vim.cmd.wincmd(dir) -- Intenta moverse dentro de Neovim
+        vim.cmd.wincmd(dir) -- Attempt navigation within Neovim
 
-        -- Si después de wincmd seguimos en la misma ventana, es que tocamos el borde de Neovim
+        -- If the current window remains unchanged, the edge of Neovim has been reached
         if win == vim.api.nvim_get_current_win() then
           local pane_dir = nav[dir]
           if vim.system then
-            -- Le ordenamos a Wezterm saltar fuera del editor
+            -- Call WezTerm CLI to activate the pane in the specified direction
             vim.system({ wezterm_cmd, "cli", "activate-pane-direction", pane_dir }, { text = true })
           end
         end
       end
     end
 
-    -- Inyectamos la variable en WezTerm al levantar el editor
+    -- Set the IS_NVIM user variable in WezTerm on startup
     set_user_var("IS_NVIM", "true")
 
-    -- Mapeamos Ctrl + hjkl
     for key, dir in pairs(nav) do
       vim.keymap.set("n", "<C-" .. key .. ">", navigate(key), { desc = "Go to " .. dir .. " pane" })
     end
 
-    -- Limpieza absoluta al salir del editor usando el flujo correcto sin lags
+    -- Reset the IS_NVIM user variable in WezTerm on exit
     vim.api.nvim_create_autocmd("VimLeave", {
       callback = function()
         if vim.g.vscode then return end

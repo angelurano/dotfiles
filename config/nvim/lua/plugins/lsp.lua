@@ -1,0 +1,126 @@
+return {
+  { "williamboman/mason.nvim" },
+  { "williamboman/mason-lspconfig.nvim" },
+
+  -- 1. BLINK.CMP: Asynchronous completion engine
+  {
+    'saghen/blink.cmp',
+    version = '*',
+    opts = {
+      keymap = {
+        preset = 'default',
+        ['<C-space>'] = { 'show', 'show_documentation', 'hide_documentation' },
+      },
+      appearance = {}, -- Removed 'use_nerd_font' since it is enabled by default
+      sources = {
+        default = { 'lsp', 'path', 'snippets', 'buffer' },
+      },
+    },
+  },
+
+  -- 2. NVIM-LSPCONFIG: LSP configuration coordinator (adapted to Neovim Core)
+  {
+    "neovim/nvim-lspconfig",
+    dependencies = {
+      "williamboman/mason.nvim",
+      "williamboman/mason-lspconfig.nvim",
+      "saghen/blink.cmp",
+    },
+    config = function()
+      -- Step A: Initialize Mason
+      require("mason").setup({
+        ui = { border = "rounded" },
+      })
+
+      -- Step B: Map of server configurations
+      local servers = {
+        lua_ls = {
+          settings = {
+            Lua = {
+              diagnostics = { globals = { "vim" } }, -- Prevent global variable warnings for 'vim'
+            },
+          },
+        },
+        ts_ls = {},  -- TypeScript / JavaScript
+        clangd = {}, -- C / C++
+        -- jdtls = {},  -- Java (Spring Boot)
+      }
+
+      -- Check for Python executable availability
+      if vim.fn.executable("python") == 1 or vim.fn.executable("python3") == 1 then
+        servers.basedpyright = {}
+      end
+
+      -- Dynamically extract server names for Mason
+      local ensure_installed = vim.tbl_keys(servers)
+
+      -- Step C: Initialize mason-lspconfig with the server list
+
+      require("mason-lspconfig").setup({
+        ensure_installed = ensure_installed,
+      })
+
+      -- Step D: Retrieve LSP capabilities from blink.cmp
+      local capabilities = require("blink.cmp").get_lsp_capabilities()
+
+      -- Global diagnostics styling and behavior
+      vim.diagnostic.config({
+        virtual_text = { prefix = "●" },
+        severity_sort = true,
+        float = { border = "rounded" },
+      })
+
+      -- Keymaps enabled only when LSP attaches
+      vim.api.nvim_create_autocmd('LspAttach', {
+        callback = function(event)
+          local map = function(keys, func, desc)
+            vim.keymap.set('n', keys, func, { buffer = event.buf, desc = desc })
+          end
+
+          map('gd', vim.lsp.buf.definition, 'Go to Definition')
+          map('gr', vim.lsp.buf.references, 'Go to References')
+          map('K', vim.lsp.buf.hover, 'Hover Documentation')
+          map('<leader>rn', vim.lsp.buf.rename, 'Rename Variable')
+          map('<leader>ca', vim.lsp.buf.code_action, 'Code Action')
+          map('<leader>d', vim.diagnostic.open_float, 'Show Line Diagnostics')
+        end,
+      })
+
+      -- Step E: Modern native configuration (replaces require('lspconfig')[...].setup)
+      -- Iterate through the servers and use native Neovim APIs
+      for server_name, server_opts in pairs(servers) do
+        server_opts.capabilities = capabilities
+
+        -- 1. Register/extend server configuration in the native Neovim API
+        vim.lsp.config(server_name, server_opts)
+        -- 2. Enable the server natively in the editor core
+        vim.lsp.enable(server_name)
+      end
+    end,
+  },
+
+  -- 3. CONFORM.NVIM: Code formatter
+  {
+    'stevearc/conform.nvim',
+    -- event = { "BufWritePre" }, -- disabled
+    cmd = { "ConformInfo" },
+    keys = {
+      {
+        "<leader>f",
+        function() require("conform").format({ async = true, lsp_fallback = true }) end,
+        mode = "",
+        desc = "Format buffer manual",
+      },
+    },
+    opts = {
+      formatters_by_ft = {
+        lua = { "stylua" },
+        python = { "black" },
+        javascript = { "prettier" },
+        typescript = { "prettier" },
+        c = { "clang-format" },
+        cpp = { "clang-format" },
+      },
+    },
+  },
+}

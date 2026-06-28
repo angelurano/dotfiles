@@ -11,11 +11,13 @@ if not vim.g.vscode then
 
   vim.o.title = true
 
-  vim.opt.tabstop = 4
-  vim.opt.shiftwidth = 4
-  vim.opt.softtabstop = 4
+  vim.opt.tabstop = 2
+  vim.opt.shiftwidth = 2
+  vim.opt.softtabstop = 2
   vim.opt.expandtab = true
   vim.opt.smartindent = true
+  vim.opt.endofline = true
+  vim.opt.fixendofline = true
 
   vim.g.have_nerd_font = true
   vim.o.number = true
@@ -28,16 +30,26 @@ if not vim.g.vscode then
 
 end
 
--- in vscode, there are default shortcuts:
---   select multiple lines, and mi must inset multiple cursors at the start
---   select multiple lines, and ma must inset multiple cursors at the end of the selection
---   on hover code, can see the documentation of function, types, etc, with gh, or <shift>k
---     on do again <shift>k must use vim cursor on documentation
---   select code, and then can apply format of vscode with =
---   on hover code, can go to code declaration with gd, and when it's in definition, can
---     do gd to see the places the reference are presented, or g<shift>H
---   for go to next open file, can use gt, it's like <ctrl><tab>
---   for go to previous open file, can use g<shift>t, it's like <ctrl><shift><tab>
---   <ctrl>b open sidebar, <ctrl>h put the focus in the sidebar, <ctrl><shift>e open and focus sidebar
---   in sidebar, can move with jklh, open folder or file with o, delete with d, cut with x, copy with y, and prev p to paste copy or cut file, rename with r, add a file with a, add a folder with <shift>a
---   in sidebar, can open the file in split, vertical with v, horizontal with h
+-- VSCode-specific default keybindings reference:
+-- - mi: Insert multiple cursors at the start of selected lines.
+-- - ma: Insert multiple cursors at the end of selected lines.
+-- - gh / <S-k>: View documentation on hover (press <S-k> twice to focus the documentation window).
+-- - =: Format the selected code block.
+-- - gd: Go to definition (or show references if already at the definition).
+-- - gt: Navigate to the next open file.
+-- - g<S-t>: Navigate to the previous open file.
+-- - <C-b>: Toggle the sidebar.
+-- - <C-h>: Move focus to the sidebar.
+-- - <C-S-e>: Open and focus the file explorer in the sidebar.
+-- - Sidebar actions (when focused):
+--   - j/k/l/h: Navigate.
+--   - o: Open file or folder.
+--   - d: Delete.
+--   - x: Cut.
+--   - y: Copy.
+--   - p: Paste copied/cut file.
+--   - r: Rename.
+--   - a: Create new file.
+--   - A: Create new folder.
+--   - v: Open file in vertical split.
+--   - h: Open file in horizontal split.

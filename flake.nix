@@ -65,7 +65,11 @@
         };
         c = {
           path = ./templates/c;
-          description = "C/C++ development environment (Devenv)";
+          description = "C development environment (Devenv)";
+        };
+        cpp = {
+          path = ./templates/cpp;
+          description = "C++ development environment (Devenv)";
         };
         python = {
           path = ./templates/python;

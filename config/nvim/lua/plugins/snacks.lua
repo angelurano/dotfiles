@@ -36,7 +36,7 @@ return {
           explorer = {
             layout = {
               preset = "sidebar",
-              preview = false,
+              preview = nil,
               layout = {
                 position = "left",
                 width = 30,

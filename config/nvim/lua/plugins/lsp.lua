@@ -1,4 +1,16 @@
 return {
+  -- LAZYDEV: Configure Lua LS for Neovim config and plugin APIs
+  {
+    "folke/lazydev.nvim",
+    ft = "lua", -- Only load lazydev for Lua files
+    opts = {
+      library = {
+        -- Load luvit types for vim.uv
+        { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+      },
+    },
+  },
+
   { "williamboman/mason.nvim" },
   { "williamboman/mason-lspconfig.nvim" },
 
@@ -41,10 +53,18 @@ return {
             },
           },
         },
-        ts_ls = {},  -- TypeScript / JavaScript
         clangd = {}, -- C / C++
         -- jdtls = {},  -- Java (Spring Boot)
       }
+
+      -- Check for Node.js or Bun executable availability (required by ts_ls and eslint)
+      if vim.fn.executable("node") == 1 or vim.fn.executable("bun") == 1 then
+        servers.ts_ls = {}  -- TypeScript / JavaScript
+        servers.eslint = {} -- ESLint for JavaScript / TypeScript
+      end
+
+      -- Biome handles JS/TS linting and formatting (precompiled binary, no cargo or node required)
+      servers.biome = {}
 
       -- Check for Python executable availability
       if vim.fn.executable("python") == 1 or vim.fn.executable("python3") == 1 then
@@ -122,16 +142,22 @@ return {
         desc = "Format buffer manual",
       },
     },
-    opts = {
-      formatters_by_ft = {
+    opts = function()
+      local formatters = {
         lua = { "stylua" },
         python = { "black" },
-        javascript = { "prettier" },
-        typescript = { "prettier" },
         c = { "clang-format" },
         cpp = { "clang-format" },
-        nix = { "nixfmt" }
-      },
-    },
+        nix = { "nixfmt" },
+      }
+      -- Prettier requires Node.js or Bun to run
+      if vim.fn.executable("node") == 1 or vim.fn.executable("bun") == 1 then
+        formatters.javascript = { "prettier" }
+        formatters.typescript = { "prettier" }
+      end
+      return {
+        formatters_by_ft = formatters,
+      }
+    end,
   },
 }

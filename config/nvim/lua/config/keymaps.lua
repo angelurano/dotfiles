@@ -91,3 +91,7 @@ vim.api.nvim_create_autocmd("User", {
     })
   end,
 })
+
+-- Delete word forward in insert mode
+vim.keymap.set('i', '<C-Delete>', '<C-o>dw', { desc = 'Delete word forward' })
+vim.keymap.set('i', '<C-Del>', '<C-o>dw', { desc = 'Delete word forward' })

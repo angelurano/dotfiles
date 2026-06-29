@@ -9,6 +9,9 @@ end
 require('config.options')
 require('config.keymaps')
 require('config.autocmds')
+if not vim.g.vscode then
+  require('config.better_comments').setup()
+end
 
 vim.schedule(function()
   vim.opt.clipboard = 'unnamedplus'

@@ -9,9 +9,6 @@ return {
       { '<leader>fh',  '<cmd>Telescope help_tags<cr>',    desc = 'Help Tags' },
       { '<leader>fk',  '<cmd>Telescope keymaps<cr>',      desc = 'See keymaps' },
       { '<leader>fg',  '<cmd>Telescope live_grep<cr>',    desc = 'Live Grep' },
-      { '<leader>fs',  '<cmd>Telescope git_status<cr>',   desc = 'See git status' },
-      { '<leader>fgc', '<cmd>Telescope git_commits<cr>',  desc = 'Git commit' },
-      { '<leader>fgb', '<cmd>Telescope git_branches<cr>', desc = 'Git commit' },
     },
     opts = {
       defaults = {

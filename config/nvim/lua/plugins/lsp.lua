@@ -60,6 +60,16 @@ return {
         ensure_installed = ensure_installed,
       })
 
+      if vim.fn.executable("nil") == 1 then
+        servers.nil_ls = {
+          settings = {
+            formatting = {
+              command = { "nixfmt" },
+            },
+          }
+        }
+      end
+
       -- Step D: Retrieve LSP capabilities from blink.cmp
       local capabilities = require("blink.cmp").get_lsp_capabilities()
 
@@ -120,6 +130,7 @@ return {
         typescript = { "prettier" },
         c = { "clang-format" },
         cpp = { "clang-format" },
+        nix = { "nixfmt" }
       },
     },
   },

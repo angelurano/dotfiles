@@ -38,6 +38,8 @@
     (writeShellScriptBin "xdg-open" ''
       exec wsl-open "$@"
     '')
+
+    nil
   ];
 
   home.sessionVariables = {

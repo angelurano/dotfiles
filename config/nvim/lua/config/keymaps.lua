@@ -1,5 +1,28 @@
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
+-- Track and toggle last active tab
+local last_tab = nil
+vim.api.nvim_create_autocmd("TabLeave", {
+  callback = function()
+    last_tab = vim.api.nvim_get_current_tabpage()
+  end,
+})
+
+local function go_to_last_tab()
+  if last_tab and vim.api.nvim_tabpage_is_valid(last_tab) then
+    vim.api.nvim_set_current_tabpage(last_tab)
+  else
+    vim.notify("No previous tab to return to", vim.log.levels.WARN)
+  end
+end
+
+-- Handle tabs
+vim.keymap.set('n', '<leader>tx', '<cmd>tabclose<CR>', { desc = 'Close Current Neovim Tab' })
+vim.keymap.set('n', '<M-h>', go_to_last_tab, { desc = 'Go to Last Active Tab' })
+vim.keymap.set('n', '<M-k>', go_to_last_tab, { desc = 'Go to Last Active Tab' })
+vim.keymap.set('n', '<M-j>', '<cmd>tabprevious<CR>', { desc = 'Go to Previous Tab' })
+vim.keymap.set('n', '<M-l>', '<cmd>tabnext<CR>', { desc = 'Go to Next Tab' })
+
 vim.api.nvim_create_autocmd("User", {
   pattern = "VeryLazy",
   callback = function()
@@ -68,4 +91,3 @@ vim.api.nvim_create_autocmd("User", {
     })
   end,
 })
-

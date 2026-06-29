@@ -156,7 +156,7 @@ config.launch_menu = {
 -- config.default_prog = { "" }
 -- config.default_domain = "WSL:Debian"
 local function is_admin()
-  local success, stdout, stderr = wezterm.run_child_process { "cmd.exe", "/c", "net session" }
+  local success, _, _ = wezterm.run_child_process { "cmd.exe", "/c", "net session" }
   return success
 end
 
@@ -188,6 +188,11 @@ config.keys = {
     key = ' ',
     mods = 'CTRL',
     action = wezterm.action.SendKey { key = ' ', mods = 'CTRL' },
+  },
+  {
+    key = 'e',
+    mods = 'CTRL|SHIFT',
+    action = wezterm.action.SendKey { key = 'e', mods = 'CTRL|SHIFT' }
   },
 }
 

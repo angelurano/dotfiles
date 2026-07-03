@@ -53,7 +53,14 @@ return {
             },
           },
         },
-        clangd = {}, -- C / C++
+        clangd = {
+          cmd = {
+            "clangd",
+            "--background-index",
+            "--clang-tidy",
+            "--header-insertion=never",
+          },
+        }, -- C / C++
         -- jdtls = {},  -- Java (Spring Boot)
       }
 

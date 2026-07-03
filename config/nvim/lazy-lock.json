@@ -15,5 +15,5 @@
   "smear-cursor.nvim": { "branch": "main", "commit": "9e9378d6ee34bb3782e0e8c63d9ec8ca618b479b" },
   "snacks.nvim": { "branch": "main", "commit": "882c996cf28183f4d63640de0b4c02ec886d01f2" },
   "telescope.nvim": { "branch": "master", "commit": "427b576c16792edad01a92b89721d923c19ad60f" },
-  "yazi.nvim": { "branch": "main", "commit": "250546b7b4dc71ab99b036ea423ae020be79ce14" }
+  "yazi.nvim": { "branch": "main", "commit": "1fb8b04bee3d0e42e9966e87772428906b184df8" }
 }

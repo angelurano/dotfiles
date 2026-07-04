@@ -44,7 +44,7 @@ Function Sync-Dotfiles {
     }
 
     # Folders to symlink from dotfiles/config to ~/.config
-    $folders = @("nvim", "wezterm", "ohmyposh", "powershell")
+    $folders = @("nvim", "wezterm", "ohmyposh", "powershell", "winfetch")
 
     foreach ($folder in $folders) {
         $destination = "$ConfigDir\$folder"

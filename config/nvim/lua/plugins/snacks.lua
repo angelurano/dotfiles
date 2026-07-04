@@ -9,11 +9,11 @@ return {
         enabled = true,
       },
 
-      -- Smooth scroll animation
-      scroll = { enabled = true },
+      -- Smooth scroll animation (disabled for instant, lag-free movement)
+      scroll = { enabled = false },
 
-      -- Native image renderer
-      image = { enabled = true },
+      -- Native image renderer (disabled in WSL due to terminal bridge rendering limits)
+      image = { enabled = vim.fn.has("wsl") == 0 },
 
       -- Native Git components
       git = { enabled = true },

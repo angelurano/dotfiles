@@ -21,6 +21,9 @@ local tags = {
   { tag = "@",    hl = "BetterCommentParam",     case_insensitive = false },
 }
 
+-- Cache for compiled buffer patterns to avoid re-generating on every cursor/window switch
+local pattern_cache = {}
+
 -- Create or restore highlight groups
 function M.setup_highlights()
   for hl_name, hl_opts in pairs(highlights) do
@@ -30,12 +33,15 @@ end
 
 -- Escape special characters for Vim's very magic (\v) regex mode
 local function escape_for_very_magic(str)
+  if type(str) ~= "string" then
+    return ""
+  end
   return str:gsub("[\\.*^$()[%]~|?+<>/@{}=]", "\\%0")
 end
 
 -- Find block comment continuation character (e.g., '*') from buffer 'comments' setting
-local function get_block_continuation()
-  local comments = vim.bo.comments
+local function get_block_continuation(buf)
+  local comments = vim.bo[buf].comments
   if not comments or comments == "" then
     return nil
   end
@@ -53,9 +59,13 @@ local function get_block_continuation()
   return nil
 end
 
--- Generate regex patterns for a tag based on buffer comment configuration
-local function get_patterns(tag, is_case_insensitive)
-  local cs = vim.bo.commentstring
+-- Generate regex patterns for a tag based on buffer comment configuration (cached)
+local function get_buf_patterns(buf)
+  if pattern_cache[buf] then
+    return pattern_cache[buf]
+  end
+
+  local cs = vim.bo[buf].commentstring
   local main_prefix = "//"
 
   if cs and cs ~= "" then
@@ -67,31 +77,35 @@ local function get_patterns(tag, is_case_insensitive)
   end
 
   local escaped_main = escape_for_very_magic(main_prefix)
-  local escaped_tag = escape_for_very_magic(tag)
-  local case_prefix = is_case_insensitive and "\\c" or ""
-
-  -- Check for block comment continuation support
-  local block_cont = get_block_continuation()
+  local block_cont = get_block_continuation(buf)
 
   -- Allow block comments starting with '/*' if '*' is the continuation character
   if block_cont == "*" and main_prefix ~= "/*" and main_prefix ~= "/**" then
     escaped_main = "(" .. escaped_main .. "|/\\*)"
   end
 
-  -- Pattern 1: Match main or block comment prefix anywhere in the line
-  -- e.g., // ! alert   or   /* ! alert */
-  local pattern1 = "\\v" .. case_prefix .. escaped_main .. "\\s*\\zs" .. escaped_tag .. ".*"
-  local patterns = { pattern1 }
+  local buf_patterns = {}
 
-  if block_cont then
-    local escaped_cont = escape_for_very_magic(block_cont)
-    -- Pattern 2: Match continuation lines starting with block comment character
-    -- e.g., in a JSDoc block: * ! alert
-    local pattern2 = "\\v" .. case_prefix .. "^\\s*" .. escaped_cont .. "\\s*\\zs" .. escaped_tag .. ".*"
-    table.insert(patterns, pattern2)
+  for _, tag_config in ipairs(tags) do
+    local escaped_tag = escape_for_very_magic(tag_config.tag)
+    local case_prefix = tag_config.case_insensitive and "\\c" or ""
+
+    -- Pattern 1: Match main or block comment prefix anywhere in the line
+    local pattern1 = "\\v" .. case_prefix .. escaped_main .. "\\s*\\zs" .. escaped_tag .. ".*"
+    local patterns = { pattern1 }
+
+    if block_cont then
+      local escaped_cont = escape_for_very_magic(block_cont)
+      -- Pattern 2: Match continuation lines starting with block comment character
+      local pattern2 = "\\v" .. case_prefix .. "^\\s*" .. escaped_cont .. "\\s*\\zs" .. escaped_tag .. ".*"
+      table.insert(patterns, pattern2)
+    end
+
+    buf_patterns[tag_config] = patterns
   end
 
-  return patterns
+  pattern_cache[buf] = buf_patterns
+  return buf_patterns
 end
 
 -- Clear window matches
@@ -106,28 +120,43 @@ function M.clear_matches()
 end
 
 -- Update matches for the current window and buffer
-function M.update_matches()
+function M.update_matches(force)
+  local win = vim.api.nvim_get_current_win()
+  local buf = vim.api.nvim_get_current_buf()
+
+  -- Check if matches are already configured for this buffer in this window
+  if not force and vim.w.better_comments_buf == buf then
+    return
+  end
+
   M.clear_matches()
 
+  -- Verify buffer is valid
+  if not vim.api.nvim_buf_is_valid(buf) then
+    return
+  end
+
   -- Only apply to normal buffers
-  if vim.bo.buftype ~= "" then
+  local ok, buftype = pcall(function() return vim.bo[buf].buftype end)
+  if not ok or buftype ~= "" then
     return
   end
 
   local match_ids = {}
+  local buf_patterns = get_buf_patterns(buf)
 
-  for _, tag_config in ipairs(tags) do
-    local patterns = get_patterns(tag_config.tag, tag_config.case_insensitive)
+  for tag_config, patterns in pairs(buf_patterns) do
     for _, pattern in ipairs(patterns) do
       -- Match priority 11 to override default comment highlighting
-      local ok, match_id = pcall(vim.fn.matchadd, tag_config.hl, pattern, 11)
-      if ok then
+      local ok_add, match_id = pcall(vim.fn.matchadd, tag_config.hl, pattern, 11)
+      if ok_add then
         table.insert(match_ids, match_id)
       end
     end
   end
 
   vim.w.better_comments_matches = match_ids
+  vim.w.better_comments_buf = buf
 end
 
 -- Initialize the better comments system
@@ -142,11 +171,21 @@ function M.setup()
 
   local group = vim.api.nvim_create_augroup("better_comments", { clear = true })
 
-  -- Update matches on window, buffer, or filetype changes
-  vim.api.nvim_create_autocmd({ "BufWinEnter", "WinEnter", "BufEnter", "FileType" }, {
+  -- Update matches on window or buffer transitions
+  vim.api.nvim_create_autocmd({ "BufWinEnter", "WinEnter", "BufEnter" }, {
     group = group,
     callback = function()
       M.update_matches()
+    end,
+  })
+
+  -- Invalidate cache and update when filetype changes
+  vim.api.nvim_create_autocmd("FileType", {
+    group = group,
+    callback = function()
+      local buf = vim.api.nvim_get_current_buf()
+      pattern_cache[buf] = nil
+      M.update_matches(true)
     end,
   })
 
@@ -155,7 +194,17 @@ function M.setup()
     group = group,
     pattern = "commentstring",
     callback = function()
-      M.update_matches()
+      local buf = vim.api.nvim_get_current_buf()
+      pattern_cache[buf] = nil
+      M.update_matches(true)
+    end,
+  })
+
+  -- Clear cache when buffer is deleted to prevent memory leaks
+  vim.api.nvim_create_autocmd({ "BufWipeout", "BufDelete" }, {
+    group = group,
+    callback = function(args)
+      pattern_cache[args.buf] = nil
     end,
   })
 end

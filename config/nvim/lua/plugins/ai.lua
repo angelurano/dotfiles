@@ -4,6 +4,9 @@ return {
     "zbirenbaum/copilot.lua",
     cmd = "Copilot",
     event = "InsertEnter",
+    cond = function()
+      return vim.fn.executable("node") == 1 or vim.fn.executable("bun") == 1
+    end,
     opts = function()
       local node_cmd = "node"
       -- Use bun if node is missing but bun is present

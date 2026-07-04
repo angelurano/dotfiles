@@ -1,4 +1,13 @@
-vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+vim.keymap.set('n', '<Esc>', function()
+  vim.cmd("nohlsearch")
+  -- Close all floating windows
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    local config = vim.api.nvim_win_get_config(win)
+    if config.relative ~= "" then
+      pcall(vim.api.nvim_win_close, win, false)
+    end
+  end
+end, { desc = 'Clear search highlights and close floating windows' })
 
 --[[
 -- Track and toggle last active tab
@@ -23,39 +32,24 @@ vim.keymap.set('n', '<M-h>', go_to_last_tab, { desc = 'Go to Last Active Tab' })
 vim.keymap.set('n', '<M-k>', go_to_last_tab, { desc = 'Go to Last Active Tab' })
 --]]
 
+vim.keymap.set('n', '<leader>w', '<cmd>w<CR>', { desc = 'Save file' })
+
 vim.api.nvim_create_autocmd("User", {
   pattern = "VeryLazy",
   callback = function()
     local nav = { h = "Left", j = "Down", k = "Up", l = "Right" }
 
-    -- Base64 encoding required by the WezTerm user variable protocol
-    local function base64(data)
-      data = tostring(data)
-      local bit = require("bit")
-      local b64chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
-      local b64, len = "", #data
-      for i = 1, len, 3 do
-        local a, b, c = data:byte(i, i + 2)
-        local buffer = bit.bor(bit.lshift(a, 16), bit.lshift(b or 0, 8), c or 0)
-        for j = 0, 3 do
-          local index = bit.rshift(buffer, (3 - j) * 6) % 64
-          b64 = b64 .. b64chars:sub(index + 1, index + 1)
-        end
-      end
-      local padding = (3 - len % 3) % 3
-      b64 = b64:sub(1, -1 - padding) .. ("="):rep(padding)
-      return b64
-    end
-
     -- Write to stdout and flush immediately for atomic transmission
     local function set_user_var(key, value)
       if vim.g.vscode then return end
-      local seq = string.format("\027]1337;SetUserVar=%s=%s\027\\", key, base64(value))
+      -- Precomputed base64 for "true" is "dHJ1ZQ=="
+      local b64_value = value == "true" and "dHJ1ZQ==" or ""
+      local seq = string.format("\027]1337;SetUserVar=%s=%s\027\\", key, b64_value)
       io.stdout:write(seq)
       io.stdout:flush()
     end
 
-    local wezterm_cmd = "wezterm.exe"
+    local wezterm_cmd = vim.fn.executable("wezterm.exe") == 1 and "wezterm.exe" or "wezterm"
 
     local function navigate(dir)
       return function()

@@ -1,7 +1,4 @@
 {
-  config,
-  pkgs,
-  lib,
   ...
 }:
 {
@@ -18,7 +15,7 @@
       init = {
         defaultBranch = "main";
       };
-      color.ui = "always";
+      color.ui = "auto";
       core.pager = "";
     };
     ignores = [

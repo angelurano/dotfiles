@@ -1,12 +1,12 @@
 {
   config,
-  pkgs,
   lib,
   ...
 }:
 {
   home.sessionVariables = {
     EDITOR = lib.mkDefault "nvim";
+    VISUAL = lib.mkDefault "nvim";
   };
 
   xdg.configFile."nvim" = {

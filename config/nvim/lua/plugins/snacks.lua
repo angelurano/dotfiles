@@ -3,19 +3,10 @@ return {
     "folke/snacks.nvim",
     priority = 1000, -- Early load to ensure scroll and indent work on startup
     lazy = false,
-    ---@type snacks.Config
     opts = {
-      -- Integrated File Explorer
-      explorer = { enabled = true },
-
       -- Indent guides
       indent = {
         enabled = true,
-        char = "│",
-        blank = " ",
-        animate = {
-          enabled = false, -- Disable animation
-        },
       },
 
       -- Smooth scroll animation
@@ -27,13 +18,35 @@ return {
       -- Native Git components
       git = { enabled = true },
 
-      -- GitHub integration
-      gh = { enabled = true },
-
       -- Explorer layout customization
       picker = {
+        win = {
+          input = {
+            keys = {
+              ["J"] = { "preview_scroll_down", mode = { "i", "n" } },
+              ["K"] = { "preview_scroll_up", mode = { "i", "n" } },
+            },
+          },
+        },
         sources = {
           explorer = {
+            jump = { close = true },
+            win = {
+              input = {
+                keys = {
+                  ["<C-h>"] = { "close", mode = { "i", "n" } },
+                  ["<C-j>"] = { "close", mode = { "i", "n" } },
+                  ["<C-k>"] = { "close", mode = { "i", "n" } },
+                },
+              },
+              list = {
+                keys = {
+                  ["<C-h>"] = { "close", mode = { "i", "n" } },
+                  ["<C-j>"] = { "close", mode = { "i", "n" } },
+                  ["<C-k>"] = { "close", mode = { "i", "n" } },
+                },
+              },
+            },
             layout = {
               preset = "sidebar",
               preview = nil,
@@ -53,10 +66,11 @@ return {
         }
       },
 
-      dashboard = { enabled = false },
-      words = { enabled = false },
       statuscolumn = { enabled = true },
+
+      words = { enabled = false },
       scope = { enabled = true },
+      dashboard = { enabled = false },
     },
     keys = {
       -- Explorer keymaps

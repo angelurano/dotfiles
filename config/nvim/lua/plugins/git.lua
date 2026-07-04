@@ -9,6 +9,7 @@ return {
         topdelete = { text = '‾' },
         changedelete = { text = '~' },
       },
+      signcolumn = true
     },
   }
 }

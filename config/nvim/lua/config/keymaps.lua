@@ -1,5 +1,6 @@
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
+--[[
 -- Track and toggle last active tab
 local last_tab = nil
 vim.api.nvim_create_autocmd("TabLeave", {
@@ -20,8 +21,7 @@ end
 vim.keymap.set('n', '<leader>tx', '<cmd>tabclose<CR>', { desc = 'Close Current Neovim Tab' })
 vim.keymap.set('n', '<M-h>', go_to_last_tab, { desc = 'Go to Last Active Tab' })
 vim.keymap.set('n', '<M-k>', go_to_last_tab, { desc = 'Go to Last Active Tab' })
-vim.keymap.set('n', '<M-j>', '<cmd>tabprevious<CR>', { desc = 'Go to Previous Tab' })
-vim.keymap.set('n', '<M-l>', '<cmd>tabnext<CR>', { desc = 'Go to Next Tab' })
+--]]
 
 vim.api.nvim_create_autocmd("User", {
   pattern = "VeryLazy",

@@ -19,7 +19,7 @@
 
   outputs =
     {
-      self,
+      # self,
       nixpkgs,
       home-manager,
       antigravity-nix,

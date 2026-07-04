@@ -86,7 +86,6 @@
     enable = true;
     enableBashIntegration = true;
     enableZshIntegration = true;
-    # TODO
   };
 
   programs.fastfetch = {

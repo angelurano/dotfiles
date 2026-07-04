@@ -24,7 +24,8 @@ if not vim.g.vscode then
   vim.o.relativenumber = true
   vim.o.breakindent = true
   vim.o.cursorline = true
+  -- vim.o.laststatus = 3
 
-  vim.o.list = true
-  vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+  -- vim.o.list = true
+  -- vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 end

@@ -34,6 +34,7 @@ return {
             win = {
               input = {
                 keys = {
+                  ["<C-x>"] = { "edit_split", mode = { "i", "n" } },
                   ["<C-h>"] = { "close", mode = { "i", "n" } },
                   ["<C-j>"] = { "close", mode = { "i", "n" } },
                   ["<C-k>"] = { "close", mode = { "i", "n" } },
@@ -41,6 +42,7 @@ return {
               },
               list = {
                 keys = {
+                  ["<C-x>"] = { "edit_split", mode = { "i", "n" } },
                   ["<C-h>"] = { "close", mode = { "i", "n" } },
                   ["<C-j>"] = { "close", mode = { "i", "n" } },
                   ["<C-k>"] = { "close", mode = { "i", "n" } },

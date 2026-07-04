@@ -34,6 +34,56 @@ vim.keymap.set('n', '<M-k>', go_to_last_tab, { desc = 'Go to Last Active Tab' })
 
 vim.keymap.set('n', '<leader>w', '<cmd>w<CR>', { desc = 'Save file' })
 
+-- Change panel size dynamically with Alt+h/j/k/l (absolute-directional)
+local function resize(dir)
+  return function()
+    if dir == "h" or dir == "l" then
+      local has_left = vim.fn.winnr('h') ~= vim.fn.winnr()
+      local has_right = vim.fn.winnr('l') ~= vim.fn.winnr()
+
+      if has_left or has_right then
+        if dir == "h" then
+          if has_right then
+            vim.cmd("vertical resize -2")
+          else
+            vim.cmd("vertical resize +2")
+          end
+        else
+          if has_right then
+            vim.cmd("vertical resize +2")
+          else
+            vim.cmd("vertical resize -2")
+          end
+        end
+      end
+    elseif dir == "j" or dir == "k" then
+      local has_up = vim.fn.winnr('k') ~= vim.fn.winnr()
+      local has_down = vim.fn.winnr('j') ~= vim.fn.winnr()
+
+      if has_up or has_down then
+        if dir == "k" then
+          if has_down then
+            vim.cmd("resize -2")
+          else
+            vim.cmd("resize +2")
+          end
+        else
+          if has_down then
+            vim.cmd("resize +2")
+          else
+            vim.cmd("resize -2")
+          end
+        end
+      end
+    end
+  end
+end
+
+vim.keymap.set('n', '<M-h>', resize('h'), { desc = 'Resize panel left' })
+vim.keymap.set('n', '<M-l>', resize('l'), { desc = 'Resize panel right' })
+vim.keymap.set('n', '<M-j>', resize('j'), { desc = 'Resize panel down' })
+vim.keymap.set('n', '<M-k>', resize('k'), { desc = 'Resize panel up' })
+
 vim.api.nvim_create_autocmd("User", {
   pattern = "VeryLazy",
   callback = function()

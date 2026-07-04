@@ -30,6 +30,7 @@ return {
         },
         sources = {
           explorer = {
+            hidden = true,
             jump = { close = true },
             win = {
               input = {

@@ -89,6 +89,43 @@
     # TODO
   };
 
+  programs.fastfetch = {
+    enable = true;
+    settings = {
+      logo = {
+        source = "Debian_small";
+        padding = {
+          left = 7;
+          right = 7;
+          top = 2;
+          bottom = 1;
+        };
+      };
+      modules = [
+        "break"
+        "title"
+        "separator"
+        "host"
+        "os"
+        "kernel"
+        "wm"
+        "shell"
+        "editor"
+        {
+          type = "disk";
+          folders = "/";
+          format = "{size-used}";
+        }
+        "packages"
+        "uptime"
+        "break"
+        "colors"
+        "break"
+        "break"
+      ];
+    };
+  };
+
   programs.bash = {
     enable = true;
     historyFile = "${config.xdg.stateHome}/bash/history";

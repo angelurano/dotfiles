@@ -1,21 +1,21 @@
 return {
   {
-    "ribru17/bamboo.nvim",
+    name = "ayu_dobri",
+    dir = vim.fn.stdpath("config") .. "/colors",
     priority = 1000,
     lazy = false,
     config = function()
-      require("bamboo").setup {}
-      require("bamboo").load()
+      vim.cmd.colorscheme("ayu_dobri")
 
-      -- Cambiar el color de la línea de indentación activa a un tono anaranjado
+      -- Change the active indentation line color to an orange shade
       local function set_indent_scope_color()
-        vim.api.nvim_set_hl(0, "SnacksIndentScope", { fg = "#ff9e64", nocombine = true })
+        vim.api.nvim_set_hl(0, "SnacksIndentScope", { fg = "#ff8d03", nocombine = true })
       end
 
-      -- Definir el highlight de forma inmediata
+      -- Define the highlight immediately
       set_indent_scope_color()
 
-      -- Asegurar que se vuelva a aplicar si se recarga el colorscheme
+      -- Ensure it is re-applied if the colorscheme is reloaded
       vim.api.nvim_create_autocmd("ColorScheme", {
         callback = set_indent_scope_color,
       })

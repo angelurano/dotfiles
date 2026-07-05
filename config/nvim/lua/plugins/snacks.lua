@@ -9,9 +9,6 @@ return {
         enabled = true,
       },
 
-      -- Smooth scroll animation (disabled for instant, lag-free movement)
-      scroll = { enabled = false },
-
       -- Native image renderer (disabled in WSL due to terminal bridge rendering limits)
       image = { enabled = vim.fn.has("wsl") == 0 },
 
@@ -69,10 +66,12 @@ return {
         }
       },
 
-      statuscolumn = { enabled = true },
-
-      words = { enabled = false },
+      words = { enabled = true },
       scope = { enabled = true },
+
+      -- Smooth scroll animation (disabled for instant, lag-free movement)
+      scroll = { enabled = false },
+      statuscolumn = { enabled = true },
       dashboard = { enabled = false },
     },
     keys = {

@@ -1,7 +1,7 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
-vim.o.showmode = true
+vim.o.showmode = false
 vim.o.scrolloff = 10
 vim.o.ignorecase = true
 vim.o.smartcase = true

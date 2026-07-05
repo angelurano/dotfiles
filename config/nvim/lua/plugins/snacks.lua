@@ -72,7 +72,17 @@ return {
       -- Smooth scroll animation (disabled for instant, lag-free movement)
       scroll = { enabled = false },
       statuscolumn = { enabled = true },
-      dashboard = { enabled = false },
+      dashboard = {
+        enabled = true,
+        preset = {
+          header = [[ ]],
+        },
+        sections = {
+          { section = "startup" },
+          { section = "header" },
+          { section = "keys",   gap = 1, padding = 1 },
+        },
+      },
     },
     keys = {
       -- Explorer keymaps

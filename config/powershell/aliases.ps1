@@ -10,6 +10,17 @@ function nvim {
 }
 Set-Alias -Name vim -Value nvim
 
+# Yazi
+function y {
+	$tmp = (New-TemporaryFile).FullName
+	& "$HOME\scoop\shims\yazi.exe" @args --cwd-file="$tmp"
+	$cwd = Get-Content -Path $tmp -Encoding UTF8
+	if ($cwd -and $cwd -ne $PWD.Path -and (Test-Path -LiteralPath $cwd -PathType Container)) {
+		Set-Location -LiteralPath (Resolve-Path -LiteralPath $cwd).Path
+	}
+	Remove-Item -Path $tmp
+}
+
 # Environment viewer helper
 Function env { Get-ChildItem Env: }
 
@@ -21,7 +32,7 @@ function code {
 		[string[]] $Args
 	)
 	if ($PSVersionTable.PSVersion -ge [Version]'7.4') {
-		& $global:CodeCli $Args &
+		Start-Process -FilePath $global:CodeCli -ArgumentList $Args
 		return
 	}
 
@@ -44,7 +55,7 @@ Function Sync-Dotfiles {
     }
 
     # Folders to symlink from dotfiles/config to ~/.config
-    $folders = @("nvim", "wezterm", "ohmyposh", "powershell", "winfetch")
+    $folders = @("nvim", "wezterm", "ohmyposh", "powershell", "winfetch", "yazi")
 
     foreach ($folder in $folders) {
         $destination = "$ConfigDir\$folder"
@@ -55,8 +66,21 @@ Function Sync-Dotfiles {
         }
 
         Write-Host "Enlazando: $destination -> $source" -ForegroundColor Cyan
-        New-Item -ItemType SymbolicLink -Path $destination -Target $source | Out-Null
+        New-Item -ItemType Junction -Path $destination -Target $source | Out-Null
     }
+
+    # Also link yazi config in AppData for global Windows support outside PowerShell
+    $AppDataYaziConfig = "$env:APPDATA\yazi\config"
+    $AppDataYaziParent = "$env:APPDATA\yazi"
+    if (-not (Test-Path -Path $AppDataYaziParent)) {
+        New-Item -ItemType Directory -Path $AppDataYaziParent | Out-Null
+    }
+    if (Test-Path -Path $AppDataYaziConfig) {
+        Remove-Item -Recurse -Force $AppDataYaziConfig
+    }
+    Write-Host "Enlazando AppData Yazi: $AppDataYaziConfig -> $ConfigDir\yazi" -ForegroundColor Cyan
+    New-Item -ItemType Junction -Path $AppDataYaziConfig -Target "$ConfigDir\yazi" | Out-Null
+
 
     # Copy the profile loader script from dotfiles/config/powershell/Microsoft.PowerShell_profile.ps1 to the OneDrive $PROFILE path
     if ($PROFILE) {

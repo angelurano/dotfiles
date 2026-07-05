@@ -88,6 +88,10 @@
     enableZshIntegration = true;
   };
 
+  xdg.configFile."yazi" = {
+    source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/config/yazi";
+  };
+
   programs.fastfetch = {
     enable = true;
     settings = {

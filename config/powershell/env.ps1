@@ -8,4 +8,5 @@ $env:FZF_ALT_C_OPTS = "--height 40% --border --layout=reverse --preview ''"
 
 # Yazi
 $env:YAZI_FILE_ONE = "$HOME\scoop\apps\git\current\usr\bin\file.exe"
+$env:YAZI_CONFIG_HOME = "$env:XDG_CONFIG_HOME\yazi"
 

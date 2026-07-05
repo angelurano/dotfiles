@@ -1,0 +1,95 @@
+[flavor]
+dark  = ""
+light = ""
+
+[app]
+overall = { fg = "#97a7c8", bg = "#0b1015" }
+
+[mgr]
+cwd = { fg = "#ffb454", bold = true } 
+
+find_keyword  = { fg = "#ffcc00", bg = "#242213", bold = true, underline = true }
+find_position = { fg = "#ff8d03", bg = "#3c341e", bold = true }
+
+symlink_target = { fg = "#61afef", italic = true }
+
+border_symbol = "│"
+border_style  = { fg = "#2c3e50" }
+
+syntect_theme = "~/.config/yazi/ayu-dark.tmTheme"
+
+[tabs]
+active   = { fg = "#ff8d03", bg = "#111820", bold = true }
+inactive = { fg = "#5c6773", bg = "#05080a" }
+
+[mode]
+normal_main = { fg = "#0b1015", bg = "#ff8d03", bold = true }
+normal_alt  = { fg = "#ff8d03", bg = "#111820" }
+
+select_main = { fg = "#0b1015", bg = "#98c379", bold = true }
+select_alt  = { fg = "#98c379", bg = "#111820" }
+
+unset_main = { fg = "#ffffff", bg = "#7045af", bold = true }
+unset_alt  = { fg = "#7045af", bg = "#111820" }
+
+[status]
+overall   = { fg = "#97a7c8", bg = "#05080a" }
+
+perm_sep   = { fg = "#2c3e50" }
+perm_type  = { fg = "#61afef" }
+perm_read  = { fg = "#98c379" }
+perm_write = { fg = "#ffcc00" }
+perm_exec  = { fg = "#ef4444" }
+
+progress_label  = { bold = true }
+progress_normal = { fg = "#ff8d03", bg = "#111820" }
+progress_error  = { fg = "#ef4444", bg = "#111820" }
+
+[input]
+border   = { fg = "#ff8d03" }
+title    = { fg = "#ffb454", bold = true }
+value    = { fg = "#f5f5f5" }
+selected = { bg = "#1e3c66" }
+
+[select]
+border   = { fg = "#ff8d03" }
+active   = { fg = "#ffb454", bold = true }
+inactive = { fg = "#97a7c8" }
+
+[tasks]
+border  = { fg = "#ff8d03" }
+title   = { fg = "#ffb454", bold = true }
+hovered = { fg = "#0b1015", bg = "#ffb454", bold = true }
+
+[which]
+mask            = { bg = "#05080a" }
+cand            = { fg = "#61afef" }
+rest            = { fg = "#5c6773" }
+desc            = { fg = "#ff8d03" }
+separator       = "  "
+separator_style = { fg = "#2c3e50" }
+
+[confirm]
+border     = { fg = "#ff8d03" }
+title      = { fg = "#ffb454", bold = true }
+body       = {}
+list       = {}
+btn_yes    = { fg = "#0b1015", bg = "#98c379", bold = true }
+btn_no     = { fg = "#ffffff", bg = "#ef4444" }
+btn_labels = [ "  [Y]es  ", "  (N)o  " ]
+
+[help]
+border  = { fg = "#ff8d03" }
+chord   = { fg = "#ffb454", bold = true }
+action  = { fg = "#97a7c8" }
+hovered = { fg = "#0b1015", bg = "#ffb454", bold = true }
+
+[filetype]
+rules = [
+	{ mime = "image/*", fg = "#ffb454" },
+	{ mime = "{audio,video}/*", fg = "#7045af" },
+	{ mime = "application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}", fg = "#ef4444" },
+	{ mime = "application/{pdf,doc,rtf}", fg = "#61afef" },
+	{ url = "*/", fg = "#61afef" }
+]
+

@@ -1,0 +1,5 @@
+[opener]
+edit = [
+	{ run = "${EDITOR:-vi} %s", desc = "$EDITOR", for = "unix", block = true },
+	{ run = "if defined EDITOR ( %EDITOR% %s ) else ( nvim %s )", desc = "Editor", for = "windows", block = true },
+]

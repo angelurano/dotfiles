@@ -197,7 +197,17 @@ config.keys = {
 }
 
 local function is_nvim(pane)
-  return pane:get_user_vars().IS_NVIM == "true" or pane:get_foreground_process_name():find("n?vim")
+  if pane:get_user_vars().IS_NVIM == "true" then return true end
+  local proc = pane:get_foreground_process_name()
+  if proc and proc:lower():find("n?vim") then return true end
+
+  local info = pane:get_foreground_process_info()
+  while info do
+    if (info.name or ""):lower():find("n?vim") or (info.executable or ""):lower():find("n?vim") then return true end
+    if info.ppid == 0 or info.ppid == info.pid or not wezterm.procinfo then break end
+    info = wezterm.procinfo.get_info_for_pid(info.ppid)
+  end
+  return false
 end
 
 local function move_pane(direction, key)

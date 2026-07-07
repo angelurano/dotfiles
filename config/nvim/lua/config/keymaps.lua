@@ -79,10 +79,10 @@ local function resize(dir)
   end
 end
 
-vim.keymap.set({'n', 't'}, '<M-h>', resize('h'), { desc = 'Resize panel left' })
-vim.keymap.set({'n', 't'}, '<M-l>', resize('l'), { desc = 'Resize panel right' })
-vim.keymap.set({'n', 't'}, '<M-j>', resize('j'), { desc = 'Resize panel down' })
-vim.keymap.set({'n', 't'}, '<M-k>', resize('k'), { desc = 'Resize panel up' })
+vim.keymap.set({ 'n', 't' }, '<M-h>', resize('h'), { desc = 'Resize panel left' })
+vim.keymap.set({ 'n', 't' }, '<M-l>', resize('l'), { desc = 'Resize panel right' })
+vim.keymap.set({ 'n', 't' }, '<M-j>', resize('j'), { desc = 'Resize panel down' })
+vim.keymap.set({ 'n', 't' }, '<M-k>', resize('k'), { desc = 'Resize panel up' })
 
 vim.api.nvim_create_autocmd("User", {
   pattern = "VeryLazy",
@@ -121,7 +121,7 @@ vim.api.nvim_create_autocmd("User", {
     set_user_var("IS_NVIM", "true")
 
     for key, dir in pairs(nav) do
-      vim.keymap.set({"n", "t"}, "<C-" .. key .. ">", navigate(key), { desc = "Go to " .. dir .. " pane" })
+      vim.keymap.set({ "n", "t" }, "<C-" .. key .. ">", navigate(key), { desc = "Go to " .. dir .. " pane" })
     end
 
     -- Reset the IS_NVIM user variable in WezTerm on exit

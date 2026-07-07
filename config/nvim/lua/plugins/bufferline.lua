@@ -24,10 +24,10 @@ return {
         end,
         desc = "Smart Close Buffer",
       },
-      { "<leader>bo", "<cmd>BufferLineCloseOthers<cr>",  desc = "Close Other Buffers" },
+      { "<leader>bo", "<cmd>BufferLineCloseOthers<cr>", desc = "Close Other Buffers" },
 
-      { "<leader>br", "<cmd>BufferLineCloseRight<cr>",   desc = "Close Buffers to the Right" },
-      { "<leader>bl", "<cmd>BufferLineCloseLeft<cr>",    desc = "Close Buffers to the Left" },
+      { "<leader>br", "<cmd>BufferLineCloseRight<cr>",  desc = "Close Buffers to the Right" },
+      { "<leader>bl", "<cmd>BufferLineCloseLeft<cr>",   desc = "Close Buffers to the Left" },
     },
     opts = {
       options = {

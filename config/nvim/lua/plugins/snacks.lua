@@ -90,16 +90,21 @@ return {
       { "<C-S-e>",    function() Snacks.explorer() end,            desc = "File Explorer" },
 
       -- Git keymaps
-      { "<leader>gl", function() Snacks.picker.git_log() end,      desc = "Git Log" },
       { "<leader>gb", function() Snacks.picker.git_branches() end, desc = "Git Branches" },
       { "<leader>gB", function() Snacks.git.blame_line() end,      desc = "Git Blame Line" },
+      { "<leader>go", function() Snacks.gitbrowse() end,           desc = "Git Browse",      mode = { "n", "v" } },
+      { "<leader>gl", function() Snacks.picker.git_log() end,      desc = "Git Log" },
+      { "<leader>gL", function() Snacks.picker.git_log_line() end, desc = "Git Log Line" },
       { "<leader>gs", function() Snacks.picker.git_status() end,   desc = "Git Status" },
+      { "<leader>gS", function() Snacks.picker.git_stash() end,    desc = "Git Stash" },
       { "<leader>gd", function() Snacks.picker.git_diff() end,     desc = "Git Diff (Hunks)" },
-      { "<leader>go", function() Snacks.gitbrowse() end,           desc = "Open Git URL in Browser" },
 
       -- GitHub keymaps
       { "<leader>gp", function() Snacks.picker.gh_pr() end,        desc = "GitHub PRs" },
       { "<leader>gi", function() Snacks.picker.gh_issue() end,     desc = "GitHub Issues" },
+
+      -- Terminal
+      { "<leader>t",  function() Snacks.terminal() end,            desc = "Terminal" },
     },
     config = function(_, opts)
       require("snacks").setup(opts)

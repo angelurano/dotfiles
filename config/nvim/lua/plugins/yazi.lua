@@ -2,6 +2,9 @@ return {
   "mikavilpas/yazi.nvim",
   version = "*",
   event = "VeryLazy",
+  enabled = function()
+    return vim.fn.executable("yazi") == 1
+  end,
   dependencies = {
     { "nvim-lua/plenary.nvim", lazy = true },
   },

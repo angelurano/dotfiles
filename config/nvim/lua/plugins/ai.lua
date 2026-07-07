@@ -4,7 +4,7 @@ return {
     "zbirenbaum/copilot.lua",
     cmd = "Copilot",
     event = "InsertEnter",
-    cond = function()
+    enabled = function()
       return vim.fn.executable("node") == 1 or vim.fn.executable("bun") == 1
     end,
     opts = function()

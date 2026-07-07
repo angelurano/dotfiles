@@ -18,10 +18,24 @@ return {
     version = '*',
     opts = {
       keymap = {
-        preset = 'default',
+        preset = 'super-tab',
         ['<C-space>'] = { 'show', 'show_documentation', 'hide_documentation' },
       },
-      appearance = {}, -- Removed 'use_nerd_font' since it is enabled by default
+      completion = {
+        list = {
+          selection = {
+            preselect = true,
+            auto_insert = false,
+          },
+        },
+        documentation = {
+          auto_show = false, -- <C-leader> to show
+          window = {
+            max_width = 100,
+            max_height = 30,
+          },
+        },
+      },
       sources = {
         default = { 'lsp', 'path', 'snippets', 'buffer' },
       },
@@ -59,6 +73,7 @@ return {
               "--background-index",
               "--clang-tidy",
               "--header-insertion=never",
+              "--completion-style=detailed",
             },
           }, -- C / C++
           -- jdtls = {},  -- Java (Spring Boot)

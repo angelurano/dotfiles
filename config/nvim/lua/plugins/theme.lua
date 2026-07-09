@@ -24,6 +24,20 @@ return {
   {
     "sphamba/smear-cursor.nvim",
     event = "VeryLazy",
-    opts = {},
+    opts = {
+      hide_target_hack = false,
+      never_draw_over_target = true,
+      stiffness = 0.55,
+      trailing_stiffness = 0.22,
+      trailing_exponent = 3.0,
+      damping = 0.8,
+      max_length = 35,
+      cursor_color = "#ff8d03",
+      particles_enabled = false,
+      anticipation = 0,
+      transparent_bg_fallback_color = "#0b1015",
+      smear_between_buffers = true,
+      smear_between_neighbor_lines = true,
+    },
   }
 }

@@ -68,6 +68,9 @@ return {
 
       words = { enabled = true },
       scope = { enabled = true },
+      terminal = {
+        auto_insert = false,
+      },
 
       -- Smooth scroll animation (disabled for instant, lag-free movement)
       scroll = { enabled = false },

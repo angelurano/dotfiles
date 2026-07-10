@@ -305,3 +305,13 @@ hl("markdownCode", { fg = colors.class })
 hl("markdownCodeBlock", { fg = colors.variable, bg = colors.widget_bg })
 hl("markdownItalic", { fg = colors.support_var, italic = true })
 hl("markdownBold", { fg = colors.support_var, bold = true })
+
+-- Dropbar
+hl("DropBarIconUIIndicator", { fg = colors.comment })
+hl("DropBarIconUISeparator", { fg = colors.comment })
+hl("DropBarIconUISeparatorMenu", { fg = colors.comment })
+hl("DropBarMenuHoverEntry", { bg = colors.line_hl, fg = colors.accent })
+hl("DropBarMenuHoverIcon", { reverse = false, bg = colors.line_hl })
+hl("DropBarMenuHoverSymbol", { fg = colors.accent, bg = colors.line_hl, bold = false })
+hl("DropBarCurrentContext", { bg = colors.line_hl })
+hl("DropBarCurrentContextName", { fg = colors.accent, bg = colors.line_hl, bold = false })

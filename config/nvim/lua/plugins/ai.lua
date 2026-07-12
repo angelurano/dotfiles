@@ -51,4 +51,46 @@ return {
       })
     end,
   },
+  {
+    "folke/sidekick.nvim",
+    cmd = "Sidekick",
+    enabled = function()
+      return vim.fn.executable("node") == 1
+          or vim.fn.executable("bun") == 1
+          or vim.fn.executable("agy") == 1
+    end,
+    keys = {
+      { "<leader>aa", function() require("sidekick.cli").toggle() end, mode = { "n", "v" }, desc = "Toggle AI CLI" },
+      { "<leader>aj", function() require("sidekick.nes").jump() end,   mode = { "n" },      desc = "Jump to NES" },
+    },
+    opts = {
+      cli = {
+        win = {
+          split = {
+            width = 45, -- default 80
+          },
+          wo = {
+            scrolloff = 0,
+          },
+          config = function(terminal)
+            local orig_start = terminal.start
+            terminal.start = function(self)
+              orig_start(self)
+              pcall(vim.api.nvim_clear_autocmds, { event = "WinEnter", group = self.group })
+            end
+          end,
+        },
+        tools = {
+          antigravity = {},
+        },
+      },
+    },
+    config = function(_, opts)
+      require("sidekick").setup(opts)
+      -- Restrict sidekick to only antigravity
+      require("sidekick.config").cli.tools = {
+        antigravity = {}
+      }
+    end,
+  },
 }

@@ -1,7 +1,23 @@
 return {
   'Bekaboo/dropbar.nvim',
+  event = { 'BufReadPost', 'BufNewFile' },
   config = function()
     local dropbar_api = require('dropbar.api')
+
+    require('dropbar').setup({
+      bar = {
+        enable = function(buf, win, _)
+          buf = vim._resolve_bufnr(buf)
+          local excluded_filetypes = { 'terminal', 'sidekick_terminal', 'help', 'dashboard', 'NvimTree' }
+          if vim.tbl_contains(excluded_filetypes, vim.bo[buf].ft)
+              or vim.bo[buf].buftype == 'terminal'
+              or vim.fn.win_gettype(win) ~= "" then
+            return false
+          end
+          return true
+        end,
+      },
+    })
 
     -- Keymaps for dropbar navigation
     vim.keymap.set('n', '<leader>;', dropbar_api.pick, { desc = 'Pick symbols in winbar' })

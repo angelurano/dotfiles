@@ -139,3 +139,6 @@ vim.api.nvim_create_autocmd("User", {
 -- Delete word forward in insert mode
 vim.keymap.set('i', '<C-Delete>', '<C-o>dw', { desc = 'Delete word forward' })
 vim.keymap.set('i', '<C-Del>', '<C-o>dw', { desc = 'Delete word forward' })
+
+-- Enter normal mode in terminal buffers (e.g. Snacks.terminal) to copy/navigate text
+vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Enter Normal Mode' })

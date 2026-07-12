@@ -22,6 +22,7 @@
     # XDG compliance configurations
     WGETRC = "${config.xdg.configHome}/wgetrc";
     DOTNET_CLI_HOME = "${config.xdg.dataHome}/dotnet";
+    DOTNET_SYSTEM_GLOBALIZATION_INVARIANT = "1";
     NPM_CONFIG_USERCONFIG = "${config.xdg.configHome}/npm/npmrc";
     NPM_CONFIG_CACHE = "${config.xdg.cacheHome}/npm";
     NODE_REPL_HISTORY = "${config.xdg.stateHome}/node/node_repl_history";

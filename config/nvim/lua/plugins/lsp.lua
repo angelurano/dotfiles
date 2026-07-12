@@ -76,6 +76,11 @@ return {
               "--completion-style=detailed",
             },
           }, -- C / C++
+          marksman = {
+            env = {
+              DOTNET_SYSTEM_GLOBALIZATION_INVARIANT = "1",
+            },
+          }, -- Markdown LSP
           -- jdtls = {},  -- Java (Spring Boot)
         }
 

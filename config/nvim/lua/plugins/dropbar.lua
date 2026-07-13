@@ -8,8 +8,31 @@ return {
       bar = {
         enable = function(buf, win, _)
           buf = vim._resolve_bufnr(buf)
-          local excluded_filetypes = { 'terminal', 'sidekick_terminal', 'help', 'dashboard', 'NvimTree' }
-          if vim.tbl_contains(excluded_filetypes, vim.bo[buf].ft)
+          if not vim.api.nvim_buf_is_valid(buf) or not vim.api.nvim_win_is_valid(win) then
+            return false
+          end
+          local ft = vim.bo[buf].ft or ""
+          local name = vim.api.nvim_buf_get_name(buf) or ""
+          local excluded_filetypes = {
+            'terminal',
+            'sidekick_terminal',
+            'help',
+            'dashboard',
+            'NvimTree',
+            'DiffviewFiles',
+            'DiffviewFileHistory',
+            'diff',
+          }
+
+          local is_diff = false
+          pcall(function()
+            is_diff = vim.wo[win].diff
+          end)
+
+          if vim.tbl_contains(excluded_filetypes, ft)
+              or ft:match("^Diffview")
+              or name:match("^diffview://")
+              or is_diff
               or vim.bo[buf].buftype == 'terminal'
               or vim.fn.win_gettype(win) ~= "" then
             return false

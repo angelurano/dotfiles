@@ -70,6 +70,9 @@ return {
       scope = { enabled = true },
       terminal = {
         auto_insert = false,
+        win = {
+          relative = "win",
+        },
       },
 
       -- Smooth scroll animation (disabled for instant, lag-free movement)
@@ -111,6 +114,16 @@ return {
     },
     config = function(_, opts)
       require("snacks").setup(opts)
+
+      -- Prevent equalize from running when relative is "win" to avoid resizing sidebars/other columns
+      local win = require("snacks.win")
+      local orig_equalize = win.equalize
+      win.equalize = function(self)
+        if self.opts.relative == "win" then
+          return
+        end
+        return orig_equalize(self)
+      end
     end,
   }
 }

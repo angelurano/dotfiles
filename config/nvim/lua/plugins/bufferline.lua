@@ -39,7 +39,7 @@ return {
         separator_style = "thin",
         custom_filter = function(buf_number, _)
           local filetype = vim.bo[buf_number].filetype
-          if filetype == "snacks_picker_list" or filetype == "snacks_layout_box" or filetype == "neo-tree" then
+          if filetype == "snacks_picker_list" or filetype == "snacks_layout_box" or filetype == "neo-tree" or filetype == "sidekick_terminal" or filetype == "terminal" then
             return false
           end
           return true
@@ -49,6 +49,12 @@ return {
             filetype = "snacks_layout_box",
             text = "File Explorer",
             text_align = "left",
+            separator = true,
+          },
+          {
+            filetype = "sidekick_terminal",
+            text = "Sidekick",
+            text_align = "right",
             separator = true,
           },
         },

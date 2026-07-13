@@ -1,5 +1,4 @@
 return {
-  -- Copilot configuration with suggestion mode
   {
     "zbirenbaum/copilot.lua",
     cmd = "Copilot",
@@ -65,6 +64,7 @@ return {
     },
     opts = {
       cli = {
+        watch = false,
         win = {
           split = {
             width = 45, -- default 80
@@ -86,6 +86,10 @@ return {
       },
     },
     config = function(_, opts)
+      local session = require("sidekick.cli.session")
+      session.did_setup = true
+      session.register("terminal", require("sidekick.cli.terminal"))
+
       require("sidekick").setup(opts)
       -- Restrict sidekick to only antigravity
       require("sidekick.config").cli.tools = {

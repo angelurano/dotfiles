@@ -12,6 +12,7 @@ local colors = {
   fg = "#97a7c8",
   border = "#2c3e50",
   dark_bg = "#05080a",
+  visible_bg = "#0a0e13",
   sidebar_bg = "#080b0f",
   widget_bg = "#111820",
   active_selection = "#111820",
@@ -70,6 +71,8 @@ hl("PmenuSbar", { bg = colors.bg })
 hl("PmenuThumb", { bg = colors.border })
 hl("StatusLine", { fg = colors.fg, bg = colors.bg })
 hl("StatusLineNC", { fg = colors.comment, bg = colors.bg })
+hl("WinBar", { fg = colors.fg, bg = colors.visible_bg })
+hl("WinBarNC", { fg = colors.comment, bg = colors.visible_bg })
 hl("Search", { fg = colors.fg, bg = colors.find_match })
 hl("IncSearch", { fg = colors.bg, bg = colors.accent })
 hl("Visual", { bg = colors.selection })
@@ -273,14 +276,15 @@ hl("SnacksDashboardSpecial", { fg = colors.class })
 -- Bufferline
 hl("BufferLineFill", { bg = colors.dark_bg })
 hl("BufferLineBackground", { bg = colors.dark_bg, fg = colors.comment })
-hl("BufferLineBufferSelected", { bg = colors.bg, fg = colors.accent, bold = true })
-hl("BufferLineBufferVisible", { bg = colors.dark_bg, fg = colors.fg })
+hl("BufferLineBufferSelected", { bg = colors.visible_bg, fg = colors.accent, bold = true })
+hl("BufferLineBufferVisible", { bg = colors.visible_bg, fg = colors.fg })
 hl("BufferLineSeparator", { fg = colors.dark_bg, bg = colors.dark_bg })
-hl("BufferLineSeparatorSelected", { fg = colors.bg, bg = colors.bg })
-hl("BufferLineSeparatorVisible", { fg = colors.dark_bg, bg = colors.dark_bg })
-hl("BufferLineIndicatorSelected", { fg = colors.accent, bg = colors.bg })
+hl("BufferLineSeparatorSelected", { fg = colors.visible_bg, bg = colors.visible_bg })
+hl("BufferLineSeparatorVisible", { fg = colors.dark_bg, bg = colors.visible_bg })
+hl("BufferLineIndicatorSelected", { fg = colors.accent, bg = colors.visible_bg })
 hl("BufferLineModified", { fg = colors.modified, bg = colors.dark_bg })
-hl("BufferLineModifiedSelected", { fg = colors.modified, bg = colors.bg })
+hl("BufferLineModifiedSelected", { fg = colors.modified, bg = colors.visible_bg })
+hl("BufferLineModifiedVisible", { fg = colors.modified, bg = colors.visible_bg })
 
 -- Tree / Sidebar Highlights
 hl("NvimTreeFolderName", { fg = colors.func })

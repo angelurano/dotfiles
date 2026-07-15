@@ -3,11 +3,19 @@
     enable = true;
     bun = {
       enable = true;
-      # install.enable = true;
     };
   };
 
   enterShell = ''
-    echo "[bun] version: $(bun -v)"
+    if [[ $- == *i* ]]; then
+      echo "[bun] version: $(bun -v)"
+    fi
   '';
+
+  git-hooks = {
+    enable = true;
+    hooks.prettier = {
+      enable = true;
+    };
+  };
 }

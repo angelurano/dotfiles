@@ -2,24 +2,30 @@
   languages.c.enable = true;
   packages = [
     pkgs.compiledb
-    # pkgs.readline
-    # pkgs.libX11
-    # pkgs.libxext
-    # pkgs.libxrender
-    # pkgs.libbsd
-    # pkgs.libxfixes
   ];
 
   env.CC = "gcc";
   env.NIX_CFLAGS_COMPILE = "-Wno-unused-result -Wno-deprecated-non-prototype"; # -std=gnu17";
   env.CLANGD_FLAGS = "--query-driver=/nix/store/**/bin/*,/usr/bin/*";
-  # env.NIX_LDFLAGS = "";
 
   enterShell = ''
-    echo "[c] environment loaded (gcc: $(gcc --version | head -n1))"
+    if [[ $- == *i* ]]; then
+      echo "[c] environment loaded (gcc: $(gcc --version | head -n1))"
+      if [ -f Makefile ]; then
+        if [ ! -f compile_commands.json ] || [ Makefile -nt compile_commands.json ]; then
+          if ! pgrep -f "compiledb -n make" >/dev/null; then
+            (compiledb -n make -B >/dev/null 2>&1 &)
+          fi
+        fi
+      fi
+    fi
   '';
 
   # Run this script via 'devenv shell lsp-reload' (or 'lsp-reload' inside the shell) to generate compile_commands.json.
-  # This needs to be executed during the first setup, whenever source files are added/removed, or when compiler flags change.
   scripts.lsp-reload.exec = "compiledb -n make -B";
+
+  git-hooks = {
+    enable = true;
+    hooks.clang-format.enable = true;
+  };
 }

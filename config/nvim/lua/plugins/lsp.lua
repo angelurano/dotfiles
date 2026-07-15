@@ -77,6 +77,7 @@ return {
             "--clang-tidy",
             "--header-insertion=never",
             "--completion-style=detailed",
+            "--offset-encoding=utf-16",
           },
         }, -- C / C++
         marksman = {
@@ -224,9 +225,6 @@ return {
           vim.schedule(function()
             -- Re-trigger FileType to start LSP clients that weren't executable on startup
             vim.api.nvim_exec_autocmds("FileType", { buffer = 0 })
-            pcall(function()
-              vim.cmd("lsp restart")
-            end)
           end)
         end,
       })

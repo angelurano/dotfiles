@@ -38,6 +38,7 @@
     '')
 
     nil
+    nixfmt
   ];
 
   home.sessionVariables = {

@@ -320,3 +320,60 @@ vim.keymap.set('i', '<C-Del>', '<C-o>dw', { desc = 'Delete word forward' })
 
 -- Enter normal mode in terminal buffers (e.g. Snacks.terminal) to copy/navigate text
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Enter Normal Mode' })
+
+-- Copy visual selection to system clipboard, unwrapping line breaks (great for terminal wrapping)
+local function get_visual_selection()
+  local mode = vim.api.nvim_get_mode().mode
+  if mode == 'v' or mode == 'V' or mode == '\22' then
+    vim.cmd('normal! \27')
+  end
+  local start_line, start_col = unpack(vim.fn.getpos("'<"), 2, 3)
+  local end_line, end_col = unpack(vim.fn.getpos("'>"), 2, 3)
+  local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
+  if #lines == 0 then return {} end
+  if mode == 'v' then
+    if #lines == 1 then
+      lines[1] = string.sub(lines[1], start_col, end_col)
+    else
+      lines[1] = string.sub(lines[1], start_col)
+      lines[#lines] = string.sub(lines[#lines], 1, end_col)
+    end
+  end
+  return lines
+end
+
+vim.keymap.set('v', '<leader>y', function()
+  local lines = get_visual_selection()
+  if #lines == 0 then return end
+  local cleaned = {}
+  for _, line in ipairs(lines) do
+    local trimmed = line:gsub("^%s+", ""):gsub("%s+$", "")
+    if trimmed == "" then
+      table.insert(cleaned, "")
+    else
+      table.insert(cleaned, trimmed)
+    end
+  end
+  local result = ""
+  for i, line in ipairs(cleaned) do
+    if i == 1 then
+      result = line
+    else
+      local prev = cleaned[i - 1]
+      if line == "" or prev == "" then
+        result = result .. "\n" .. line
+      else
+        result = result .. " " .. line
+      end
+    end
+  end
+  vim.fn.setreg("+", result)
+  -- Trigger highlight on yank (runs TextYankPost autocmds)
+  pcall(vim.api.nvim_exec_autocmds, "TextYankPost", {
+    data = { regname = "+", regtype = "v" }
+  })
+  -- Print standard Neovim yank message in the cmdline
+  if #lines > 1 then
+    vim.api.nvim_echo({ { string.format("%d lines yanked", #lines), "Normal" } }, false, {})
+  end
+end, { desc = "Copy and unwrap visual selection to clipboard" })

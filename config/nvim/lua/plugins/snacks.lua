@@ -507,6 +507,18 @@ return {
         enabled = true,
         preset = {
           header = [[ ]],
+          keys = {
+            { icon = "󰋚 ", key = "y", desc = "Yazi File Manager", action = ":Yazi" },
+            { icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
+            { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
+            { icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
+            { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('recent')" },
+            { icon = " ", key = "c", desc = "Config", action = ":e $MYVIMRC" },
+            { icon = " ", key = "s", desc = "Restore Last Session", action = ":lua require('persistence').load()" },
+            { icon = "󰒲 ", key = "L", desc = "Lazy", action = ":Lazy" },
+            { icon = "󰚩 ", key = "p", desc = "Lazy Profile", action = ":Lazy profile" },
+            { icon = " ", key = "q", desc = "Quit", action = ":qa" },
+          },
         },
         sections = {
           { section = "startup" },
@@ -523,7 +535,7 @@ return {
       -- Git keymaps
       { "<leader>gb", function() Snacks.picker.git_branches() end, desc = "Git Branches" },
       { "<leader>gB", function() Snacks.git.blame_line() end,      desc = "Git Blame Line" },
-      { "<leader>go", function() Snacks.gitbrowse() end,           desc = "Git Browse",    mode = { "n", "v" } },
+      { "<leader>go", function() Snacks.gitbrowse() end,           desc = "Git Browse",      mode = { "n", "v" } },
       { "<leader>gl", function() Snacks.picker.git_log() end,      desc = "Git Log" },
       { "<leader>gL", function() Snacks.picker.git_log_line() end, desc = "Git Log Line" },
       { "<leader>gs", function() Snacks.picker.git_status() end,   desc = "Git Status" },

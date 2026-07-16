@@ -121,7 +121,7 @@ end
 
 -- Update matches for the current window and buffer
 function M.update_matches(force)
-  local win = vim.api.nvim_get_current_win()
+  -- local win = vim.api.nvim_get_current_win()
   local buf = vim.api.nvim_get_current_buf()
 
   -- Check if matches are already configured for this buffer in this window

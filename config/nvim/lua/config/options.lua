@@ -43,6 +43,7 @@ if not vim.g.vscode then
   vim.o.cursorline = true
   vim.o.splitright = true
   vim.o.splitbelow = true
+  vim.o.equalalways = false
   vim.o.updatetime = 300
   vim.o.mousemoveevent = true
 

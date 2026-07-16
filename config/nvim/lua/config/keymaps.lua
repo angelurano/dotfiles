@@ -37,41 +37,214 @@ vim.keymap.set('n', '<leader>w', '<cmd>w<CR>', { desc = 'Save file' })
 -- Change panel size dynamically with Alt+h/j/k/l (absolute-directional)
 local function resize(dir)
   return function()
-    if dir == "h" or dir == "l" then
-      local has_left = vim.fn.winnr('h') ~= vim.fn.winnr()
-      local has_right = vim.fn.winnr('l') ~= vim.fn.winnr()
+    local current_win = vim.api.nvim_get_current_win()
+    local current_winnr = vim.fn.winnr()
 
-      if has_left or has_right then
-        if dir == "h" then
-          if has_right then
-            vim.cmd("vertical resize -2")
-          else
-            vim.cmd("vertical resize +2")
-          end
+    -- Helper: lock all windows except the two involved, forcing them to winfixwidth/winfixheight = false
+    local function lock_all_except(w1, w2, prop)
+      local saved = {}
+      for _, w in ipairs(vim.api.nvim_list_wins()) do
+        saved[w] = vim.api.nvim_get_option_value(prop, { scope = "local", win = w })
+        if w ~= w1 and w ~= w2 then
+          vim.api.nvim_set_option_value(prop, true, { scope = "local", win = w })
         else
-          if has_right then
-            vim.cmd("vertical resize +2")
+          vim.api.nvim_set_option_value(prop, false, { scope = "local", win = w })
+        end
+      end
+      return saved
+    end
+
+    local function restore_all(saved, prop)
+      for w, orig in pairs(saved) do
+        if vim.api.nvim_win_is_valid(w) then
+          vim.api.nvim_set_option_value(prop, orig, { scope = "local", win = w })
+        end
+      end
+    end
+
+    if dir == "h" or dir == "l" or dir == "S-h" or dir == "S-l" then
+      local left_winnr = vim.fn.winnr('h')
+      local right_winnr = vim.fn.winnr('l')
+      local has_left = left_winnr ~= current_winnr
+      local has_right = right_winnr ~= current_winnr
+
+      local left_win = has_left and vim.fn.win_getid(left_winnr) or nil
+      local right_win = has_right and vim.fn.win_getid(right_winnr) or nil
+
+      -- 1. Decide which boundary window to target
+      local target_win = nil
+      local is_left_boundary = false
+
+      if dir == "h" or dir == "S-l" then
+        if left_win and vim.api.nvim_win_is_valid(left_win) then
+          target_win = left_win
+          is_left_boundary = true
+        elseif right_win and vim.api.nvim_win_is_valid(right_win) then
+          target_win = right_win
+          is_left_boundary = false
+        end
+      elseif dir == "l" or dir == "S-h" then
+        if right_win and vim.api.nvim_win_is_valid(right_win) then
+          target_win = right_win
+          is_left_boundary = false
+        elseif left_win and vim.api.nvim_win_is_valid(left_win) then
+          target_win = left_win
+          is_left_boundary = true
+        end
+      end
+
+      -- 2. Apply absolute directional resize
+      if target_win then
+        local is_left_dir = (dir == "h" or dir == "S-h")
+        local should_shrink = (is_left_dir == is_left_boundary)
+
+        -- Save all widths before attempting lock-all
+        local all_widths = {}
+        for _, w in ipairs(vim.api.nvim_list_wins()) do
+          all_widths[w] = vim.api.nvim_win_get_width(w)
+        end
+
+        local before_cw = all_widths[current_win]
+        local saved = lock_all_except(current_win, target_win, "winfixwidth")
+
+        local tw = vim.api.nvim_win_get_width(target_win)
+        if should_shrink then
+          vim.api.nvim_win_set_width(target_win, math.max(1, tw - 2))
+        else
+          vim.api.nvim_win_set_width(target_win, tw + 2)
+        end
+
+        restore_all(saved, "winfixwidth")
+
+        -- If lock-all failed (current_win didn't change), undo damage and retry directly
+        local after_cw = vim.api.nvim_win_get_width(current_win)
+        if after_cw == before_cw then
+          -- Restore all widths to undo collateral damage from failed lock-all
+          for w, width in pairs(all_widths) do
+            if vim.api.nvim_win_is_valid(w) then
+              pcall(vim.api.nvim_win_set_width, w, width)
+            end
+          end
+          -- Retry: directly resize current_win (Neovim distributes proportionally)
+          if should_shrink then
+            vim.api.nvim_win_set_width(current_win, before_cw + 2)
           else
-            vim.cmd("vertical resize -2")
+            vim.api.nvim_win_set_width(current_win, math.max(1, before_cw - 2))
           end
         end
       end
-    elseif dir == "j" or dir == "k" then
-      local has_up = vim.fn.winnr('k') ~= vim.fn.winnr()
-      local has_down = vim.fn.winnr('j') ~= vim.fn.winnr()
+    elseif dir == "j" or dir == "k" or dir == "S-j" or dir == "S-k" then
+      local up_winnr = vim.fn.winnr('k')
+      local down_winnr = vim.fn.winnr('j')
+      local has_up = up_winnr ~= current_winnr
+      local has_down = down_winnr ~= current_winnr
 
-      if has_up or has_down then
-        if dir == "k" then
-          if has_down then
-            vim.cmd("resize -2")
+      local up_win = has_up and vim.fn.win_getid(up_winnr) or nil
+      local down_win = has_down and vim.fn.win_getid(down_winnr) or nil
+
+      local function is_term(win)
+        if not win or not vim.api.nvim_win_is_valid(win) then return false end
+        local buf = vim.api.nvim_win_get_buf(win)
+        local ft = vim.bo[buf].filetype
+        local bt = vim.bo[buf].buftype
+        return ft == "terminal" or bt == "terminal"
+      end
+
+      if is_term(current_win) then
+        local target_vwin = up_win or down_win
+        if target_vwin then
+          local all_heights = {}
+          for _, w in ipairs(vim.api.nvim_list_wins()) do
+            all_heights[w] = vim.api.nvim_win_get_height(w)
+          end
+          local before_ch = all_heights[current_win]
+          local saved = lock_all_except(current_win, target_vwin, "winfixheight")
+
+          local h = vim.api.nvim_win_get_height(current_win)
+          if dir == "k" then
+            vim.api.nvim_win_set_height(current_win, h + 1)
           else
-            vim.cmd("resize +2")
+            vim.api.nvim_win_set_height(current_win, math.max(1, h - 1))
+          end
+
+          restore_all(saved, "winfixheight")
+
+          local after_ch = vim.api.nvim_win_get_height(current_win)
+          if after_ch == before_ch then
+            for w, height in pairs(all_heights) do
+              if vim.api.nvim_win_is_valid(w) then
+                pcall(vim.api.nvim_win_set_height, w, height)
+              end
+            end
+            if dir == "k" then
+              vim.api.nvim_win_set_height(current_win, before_ch + 1)
+            else
+              vim.api.nvim_win_set_height(current_win, math.max(1, before_ch - 1))
+            end
           end
         else
-          if has_down then
-            vim.cmd("resize +2")
+          local h = vim.api.nvim_win_get_height(current_win)
+          if dir == "k" then
+            vim.api.nvim_win_set_height(current_win, h + 1)
           else
-            vim.cmd("resize -2")
+            vim.api.nvim_win_set_height(current_win, math.max(1, h - 1))
+          end
+        end
+      else
+        -- Focused in code window.
+        local target_win = nil
+        local is_top_boundary = false
+
+        if dir == "k" or dir == "S-j" then
+          if up_win and vim.api.nvim_win_is_valid(up_win) then
+            target_win = up_win
+            is_top_boundary = true
+          elseif down_win and vim.api.nvim_win_is_valid(down_win) then
+            target_win = down_win
+            is_top_boundary = false
+          end
+        elseif dir == "j" or dir == "S-k" then
+          if down_win and vim.api.nvim_win_is_valid(down_win) then
+            target_win = down_win
+            is_top_boundary = false
+          elseif up_win and vim.api.nvim_win_is_valid(up_win) then
+            target_win = up_win
+            is_top_boundary = true
+          end
+        end
+
+        if target_win then
+          local is_up_dir = (dir == "k" or dir == "S-k")
+          local should_shrink = (is_up_dir == is_top_boundary)
+
+          local all_heights = {}
+          for _, w in ipairs(vim.api.nvim_list_wins()) do
+            all_heights[w] = vim.api.nvim_win_get_height(w)
+          end
+          local before_ch = all_heights[current_win]
+          local saved = lock_all_except(current_win, target_win, "winfixheight")
+
+          local h = vim.api.nvim_win_get_height(target_win)
+          if should_shrink then
+            vim.api.nvim_win_set_height(target_win, math.max(1, h - 1))
+          else
+            vim.api.nvim_win_set_height(target_win, h + 1)
+          end
+
+          restore_all(saved, "winfixheight")
+
+          local after_ch = vim.api.nvim_win_get_height(current_win)
+          if after_ch == before_ch then
+            for w, height in pairs(all_heights) do
+              if vim.api.nvim_win_is_valid(w) then
+                pcall(vim.api.nvim_win_set_height, w, height)
+              end
+            end
+            if should_shrink then
+              vim.api.nvim_win_set_height(current_win, before_ch + 2)
+            else
+              vim.api.nvim_win_set_height(current_win, math.max(1, before_ch - 2))
+            end
           end
         end
       end
@@ -79,10 +252,15 @@ local function resize(dir)
   end
 end
 
-vim.keymap.set({ 'n', 't' }, '<M-h>', resize('h'), { desc = 'Resize panel left' })
-vim.keymap.set({ 'n', 't' }, '<M-l>', resize('l'), { desc = 'Resize panel right' })
-vim.keymap.set({ 'n', 't' }, '<M-j>', resize('j'), { desc = 'Resize panel down' })
-vim.keymap.set({ 'n', 't' }, '<M-k>', resize('k'), { desc = 'Resize panel up' })
+vim.keymap.set({ 'n', 't' }, '<M-h>', resize('h'), { desc = 'Resize panel left (grow)' })
+vim.keymap.set({ 'n', 't' }, '<M-l>', resize('l'), { desc = 'Resize panel right (grow)' })
+vim.keymap.set({ 'n', 't' }, '<M-j>', resize('j'), { desc = 'Resize panel down (grow)' })
+vim.keymap.set({ 'n', 't' }, '<M-k>', resize('k'), { desc = 'Resize panel up (grow)' })
+
+vim.keymap.set({ 'n', 't' }, '<M-S-h>', resize('S-h'), { desc = 'Resize panel shrink from left' })
+vim.keymap.set({ 'n', 't' }, '<M-S-l>', resize('S-l'), { desc = 'Resize panel shrink from right' })
+vim.keymap.set({ 'n', 't' }, '<M-S-j>', resize('S-j'), { desc = 'Resize panel shrink from bottom' })
+vim.keymap.set({ 'n', 't' }, '<M-S-k>', resize('S-k'), { desc = 'Resize panel shrink from top' })
 
 vim.api.nvim_create_autocmd("User", {
   pattern = "VeryLazy",

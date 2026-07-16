@@ -11,7 +11,7 @@ return {
           if not vim.api.nvim_buf_is_valid(buf) or not vim.api.nvim_win_is_valid(win) then
             return false
           end
-          local ft = vim.bo[buf].ft or ""
+          local ft = vim.bo[buf].filetype or ""
           local name = vim.api.nvim_buf_get_name(buf) or ""
           local excluded_filetypes = {
             'terminal',
@@ -32,8 +32,10 @@ return {
           if vim.tbl_contains(excluded_filetypes, ft)
               or ft:match("^Diffview")
               or name:match("^diffview://")
+              or name:match("^term://")
               or is_diff
               or vim.bo[buf].buftype == 'terminal'
+              or vim.w[win].is_terminal_win
               or vim.fn.win_gettype(win) ~= "" then
             return false
           end

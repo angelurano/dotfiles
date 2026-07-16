@@ -20,8 +20,11 @@
     eza
     bat
     wget
+    xh
+
     direnv
     devenv
+    hyperfine
 
     yazi
     wsl-open
@@ -32,6 +35,7 @@
     oh-my-zsh
 
     nodejs_22
+    python3
 
     (writeShellScriptBin "xdg-open" ''
       exec wsl-open "$@"
@@ -44,6 +48,22 @@
   home.sessionVariables = {
     BROWSER = "brave";
   };
+
+  home.file.".ignore".text = ''
+    .conda/
+    .mamba/
+    micromamba/
+    env/
+    venv/
+
+    .direnv/
+
+    .devenv/
+    .direnv/devenv-profile*
+    nix/
+    .nix-mix/
+    .nix-profile/
+  '';
 
   programs.home-manager.enable = true;
 }

@@ -58,6 +58,6 @@
   };
 
   home.activation.ensureVimStateDirs = lib.mkAfter ''
-    mkdir -p "${config.xdg.stateHome}/vim"/{swap,undo,backup}
+    run mkdir -p "${config.xdg.stateHome}/vim"/{swap,undo,backup}
   '';
 }

@@ -13,6 +13,7 @@
     ll = "ls -lAh";
     man = "BAT_THEME='Monokai Extended' batman";
     cat = "bat";
+    tree = "eza --tree --icons --git --group-directories-first";
     xdg-open = "wsl-open";
   };
 
@@ -23,15 +24,21 @@
     WGETRC = "${config.xdg.configHome}/wgetrc";
     DOTNET_CLI_HOME = "${config.xdg.dataHome}/dotnet";
     DOTNET_SYSTEM_GLOBALIZATION_INVARIANT = "1";
-    NPM_CONFIG_USERCONFIG = "${config.xdg.configHome}/npm/npmrc";
-    NPM_CONFIG_CACHE = "${config.xdg.cacheHome}/npm";
-    NODE_REPL_HISTORY = "${config.xdg.stateHome}/node/node_repl_history";
     PYTHONSTARTUP = "${config.xdg.configHome}/python/pythonstartup";
     PYTHON_HISTORY = "${config.xdg.stateHome}/python/history";
     PYTHONPYCACHEPREFIX = "${config.xdg.cacheHome}/python";
     PYTHONUSERBASE = "${config.xdg.dataHome}/python";
     BUN_INSTALL = "${config.xdg.dataHome}/bun";
     INPUTRC = "${config.xdg.configHome}/readline/inputrc";
+    DOCKER_CONFIG = "${config.xdg.configHome}/docker";
+    LESSHISTFILE = "${config.xdg.stateHome}/less/history";
+    SQLITE_HISTORY = "${config.xdg.stateHome}/sqlite_history";
+    CARGO_HOME = "${config.xdg.dataHome}/cargo";
+    RUSTUP_HOME = "${config.xdg.dataHome}/rustup";
+    GOPATH = "${config.xdg.dataHome}/go";
+    GOMODCACHE = "${config.xdg.cacheHome}/go/pkg/mod";
+    AWS_SHARED_CREDENTIALS_FILE = "${config.xdg.configHome}/aws/credentials";
+    AWS_CONFIG_FILE = "${config.xdg.configHome}/aws/config";
   };
 
   programs.direnv = {
@@ -87,6 +94,14 @@
     enable = true;
     enableBashIntegration = true;
     enableZshIntegration = true;
+  };
+
+  programs.btop = {
+    enable = true;
+    settings = {
+      theme_background = false;
+      update_ms = 2000;
+    };
   };
 
   xdg.configFile."yazi" = {
@@ -153,7 +168,13 @@
   };
 
   home.activation.ensureXdgDirs = lib.mkAfter ''
-    mkdir -p "${config.xdg.stateHome}" "${config.xdg.cacheHome}" "${config.xdg.dataHome}" "${config.xdg.stateHome}/bash"
+    run mkdir -p "${config.xdg.stateHome}/bash" \
+                 "${config.xdg.stateHome}/zsh" \
+                 "${config.xdg.stateHome}/python" \
+                 "${config.xdg.stateHome}/node" \
+                 "${config.xdg.stateHome}/less"
+    run mkdir -p "${config.xdg.cacheHome}/npm"
+    run mkdir -p "${config.xdg.dataHome}/npm/bin"
   '';
 
   xdg.configFile."wgetrc".text = ''
@@ -161,17 +182,19 @@
   '';
 
   xdg.configFile."python/pythonstartup".text = ''
-    import atexit
-    import os
-    import readline
+    import sys
+    if sys.version_info < (3, 13):
+        import atexit
+        import os
+        import readline
 
-    history = os.path.join(os.environ.get("XDG_STATE_HOME", os.path.expanduser("~/.local/state")), "python/history")
-    try:
-        os.makedirs(os.path.dirname(history), exist_ok=True)
-        readline.read_history_file(history)
-    except OSError:
-        pass
+        history = os.path.join(os.environ.get("XDG_STATE_HOME", os.path.expanduser("~/.local/state")), "python/history")
+        try:
+            os.makedirs(os.path.dirname(history), exist_ok=True)
+            readline.read_history_file(history)
+        except OSError:
+            pass
 
-    atexit.register(readline.write_history_file, history)
+        atexit.register(readline.write_history_file, history)
   '';
 }

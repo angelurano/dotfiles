@@ -53,4 +53,5 @@ if not vim.g.vscode then
 
   -- vim.o.list = true
   -- vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+  vim.opt.guicursor:append("t:ver25")
 end

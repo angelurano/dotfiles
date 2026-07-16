@@ -14,6 +14,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
   };
 
@@ -23,6 +28,7 @@
       nixpkgs,
       home-manager,
       antigravity-nix,
+      nix-index-database,
       ...
     }:
     let
@@ -33,6 +39,8 @@
         inherit pkgs;
 
         modules = [
+          nix-index-database.homeModules.nix-index
+
           ./home/home.nix
           {
             home.username = "angeldeb";

@@ -34,8 +34,8 @@
     oh-my-posh
     oh-my-zsh
 
-    nodejs_22
-    python3
+    nodejs_24
+    python314
 
     (writeShellScriptBin "xdg-open" ''
       exec wsl-open "$@"
@@ -66,4 +66,12 @@
   '';
 
   programs.home-manager.enable = true;
+
+  programs.nix-index = {
+    enable = true;
+    enableBashIntegration = true;
+    enableZshIntegration = true;
+  };
+
+  programs.nix-index-database.comma.enable = true;
 }

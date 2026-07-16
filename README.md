@@ -68,6 +68,11 @@ Traditional CLI tools are replaced with modern, fast, and feature-rich alternati
 | `cd` | **`zoxide`** | Smart directory jump tool (`z`) that learns directory navigation habits. |
 | `find` | **`fd`** | Simple, fast, and user-friendly alternative to `find`. |
 | - | **`fzf` / `PSFzf`** | Command-line fuzzy finder for files, history, and completions. |
+| `ranger` | **`yazi`** | Modern, blazing-fast terminal file manager with image previews. |
+| `top` | **`btop`** | Beautiful and interactive terminal resource monitor. |
+| `curl` | **`xh`** | Friendly and fast tool for sending HTTP requests. |
+| `neofetch`| **`fastfetch`** | Ultra-fast system information reporting utility. |
+| `nix shell`| **`,` (comma)** | Run any command from nixpkgs on the fly without installing it globally (via `nix-index`). |
 
 ## Nix Flake Templates (Devenv)
 
@@ -181,15 +186,7 @@ graph TD
 
 ## XDG Base Directory Compliance
 
-This repository enforces **XDG compliance** globally in [home/shell.nix](home/shell.nix) to prevent tool clutter in the home directory:
-
-*   **NPM**: Configuration moved to `~/.config/npm/npmrc` and cache to `~/.cache/npm/`.
-*   **Node.js**: Interactive REPL history redirected to `~/.local/state/node/node_repl_history`.
-*   **Python**:
-    *   Cache moved to `~/.cache/python/`.
-    *   User base packages moved to `~/.local/share/python/`.
-    *   Interactive shell history redirected to `~/.local/state/python/history` (native on Python 3.13+, and compatible via `pythonstartup` on older versions).
-*   **Readline**: `.inputrc` configurations redirected to `~/.config/readline/inputrc`.
+This repository enforces **XDG compliance** globally in [home/shell.nix](home/shell.nix) to redirect caches, configuration files, and histories (e.g., for Python, NPM, Cargo, Go, Docker) out of the root of the home directory, keeping it clean and clutter-free.
 
 _See [XDG Base Directory - ArchWiki](https://wiki.archlinux.org/title/XDG_Base_Directory)._
 

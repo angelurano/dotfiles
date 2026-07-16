@@ -30,15 +30,12 @@
     PYTHONUSERBASE = "${config.xdg.dataHome}/python";
     BUN_INSTALL = "${config.xdg.dataHome}/bun";
     INPUTRC = "${config.xdg.configHome}/readline/inputrc";
-    DOCKER_CONFIG = "${config.xdg.configHome}/docker";
     LESSHISTFILE = "${config.xdg.stateHome}/less/history";
     SQLITE_HISTORY = "${config.xdg.stateHome}/sqlite_history";
     CARGO_HOME = "${config.xdg.dataHome}/cargo";
     RUSTUP_HOME = "${config.xdg.dataHome}/rustup";
     GOPATH = "${config.xdg.dataHome}/go";
     GOMODCACHE = "${config.xdg.cacheHome}/go/pkg/mod";
-    AWS_SHARED_CREDENTIALS_FILE = "${config.xdg.configHome}/aws/credentials";
-    AWS_CONFIG_FILE = "${config.xdg.configHome}/aws/config";
   };
 
   programs.direnv = {

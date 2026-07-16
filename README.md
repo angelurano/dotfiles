@@ -186,7 +186,7 @@ graph TD
 
 ## XDG Base Directory Compliance
 
-This repository enforces **XDG compliance** globally in [home/shell.nix](home/shell.nix) to redirect caches, configuration files, and histories (e.g., for Python, NPM, Cargo, Go, Docker) out of the root of the home directory, keeping it clean and clutter-free.
+This repository enforces **XDG compliance** globally in [home/shell.nix](home/shell.nix) to redirect caches, configuration files, and histories (e.g., for Python, NPM, Cargo, Go) out of the root of the home directory, keeping it clean and clutter-free.
 
 _See [XDG Base Directory - ArchWiki](https://wiki.archlinux.org/title/XDG_Base_Directory)._
 

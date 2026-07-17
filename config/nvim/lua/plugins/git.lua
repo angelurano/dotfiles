@@ -2,6 +2,16 @@ return {
   {
     'lewis6991/gitsigns.nvim',
     event = { "BufReadPre", "BufNewFile" },
+    config = function(_, opts)
+      require('gitsigns').setup(opts)
+      local function set_blame_hl()
+        vim.api.nvim_set_hl(0, 'GitSignsCurrentLineBlame', { fg = '#5c6773', italic = true })
+      end
+      set_blame_hl()
+      vim.api.nvim_create_autocmd('ColorScheme', {
+        callback = set_blame_hl,
+      })
+    end,
     opts = {
       signcolumn = true,
       current_line_blame = true,

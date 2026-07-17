@@ -16,6 +16,15 @@ vim.api.nvim_create_autocmd('CursorHold', {
     if bt == "terminal" or ft == "terminal" or ft == "sidekick" or ft == "sidekick_terminal" then
       return
     end
+
+    -- Skip if any floating window is already open (e.g. hover documentation)
+    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+      local config = vim.api.nvim_win_get_config(win)
+      if config.relative ~= "" then
+        return
+      end
+    end
+
     pcall(vim.diagnostic.open_float, nil, { focusable = false })
   end,
 })

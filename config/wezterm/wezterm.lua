@@ -4,7 +4,7 @@ local config = wezterm.config_builder()
 -- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::: appearance
 
 config.font = wezterm.font("Inconsolata Nerd Font Mono")
-config.font_size = 16
+config.font_size = 14
 
 config.color_scheme = "Apple System Colors"
 -- config.color_scheme = 'Flatland'
@@ -24,10 +24,10 @@ config.initial_rows = 28
 
 config.window_decorations = "RESIZE"
 config.window_padding = {
-  top = 10,
-  right = 0,
+  top = 5,
+  right = 1,
   bottom = 0,
-  left = 0,
+  left = 1,
 }
 
 config.use_fancy_tab_bar = false

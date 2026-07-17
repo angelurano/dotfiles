@@ -55,7 +55,18 @@ return {
         sections = {
           lualine_a = { { 'mode', right_padding = 2 } },
           lualine_b = { 'branch', 'diff', 'diagnostics' },
-          lualine_c = { { 'filename', path = 1 } },
+          lualine_c = {
+            {
+              'filename',
+              path = 1,
+              symbols = {
+                modified = ' ●',
+                readonly = ' 󰌾',
+                unnamed = '[No Name]',
+                newfile = '[New]',
+              }
+            }
+          },
           lualine_x = { 'filetype' },
           lualine_y = { 'location' },
           lualine_z = {}

@@ -62,7 +62,56 @@ local function resize(dir)
       end
     end
 
+    local function is_term(win)
+      if not win or not vim.api.nvim_win_is_valid(win) then return false end
+      local buf = vim.api.nvim_win_get_buf(win)
+      local ft = vim.bo[buf].filetype
+      local bt = vim.bo[buf].buftype
+      return ft == "terminal" or bt == "terminal"
+    end
+
+    -- Reusable save-lock-resize-restore-fallback logic
+    local function perform_locked_resize(prop, current, target, step, should_shrink)
+      local is_width = (prop == "winfixwidth")
+      local get_size = is_width and vim.api.nvim_win_get_width or vim.api.nvim_win_get_height
+      local set_size = is_width and vim.api.nvim_win_set_width or vim.api.nvim_win_set_height
+
+      -- Save all sizes before attempting lock-all
+      local all_sizes = {}
+      for _, w in ipairs(vim.api.nvim_list_wins()) do
+        all_sizes[w] = get_size(w)
+      end
+
+      local before_cur = all_sizes[current]
+      local saved = lock_all_except(current, target, prop)
+
+      local target_size = get_size(target)
+      if should_shrink then
+        set_size(target, math.max(1, target_size - step))
+      else
+        set_size(target, target_size + step)
+      end
+
+      restore_all(saved, prop)
+
+      -- If lock-all failed (current size didn't change), restore and resize current directly
+      local after_cur = get_size(current)
+      if after_cur == before_cur then
+        for w, sz in pairs(all_sizes) do
+          if vim.api.nvim_win_is_valid(w) then
+            pcall(set_size, w, sz)
+          end
+        end
+        if should_shrink then
+          set_size(current, before_cur + step)
+        else
+          set_size(current, math.max(1, before_cur - step))
+        end
+      end
+    end
+
     if dir == "h" or dir == "l" or dir == "S-h" or dir == "S-l" then
+      local step = is_term(current_win) and 1 or 2
       local left_winnr = vim.fn.winnr('h')
       local right_winnr = vim.fn.winnr('l')
       local has_left = left_winnr ~= current_winnr
@@ -97,43 +146,10 @@ local function resize(dir)
       if target_win then
         local is_left_dir = (dir == "h" or dir == "S-h")
         local should_shrink = (is_left_dir == is_left_boundary)
-
-        -- Save all widths before attempting lock-all
-        local all_widths = {}
-        for _, w in ipairs(vim.api.nvim_list_wins()) do
-          all_widths[w] = vim.api.nvim_win_get_width(w)
-        end
-
-        local before_cw = all_widths[current_win]
-        local saved = lock_all_except(current_win, target_win, "winfixwidth")
-
-        local tw = vim.api.nvim_win_get_width(target_win)
-        if should_shrink then
-          vim.api.nvim_win_set_width(target_win, math.max(1, tw - 2))
-        else
-          vim.api.nvim_win_set_width(target_win, tw + 2)
-        end
-
-        restore_all(saved, "winfixwidth")
-
-        -- If lock-all failed (current_win didn't change), undo damage and retry directly
-        local after_cw = vim.api.nvim_win_get_width(current_win)
-        if after_cw == before_cw then
-          -- Restore all widths to undo collateral damage from failed lock-all
-          for w, width in pairs(all_widths) do
-            if vim.api.nvim_win_is_valid(w) then
-              pcall(vim.api.nvim_win_set_width, w, width)
-            end
-          end
-          -- Retry: directly resize current_win (Neovim distributes proportionally)
-          if should_shrink then
-            vim.api.nvim_win_set_width(current_win, before_cw + 2)
-          else
-            vim.api.nvim_win_set_width(current_win, math.max(1, before_cw - 2))
-          end
-        end
+        perform_locked_resize("winfixwidth", current_win, target_win, step, should_shrink)
       end
     elseif dir == "j" or dir == "k" or dir == "S-j" or dir == "S-k" then
+      local step = 1
       local up_winnr = vim.fn.winnr('k')
       local down_winnr = vim.fn.winnr('j')
       local has_up = up_winnr ~= current_winnr
@@ -142,52 +158,17 @@ local function resize(dir)
       local up_win = has_up and vim.fn.win_getid(up_winnr) or nil
       local down_win = has_down and vim.fn.win_getid(down_winnr) or nil
 
-      local function is_term(win)
-        if not win or not vim.api.nvim_win_is_valid(win) then return false end
-        local buf = vim.api.nvim_win_get_buf(win)
-        local ft = vim.bo[buf].filetype
-        local bt = vim.bo[buf].buftype
-        return ft == "terminal" or bt == "terminal"
-      end
-
       if is_term(current_win) then
         local target_vwin = up_win or down_win
         if target_vwin then
-          local all_heights = {}
-          for _, w in ipairs(vim.api.nvim_list_wins()) do
-            all_heights[w] = vim.api.nvim_win_get_height(w)
-          end
-          local before_ch = all_heights[current_win]
-          local saved = lock_all_except(current_win, target_vwin, "winfixheight")
-
-          local h = vim.api.nvim_win_get_height(current_win)
-          if dir == "k" then
-            vim.api.nvim_win_set_height(current_win, h + 1)
-          else
-            vim.api.nvim_win_set_height(current_win, math.max(1, h - 1))
-          end
-
-          restore_all(saved, "winfixheight")
-
-          local after_ch = vim.api.nvim_win_get_height(current_win)
-          if after_ch == before_ch then
-            for w, height in pairs(all_heights) do
-              if vim.api.nvim_win_is_valid(w) then
-                pcall(vim.api.nvim_win_set_height, w, height)
-              end
-            end
-            if dir == "k" then
-              vim.api.nvim_win_set_height(current_win, before_ch + 1)
-            else
-              vim.api.nvim_win_set_height(current_win, math.max(1, before_ch - 1))
-            end
-          end
+          local should_shrink = (dir == "j" or dir == "S-j")
+          perform_locked_resize("winfixheight", target_vwin, current_win, step, should_shrink)
         else
           local h = vim.api.nvim_win_get_height(current_win)
           if dir == "k" then
-            vim.api.nvim_win_set_height(current_win, h + 1)
+            vim.api.nvim_win_set_height(current_win, h + step)
           else
-            vim.api.nvim_win_set_height(current_win, math.max(1, h - 1))
+            vim.api.nvim_win_set_height(current_win, math.max(1, h - step))
           end
         end
       else
@@ -216,36 +197,7 @@ local function resize(dir)
         if target_win then
           local is_up_dir = (dir == "k" or dir == "S-k")
           local should_shrink = (is_up_dir == is_top_boundary)
-
-          local all_heights = {}
-          for _, w in ipairs(vim.api.nvim_list_wins()) do
-            all_heights[w] = vim.api.nvim_win_get_height(w)
-          end
-          local before_ch = all_heights[current_win]
-          local saved = lock_all_except(current_win, target_win, "winfixheight")
-
-          local h = vim.api.nvim_win_get_height(target_win)
-          if should_shrink then
-            vim.api.nvim_win_set_height(target_win, math.max(1, h - 1))
-          else
-            vim.api.nvim_win_set_height(target_win, h + 1)
-          end
-
-          restore_all(saved, "winfixheight")
-
-          local after_ch = vim.api.nvim_win_get_height(current_win)
-          if after_ch == before_ch then
-            for w, height in pairs(all_heights) do
-              if vim.api.nvim_win_is_valid(w) then
-                pcall(vim.api.nvim_win_set_height, w, height)
-              end
-            end
-            if should_shrink then
-              vim.api.nvim_win_set_height(current_win, before_ch + 2)
-            else
-              vim.api.nvim_win_set_height(current_win, math.max(1, before_ch - 2))
-            end
-          end
+          perform_locked_resize("winfixheight", current_win, target_win, step, should_shrink)
         end
       end
     end

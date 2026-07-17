@@ -60,7 +60,9 @@ return {
     end,
     keys = {
       { "<leader>aa", function() require("sidekick.cli").toggle() end, mode = { "n", "v" }, desc = "Toggle AI CLI" },
-      { "<leader>aj", function() require("sidekick.nes").jump() end,   mode = { "n" },      desc = "Jump to NES" },
+      { "<leader>aj", function() require("sidekick.nes").jump() end,   mode = { "n" },      desc = "Jump to Next AI Suggestion" },
+      { "<leader>ay", function() require("sidekick.nes").apply() end,  mode = { "n" },      desc = "Accept (Apply) AI Suggestion" },
+      { "<leader>an", function() require("sidekick.nes").cancel() end, mode = { "n" },      desc = "Reject (Cancel) AI Suggestion" },
     },
     opts = {
       cli = {

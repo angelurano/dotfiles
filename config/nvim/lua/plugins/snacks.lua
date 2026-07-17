@@ -2,6 +2,23 @@ local terminals = {} -- stores terminal_id -> buffer_id
 local last_term_height = nil
 local last_win_layout = nil
 
+local function get_terminal_wins()
+  local term_wins = {}
+  for _, w in ipairs(vim.api.nvim_list_wins()) do
+    if vim.api.nvim_win_is_valid(w) then
+      local b = vim.api.nvim_win_get_buf(w)
+      if vim.api.nvim_buf_is_valid(b) then
+        local ft = vim.bo[b].filetype
+        local bt = vim.bo[b].buftype
+        if (bt == "terminal" or ft == "terminal") and ft ~= "sidekick" and ft ~= "sidekick_terminal" then
+          table.insert(term_wins, w)
+        end
+      end
+    end
+  end
+  return term_wins
+end
+
 local function toggle_terminal()
   local snacks = require("snacks")
   local count = vim.v.count1
@@ -9,15 +26,8 @@ local function toggle_terminal()
 
   -- Save layout and lock code window heights to prevent shifts
   local locked_wins = {}
-  local any_term_open = false
-  for _, win in ipairs(vim.api.nvim_list_wins()) do
-    local buf = vim.api.nvim_win_get_buf(win)
-    local win_ft = vim.bo[buf].filetype
-    local win_bt = vim.bo[buf].buftype
-    if (win_bt == "terminal" or win_ft == "terminal") and win_ft ~= "sidekick" and win_ft ~= "sidekick_terminal" then
-      any_term_open = true
-    end
-  end
+  local open_term_wins = get_terminal_wins()
+  local any_term_open = (#open_term_wins > 0)
 
   if any_term_open then
     for _, win in ipairs(vim.api.nvim_list_wins()) do
@@ -45,26 +55,13 @@ local function toggle_terminal()
     last_term_height = h
 
     -- Check if this is the last terminal window
-    local term_wins = {}
-    for _, w in ipairs(vim.api.nvim_list_wins()) do
-      local b = vim.api.nvim_win_get_buf(w)
-      local bft = vim.bo[b].filetype
-      local bbt = vim.bo[b].buftype
-      if (bbt == "terminal" or bft == "terminal") and bft ~= "sidekick" and bft ~= "sidekick_terminal" then
-        table.insert(term_wins, w)
-      end
-    end
+    local term_wins = get_terminal_wins()
     vim.api.nvim_win_close(current_win, true)
 
     -- Force remaining terminal windows to keep the current height
-    for _, w in ipairs(vim.api.nvim_list_wins()) do
-      local b = vim.api.nvim_win_get_buf(w)
-      local bft = vim.bo[b].filetype
-      local bbt = vim.bo[b].buftype
-      if (bbt == "terminal" or bft == "terminal") and bft ~= "sidekick" and bft ~= "sidekick_terminal" then
-        if vim.api.nvim_win_is_valid(w) then
-          vim.api.nvim_win_set_height(w, h)
-        end
+    for _, w in ipairs(get_terminal_wins()) do
+      if vim.api.nvim_win_is_valid(w) then
+        vim.api.nvim_win_set_height(w, h)
       end
     end
 
@@ -97,26 +94,13 @@ local function toggle_terminal()
     last_term_height = h
 
     -- Check if this is the last terminal window
-    local term_wins = {}
-    for _, w in ipairs(vim.api.nvim_list_wins()) do
-      local b = vim.api.nvim_win_get_buf(w)
-      local bft = vim.bo[b].filetype
-      local bbt = vim.bo[b].buftype
-      if (bbt == "terminal" or bft == "terminal") and bft ~= "sidekick" and bft ~= "sidekick_terminal" then
-        table.insert(term_wins, w)
-      end
-    end
+    local term_wins = get_terminal_wins()
     vim.api.nvim_win_close(term_win, true)
 
     -- Force remaining terminal windows to keep the current height
-    for _, w in ipairs(vim.api.nvim_list_wins()) do
-      local b = vim.api.nvim_win_get_buf(w)
-      local bft = vim.bo[b].filetype
-      local bbt = vim.bo[b].buftype
-      if (bbt == "terminal" or bft == "terminal") and bft ~= "sidekick" and bft ~= "sidekick_terminal" then
-        if vim.api.nvim_win_is_valid(w) then
-          vim.api.nvim_win_set_height(w, h)
-        end
+    for _, w in ipairs(get_terminal_wins()) do
+      if vim.api.nvim_win_is_valid(w) then
+        vim.api.nvim_win_set_height(w, h)
       end
     end
 
@@ -131,14 +115,9 @@ local function toggle_terminal()
   else
     -- Terminal is closed, we want to open it.
     -- If there is already an open terminal window, inherit its current height
-    for _, win in ipairs(vim.api.nvim_list_wins()) do
-      local buf = vim.api.nvim_win_get_buf(win)
-      local win_ft = vim.bo[buf].filetype
-      local win_bt = vim.bo[buf].buftype
-      if (win_bt == "terminal" or win_ft == "terminal") and win_ft ~= "sidekick" and win_ft ~= "sidekick_terminal" then
-        last_term_height = vim.api.nvim_win_get_height(win)
-        break
-      end
+    local current_terms = get_terminal_wins()
+    if #current_terms > 0 then
+      last_term_height = vim.api.nvim_win_get_height(current_terms[1])
     end
 
     -- 1. Check if Snacks Explorer is open
@@ -174,19 +153,17 @@ local function toggle_terminal()
     vim.schedule(function()
       -- 3. Find all open terminal windows and their counts, sorted left to right
       local open_terms = {}
-      for _, win in ipairs(vim.api.nvim_list_wins()) do
+      for _, win in ipairs(get_terminal_wins()) do
         local buf = vim.api.nvim_win_get_buf(win)
-        if vim.bo[buf].filetype == "terminal" then
-          local win_count = nil
-          for c, b in pairs(terminals) do
-            if b == buf then
-              win_count = c
-              break
-            end
+        local win_count = nil
+        for c, b in pairs(terminals) do
+          if b == buf then
+            win_count = c
+            break
           end
-          if win_count then
-            table.insert(open_terms, { win = win, count = win_count, x = vim.api.nvim_win_get_position(win)[2] })
-          end
+        end
+        if win_count then
+          table.insert(open_terms, { win = win, count = win_count, x = vim.api.nvim_win_get_position(win)[2] })
         end
       end
       table.sort(open_terms, function(a, b) return a.x < b.x end)
@@ -349,6 +326,74 @@ vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter", "BufWinEnter" }, {
   end,
 })
 
+-- Equalize terminal widths whenever window layouts change to prevent any terminal from being squished to size 1
+local function equalize_terminal_widths()
+  local term_wins = get_terminal_wins()
+  if #term_wins <= 1 then return end
+
+  -- Sort left-to-right
+  table.sort(term_wins, function(a, b)
+    return vim.api.nvim_win_get_position(a)[2] < vim.api.nvim_win_get_position(b)[2]
+  end)
+
+  local total_w = 0
+  local widths = {}
+  for _, w in ipairs(term_wins) do
+    local w_val = vim.api.nvim_win_get_width(w)
+    total_w = total_w + w_val
+    table.insert(widths, w_val)
+  end
+
+  local base_w = math.floor(total_w / #term_wins)
+  local extra = total_w % #term_wins
+
+  local already_equal = true
+  for i, w_val in ipairs(widths) do
+    local target_w = base_w + (i <= extra and 1 or 0)
+    if w_val ~= target_w then
+      already_equal = false
+      break
+    end
+  end
+
+  if already_equal then return end
+
+  -- Temporarily lock other windows to prevent Neovim from stealing width from code windows
+  local saved_locks = {}
+  for _, w in ipairs(vim.api.nvim_list_wins()) do
+    local is_term_win = false
+    for _, tw in ipairs(term_wins) do
+      if tw == w then
+        is_term_win = true
+        break
+      end
+    end
+    if not is_term_win then
+      saved_locks[w] = vim.api.nvim_get_option_value("winfixwidth", { scope = "local", win = w })
+      vim.api.nvim_set_option_value("winfixwidth", true, { scope = "local", win = w })
+    end
+  end
+
+  for i, w in ipairs(term_wins) do
+    local target_w = base_w + (i <= extra and 1 or 0)
+    vim.api.nvim_win_set_width(w, target_w)
+  end
+
+  -- Restore original winfixwidth values
+  for w, orig in pairs(saved_locks) do
+    if vim.api.nvim_win_is_valid(w) then
+      vim.api.nvim_set_option_value("winfixwidth", orig, { scope = "local", win = w })
+    end
+  end
+end
+
+vim.api.nvim_create_autocmd({ "BufWinEnter", "BufWinLeave", "WinClosed", "WinNew", "VimResized" }, {
+  group = vim.api.nvim_create_augroup("terminal-equalize-widths", { clear = true }),
+  callback = function()
+    vim.schedule(equalize_terminal_widths)
+  end,
+})
+
 -- Save terminal window height when it leaves or closes, so we remember it
 vim.api.nvim_create_autocmd("BufWinLeave", {
   group = vim.api.nvim_create_augroup("terminal-save-height", { clear = true }),
@@ -365,21 +410,7 @@ vim.api.nvim_create_autocmd("BufWinLeave", {
 
       -- If all terminal windows are closed, restore the layout
       vim.schedule(function()
-        local any_left = false
-        for _, w in ipairs(vim.api.nvim_list_wins()) do
-          if vim.api.nvim_win_is_valid(w) then
-            local b = vim.api.nvim_win_get_buf(w)
-            if vim.api.nvim_buf_is_valid(b) then
-              local bft = vim.bo[b].filetype
-              local bbt = vim.bo[b].buftype
-              if (bbt == "terminal" or bft == "terminal") and bft ~= "sidekick" and bft ~= "sidekick_terminal" then
-                any_left = true
-                break
-              end
-            end
-          end
-        end
-        if not any_left and last_win_layout then
+        if #get_terminal_wins() == 0 and last_win_layout then
           pcall(function() vim.cmd(last_win_layout) end)
         end
       end)

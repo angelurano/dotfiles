@@ -36,7 +36,7 @@ return {
         show_buffer_close_icons = true,
         show_close_icon = true,
         diagnostics = "nvim_lsp",
-        separator_style = "thin",
+        separator_style = { '', '│' },
         custom_filter = function(buf_number, _)
           local filetype = vim.bo[buf_number].filetype
           if filetype == "snacks_picker_list" or filetype == "snacks_layout_box" or filetype == "neo-tree" or filetype == "sidekick_terminal" or filetype == "terminal" then

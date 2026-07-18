@@ -9,6 +9,11 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 vim.api.nvim_create_autocmd('CursorHold', {
   desc = 'Show diagnostics in a floating window on hover',
   callback = function()
+    -- Only show diagnostics in Normal mode
+    if vim.api.nvim_get_mode().mode ~= 'n' then
+      return
+    end
+
     local buf = vim.api.nvim_get_current_buf()
     if not vim.api.nvim_buf_is_valid(buf) then return end
     local ft = vim.bo[buf].filetype
@@ -17,12 +22,31 @@ vim.api.nvim_create_autocmd('CursorHold', {
       return
     end
 
-    -- Skip if any floating window is already open (e.g. hover documentation)
+    -- Skip if blink.cmp completion menu is visible
+    local blink_ok, blink = pcall(require, "blink.cmp")
+    if blink_ok and blink.is_visible() then
+      return
+    end
+
+    -- Skip if any floating window showing documentation/hover is already open
     for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
       local config = vim.api.nvim_win_get_config(win)
       if config.relative ~= "" then
-        return
+        local win_buf = vim.api.nvim_win_get_buf(win)
+        local win_ft = vim.bo[win_buf].filetype
+        -- "markdown" is used by LSP hover and signature help.
+        -- blink-cmp windows use filetypes starting with "blink" (e.g. blink-cmp-doc).
+        if win_ft == "markdown" or win_ft:match("^blink%-cmp") then
+          return
+        end
       end
+    end
+
+    -- Only open if there are diagnostics on the current line
+    local line = vim.api.nvim_win_get_cursor(0)[1] - 1
+    local diagnostics = vim.diagnostic.get(buf, { lnum = line })
+    if #diagnostics == 0 then
+      return
     end
 
     pcall(vim.diagnostic.open_float, nil, { focusable = false })

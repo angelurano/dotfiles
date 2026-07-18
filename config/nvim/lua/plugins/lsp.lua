@@ -25,6 +25,9 @@ return {
         ['<C-space>'] = { 'show', 'show_documentation', 'hide_documentation' },
       },
       completion = {
+        menu = {
+          border = 'rounded',
+        },
         list = {
           selection = {
             preselect = true,
@@ -34,12 +37,18 @@ return {
         documentation = {
           auto_show = false, -- <C-leader> to show
           window = {
+            border = 'rounded',
             max_width = 100,
             max_height = 30,
           },
         },
       },
-      signature = { enabled = true },
+      signature = {
+        enabled = true,
+        window = {
+          border = 'rounded',
+        },
+      },
       sources = {
         default = { 'lsp', 'path', 'snippets', 'buffer' },
       },
@@ -139,6 +148,7 @@ return {
         float = { border = "rounded" },
       })
 
+
       -- Keymaps enabled only when LSP attaches
       vim.api.nvim_create_autocmd('LspAttach', {
         callback = function(event)
@@ -157,7 +167,7 @@ return {
             map('gr', vim.lsp.buf.references, 'Go to References')
             map('gI', vim.lsp.buf.implementation, 'Go to Implementation')
           end
-          map('K', vim.lsp.buf.hover, 'Hover Documentation')
+          map('K', function() vim.lsp.buf.hover({ border = 'rounded' }) end, 'Hover Documentation')
           map('<leader>rn', vim.lsp.buf.rename, 'Rename Variable')
           map('<leader>ca', vim.lsp.buf.code_action, 'Code Action')
           map('<leader>d', vim.diagnostic.open_float, 'Show Line Diagnostics')

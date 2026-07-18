@@ -25,13 +25,14 @@ config.initial_rows = 28
 config.window_decorations = "RESIZE"
 config.window_padding = {
   top = 5,
-  right = 1,
+  right = 2,
   bottom = 0,
-  left = 1,
+  left = 2,
 }
 
 config.use_fancy_tab_bar = false
 config.hide_tab_bar_if_only_one_tab = false
+config.tab_max_width = 24
 config.colors = {
   tab_bar = {
     background = "#0f0c29",
@@ -111,7 +112,7 @@ wezterm.on("format-tab-title", function(tab, _, _, _, hover, max_width)
 
   local title = " " .. tab_title(tab) .. " "
 
-  title = wezterm.truncate_right(title, max_width - 2)
+  title = wezterm.truncate_right(title, max_width - 3)
 
   return {
     { Background = { Color = edge_background } },
@@ -123,6 +124,8 @@ wezterm.on("format-tab-title", function(tab, _, _, _, hover, max_width)
     { Background = { Color = edge_background } },
     { Foreground = { Color = edge_foreground } },
     { Text = SOLID_RIGHT_ARROW },
+    { Background = { Color = edge_background } },
+    { Text = " " },
   }
 end)
 

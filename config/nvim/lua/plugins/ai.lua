@@ -69,7 +69,7 @@ return {
         watch = false,
         win = {
           split = {
-            width = 45, -- default 80
+            width = 40, -- default 80
           },
           wo = {
             scrolloff = 0,

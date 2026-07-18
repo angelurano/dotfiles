@@ -35,7 +35,7 @@ return {
       cursor_color = "#ff8d03",
       particles_enabled = false,
       anticipation = 0,
-      transparent_bg_fallback_color = "#0b1015",
+      -- transparent_bg_fallback_color = "#0b1015",
       smear_between_buffers = true,
       smear_between_neighbor_lines = true,
     },

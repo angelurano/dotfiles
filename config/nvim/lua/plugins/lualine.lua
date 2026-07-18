@@ -5,22 +5,24 @@ return {
     lazy = false,
     config = function()
       local colors = {
-        bg        = '#0b1015',
-        fg        = '#97a7c8',
-        dark_bg   = '#05080a',
-        widget_bg = '#111820',
-        accent    = '#ff8d03',
-        comment   = '#5c6773',
-        green     = '#98c379',
-        yellow    = '#ffcc00',
-        red       = '#ef4444',
-        white     = '#f5f5f5',
+        bg         = '#0b1015',
+        fg         = '#e0e0e0',
+        dark_bg    = '#05080a',
+        widget_bg  = '#111820',
+        accent     = '#ff8d03',
+        comment    = '#5c6773',
+        green      = '#98c379',
+        yellow     = '#ffcc00',
+        red        = '#ef4444',
+        white      = '#f5f5f5',
+        wez_bottom = '#331717',
       }
 
       local ayu_lualine = {
         normal = {
           a = { fg = colors.white, bg = colors.accent, bold = true },
           b = { fg = colors.white, bg = colors.widget_bg },
+          -- c = { fg = colors.fg, bg = colors.wez_bottom },
           c = { fg = colors.fg, bg = colors.dark_bg },
         },
         insert = {
@@ -36,9 +38,9 @@ return {
           b = { fg = colors.white, bg = colors.widget_bg },
         },
         inactive = {
-          a = { fg = colors.comment, bg = colors.dark_bg, bold = true },
-          b = { fg = colors.comment, bg = colors.dark_bg },
-          c = { fg = colors.comment, bg = colors.dark_bg },
+          a = { fg = colors.comment, bg = colors.wez_bottom, bold = true },
+          b = { fg = colors.comment, bg = colors.wez_bottom },
+          c = { fg = colors.comment, bg = colors.wez_bottom },
         },
       }
 

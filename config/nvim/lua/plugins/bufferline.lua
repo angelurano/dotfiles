@@ -11,6 +11,21 @@ return {
       {
         "<leader>q",
         function()
+          local win = vim.api.nvim_get_current_win()
+          local is_floating = vim.api.nvim_win_get_config(win).relative ~= ""
+          local special_fts = {
+            lazy = true,
+            mason = true,
+            lspinfo = true,
+            help = true,
+            qf = true,
+            checkhealth = true,
+          }
+          if is_floating or special_fts[vim.bo.filetype] then
+            vim.api.nvim_feedkeys("q", "m", true)
+            return
+          end
+
           local bufs = vim.fn.getbufinfo({ buflisted = 1 })
           if #bufs <= 1 then
             vim.cmd("q")
@@ -23,6 +38,42 @@ return {
           end
         end,
         desc = "Smart Close Buffer",
+      },
+      {
+        "<leader>x",
+        function()
+          local win = vim.api.nvim_get_current_win()
+          local is_floating = vim.api.nvim_win_get_config(win).relative ~= ""
+          local special_fts = {
+            lazy = true,
+            mason = true,
+            lspinfo = true,
+            help = true,
+            qf = true,
+            checkhealth = true,
+          }
+          if is_floating or special_fts[vim.bo.filetype] then
+            vim.api.nvim_feedkeys("q", "m", true)
+            return
+          end
+
+          -- Save the current buffer if it is modifiable and has a file
+          if vim.bo.modifiable and vim.bo.buftype == "" and vim.fn.empty(vim.fn.expand("%")) == 0 then
+            pcall(function() vim.cmd("w") end)
+          end
+
+          local bufs = vim.fn.getbufinfo({ buflisted = 1 })
+          if #bufs <= 1 then
+            vim.cmd("q")
+          else
+            if _G.Snacks and _G.Snacks.bufdelete then
+              _G.Snacks.bufdelete()
+            else
+              vim.cmd("bd")
+            end
+          end
+        end,
+        desc = "Save and Smart Close Buffer",
       },
       { "<leader>bo", "<cmd>BufferLineCloseOthers<cr>", desc = "Close Other Buffers" },
 

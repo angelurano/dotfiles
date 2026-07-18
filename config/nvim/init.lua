@@ -30,6 +30,9 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup('plugins', {
+  ui = {
+    border = 'rounded',
+  },
   defaults = {
     cond = function(plugin)
       if vim.g.vscode then

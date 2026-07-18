@@ -1,22 +1,47 @@
 local terminals = {} -- stores terminal_id -> buffer_id
 local last_term_height = nil
 local last_win_layout = nil
+local last_sidekick_width = nil
 
 local function get_terminal_wins()
   local term_wins = {}
   for _, w in ipairs(vim.api.nvim_list_wins()) do
     if vim.api.nvim_win_is_valid(w) then
-      local b = vim.api.nvim_win_get_buf(w)
-      if vim.api.nvim_buf_is_valid(b) then
-        local ft = vim.bo[b].filetype
-        local bt = vim.bo[b].buftype
-        if (bt == "terminal" or ft == "terminal") and ft ~= "sidekick" and ft ~= "sidekick_terminal" then
-          table.insert(term_wins, w)
+      local config = vim.api.nvim_win_get_config(w)
+      if config.relative == "" then
+        local b = vim.api.nvim_win_get_buf(w)
+        if vim.api.nvim_buf_is_valid(b) then
+          local ft = vim.bo[b].filetype
+          local bt = vim.bo[b].buftype
+          if (bt == "terminal" or ft == "terminal") and ft ~= "sidekick" and ft ~= "sidekick_terminal" then
+            table.insert(term_wins, w)
+          end
         end
       end
     end
   end
   return term_wins
+end
+
+local function toggle_floating_terminal()
+  require("snacks").terminal.toggle(nil, {
+    win = {
+      position = "float",
+      border = "rounded",
+      height = 0.8,
+      width = 0.8,
+      title = " Terminal ",
+      title_pos = "center",
+      keys = {
+        ["<Esc><Esc>"] = { function() vim.cmd("stopinsert") end, mode = "t" },
+        ["<C-h>"] = { "hide", mode = { "t", "n" } },
+        ["<C-j>"] = { "hide", mode = { "t", "n" } },
+        ["<C-k>"] = { "hide", mode = { "t", "n" } },
+        ["<C-l>"] = { "hide", mode = { "t", "n" } },
+      },
+    },
+    count = 99,
+  })
 end
 
 local function toggle_terminal()
@@ -32,6 +57,7 @@ local function toggle_terminal()
   if any_term_open then
     for _, win in ipairs(vim.api.nvim_list_wins()) do
       local buf = vim.api.nvim_win_get_buf(win)
+
       local win_ft = vim.bo[buf].filetype
       local win_bt = vim.bo[buf].buftype
       if win_bt ~= "terminal" and win_ft ~= "terminal" and win_ft ~= "sidekick" and win_ft ~= "sidekick_terminal" then
@@ -51,6 +77,12 @@ local function toggle_terminal()
       and ft ~= "sidekick"
       and ft ~= "sidekick_terminal"
       and vim.b[current_buf].sidekick_cli == nil then
+    local is_floating = vim.api.nvim_win_get_config(current_win).relative ~= ""
+    if is_floating then
+      toggle_floating_terminal()
+      return
+    end
+
     local h = vim.api.nvim_win_get_height(current_win)
     last_term_height = h
 
@@ -131,18 +163,19 @@ local function toggle_terminal()
     -- 2. Check if Sidekick is open (bulletproof detection matching filetype, name, or terminal metadata)
     local reopen_sidekick = false
     if has_sidekick then
-      local sidekick_open = false
+      local sidekick_win = nil
       for _, win in ipairs(vim.api.nvim_list_wins()) do
         local buf = vim.api.nvim_win_get_buf(win)
         local wft = vim.bo[buf].filetype
         local name = vim.api.nvim_buf_get_name(buf)
         if wft == "sidekick" or wft == "sidekick_terminal" or string.match(name, "sidekick") or vim.b[buf].sidekick_cli ~= nil then
-          sidekick_open = true
+          sidekick_win = win
           break
         end
       end
-      if sidekick_open then
+      if sidekick_win then
         reopen_sidekick = true
+        last_sidekick_width = vim.api.nvim_win_get_width(sidekick_win)
         pcall(function()
           sidekick_cli.hide()
         end)
@@ -259,10 +292,12 @@ local function toggle_terminal()
               if wft == "sidekick" or wft == "sidekick_terminal" or vim.b[buf].sidekick_cli ~= nil then
                 vim.api.nvim_win_call(win, function()
                   vim.cmd("wincmd L")
-                  local width = 45
-                  pcall(function()
-                    width = require("sidekick.config").cli.win.split.width or 45
-                  end)
+                  local width = last_sidekick_width or 45
+                  if not last_sidekick_width then
+                    pcall(function()
+                      width = require("sidekick.config").cli.win.split.width or 45
+                    end)
+                  end
                   vim.api.nvim_win_set_width(win, width)
                 end)
                 break
@@ -368,7 +403,7 @@ local function equalize_terminal_widths()
         break
       end
     end
-    if not is_term_win then
+    if not is_term_win and vim.api.nvim_win_get_config(w).relative == "" then
       saved_locks[w] = vim.api.nvim_get_option_value("winfixwidth", { scope = "local", win = w })
       vim.api.nvim_set_option_value("winfixwidth", true, { scope = "local", win = w })
     end
@@ -405,7 +440,10 @@ vim.api.nvim_create_autocmd("BufWinLeave", {
     if (bt == "terminal" or ft == "terminal") and ft ~= "sidekick" and ft ~= "sidekick_terminal" then
       local win = vim.fn.bufwinid(buf)
       if win ~= -1 and vim.api.nvim_win_is_valid(win) then
-        last_term_height = vim.api.nvim_win_get_height(win)
+        local config = vim.api.nvim_win_get_config(win)
+        if config.relative == "" then
+          last_term_height = vim.api.nvim_win_get_height(win)
+        end
       end
 
       -- If all terminal windows are closed, restore the layout
@@ -424,6 +462,14 @@ return {
     priority = 1000, -- Early load to ensure scroll and indent work on startup
     lazy = false,
     opts = {
+      -- Notifier
+      notifier = {
+        enabled = true,
+        timeout = 3000,
+        top_down = false,
+        margin = { top = 0, right = 1, bottom = 1 },
+      },
+
       -- Indent guides
       indent = {
         enabled = true,
@@ -560,25 +606,31 @@ return {
     },
     keys = {
       -- Explorer keymaps
-      { "<leader>e",  function() Snacks.explorer() end,            desc = "File Explorer" },
-      { "<C-S-e>",    function() Snacks.explorer() end,            desc = "File Explorer" },
+      { "<leader>e",         function() Snacks.explorer() end,              desc = "File Explorer" },
+      { "<C-S-e>",           function() Snacks.explorer() end,              desc = "File Explorer" },
 
       -- Git keymaps
-      { "<leader>gb", function() Snacks.picker.git_branches() end, desc = "Git Branches" },
-      { "<leader>gB", function() Snacks.git.blame_line() end,      desc = "Git Blame Line" },
-      { "<leader>go", function() Snacks.gitbrowse() end,           desc = "Git Browse",      mode = { "n", "v" } },
-      { "<leader>gl", function() Snacks.picker.git_log() end,      desc = "Git Log" },
-      { "<leader>gL", function() Snacks.picker.git_log_line() end, desc = "Git Log Line" },
-      { "<leader>gs", function() Snacks.picker.git_status() end,   desc = "Git Status" },
-      { "<leader>gS", function() Snacks.picker.git_stash() end,    desc = "Git Stash" },
+      { "<leader>gb",        function() Snacks.picker.git_branches() end,   desc = "Git Branches" },
+      { "<leader>gB",        function() Snacks.git.blame_line() end,        desc = "Git Blame Line" },
+      { "<leader>go",        function() Snacks.gitbrowse() end,             desc = "Git Browse",               mode = { "n", "v" } },
+      { "<leader>gl",        function() Snacks.picker.git_log() end,        desc = "Git Log" },
+      { "<leader>gL",        function() Snacks.picker.git_log_line() end,   desc = "Git Log Line" },
+      { "<leader>gs",        function() Snacks.picker.git_status() end,     desc = "Git Status" },
+      { "<leader>gS",        function() Snacks.picker.git_stash() end,      desc = "Git Stash" },
 
       -- GitHub keymaps
-      { "<leader>gp", function() Snacks.picker.gh_pr() end,        desc = "GitHub PRs" },
-      { "<leader>gi", function() Snacks.picker.gh_issue() end,     desc = "GitHub Issues" },
+      { "<leader>gp",        function() Snacks.picker.gh_pr() end,          desc = "GitHub PRs" },
+      { "<leader>gi",        function() Snacks.picker.gh_issue() end,       desc = "GitHub Issues" },
 
       -- Terminal keymaps
-      { "<leader>t",  toggle_terminal,                             desc = "Toggle Terminal" },
-      { "<C-\\>",     toggle_terminal,                             desc = "Toggle Terminal", mode = { "n", "t" } },
+      { "<leader>t",         toggle_terminal,                               desc = "Toggle Terminal" },
+      { "<C-\\>",            toggle_terminal,                               desc = "Toggle Terminal",          mode = { "n", "t" } },
+      { "<leader><leader>t", toggle_floating_terminal,                      desc = "Toggle Floating Terminal", mode = { "n", "t" } },
+      { "0<leader>t",        toggle_floating_terminal,                      desc = "Toggle Floating Terminal", mode = { "n" } },
+
+      -- Notifier keymaps
+      { "<leader>nh",        function() Snacks.notifier.show_history() end, desc = "Notification History" },
+      { "<leader>nd",        function() Snacks.notifier.hide() end,         desc = "Dismiss All Notifications" },
     },
     config = function(_, opts)
       require("snacks").setup(opts)

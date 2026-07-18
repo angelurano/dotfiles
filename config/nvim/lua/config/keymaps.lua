@@ -33,6 +33,7 @@ vim.keymap.set('n', '<M-k>', go_to_last_tab, { desc = 'Go to Last Active Tab' })
 --]]
 
 vim.keymap.set('n', '<leader>w', '<cmd>w<CR>', { desc = 'Save file' })
+vim.keymap.set('n', '<leader><Tab>', '<C-^>', { desc = 'Toggle alternate buffer' })
 
 -- Change panel size dynamically with Alt+h/j/k/l (absolute-directional)
 local function resize(dir)

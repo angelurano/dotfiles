@@ -2,6 +2,7 @@ local terminals = {} -- stores terminal_id -> buffer_id
 local last_term_height = nil
 local last_win_layout = nil
 local last_sidekick_width = nil
+local toggle_terminal, toggle_floating_terminal
 
 local function get_terminal_wins()
   local term_wins = {}
@@ -23,7 +24,89 @@ local function get_terminal_wins()
   return term_wins
 end
 
-local function toggle_floating_terminal()
+local function list_terminals()
+  local items = {}
+  for count, buf in pairs(terminals) do
+    if vim.api.nvim_buf_is_valid(buf) then
+      local is_open = false
+      for _, win in ipairs(vim.api.nvim_list_wins()) do
+        if vim.api.nvim_win_get_buf(win) == buf then
+          is_open = true
+          break
+        end
+      end
+      local label = (count == 99) and "Flotante" or tostring(count)
+      local status = is_open and "󰄬 Visible" or "󰈉 Oculta"
+      table.insert(items, {
+        text = string.format("Terminal %s [%s]", label, status),
+        count = count,
+        buf = buf,
+      })
+    end
+  end
+
+  table.sort(items, function(a, b) return a.count < b.count end)
+
+  if #items == 0 then
+    vim.notify("No hay terminales activas", vim.log.levels.INFO, { title = "Terminales" })
+    return
+  end
+
+  require("snacks").picker({
+    title = " Terminales Activas (<c-d> / dd: Cerrar) ",
+    items = items,
+    focus = "list",
+    format = function(item)
+      return { { item.text } }
+    end,
+    win = {
+      preview = {
+        focusable = false,
+      },
+      input = {
+        keys = {
+          ["<c-d>"] = { "kill_term", mode = { "n", "i" } },
+          ["dd"] = { "kill_term", mode = { "n" } },
+        },
+      },
+    },
+    actions = {
+      kill_term = function(picker, item)
+        if item then
+          local buf = item.buf
+          local count = item.count
+          for _, win in ipairs(vim.api.nvim_list_wins()) do
+            if vim.api.nvim_win_get_buf(win) == buf then
+              pcall(vim.api.nvim_win_close, win, true)
+            end
+          end
+          if vim.api.nvim_buf_is_valid(buf) then
+            pcall(vim.api.nvim_buf_delete, buf, { force = true })
+          end
+          terminals[count] = nil
+          picker:close()
+          vim.schedule(function()
+            list_terminals()
+          end)
+        end
+      end,
+    },
+    confirm = function(picker, item)
+      picker:close()
+      if item then
+        vim.schedule(function()
+          if item.count == 99 then
+            toggle_floating_terminal()
+          else
+            toggle_terminal(item.count)
+          end
+        end)
+      end
+    end,
+  })
+end
+
+function toggle_floating_terminal()
   require("snacks").terminal.toggle(nil, {
     win = {
       position = "float",
@@ -44,10 +127,90 @@ local function toggle_floating_terminal()
   })
 end
 
-local function toggle_terminal()
+function toggle_terminal(target_count)
   local snacks = require("snacks")
-  local count = vim.v.count1
+  local explicit_count = (target_count ~= nil) or (vim.v.count > 0)
+  local count = target_count or vim.v.count1
   local has_sidekick, sidekick_cli = pcall(require, "sidekick.cli")
+
+  local current_buf = vim.api.nvim_get_current_buf()
+  local current_win = vim.api.nvim_get_current_win()
+  local ft = vim.bo[current_buf].filetype
+
+  -- 1. Check if currently inside any terminal window (excluding Sidekick)
+  local is_term_buf = (vim.bo[current_buf].buftype == "terminal" or ft == "terminal")
+      and ft ~= "sidekick"
+      and ft ~= "sidekick_terminal"
+      and vim.b[current_buf].sidekick_cli == nil
+
+  if is_term_buf then
+    local is_floating = vim.api.nvim_win_get_config(current_win).relative ~= ""
+
+    if is_floating then
+      toggle_floating_terminal()
+      if not explicit_count or count == 99 then
+        return
+      end
+    else
+      -- Currently inside a split terminal window
+      local current_term_count = nil
+      for c, b in pairs(terminals) do
+        if b == current_buf then
+          current_term_count = c
+          break
+        end
+      end
+
+      -- If no explicit count was typed, OR user typed the SAME count as current terminal:
+      -- Toggle off (close current split terminal window)
+      if not explicit_count or (current_term_count and current_term_count == count) then
+        local h = vim.api.nvim_win_get_height(current_win)
+        last_term_height = h
+        vim.api.nvim_win_close(current_win, true)
+        for _, w in ipairs(get_terminal_wins()) do
+          if vim.api.nvim_win_is_valid(w) then
+            vim.api.nvim_win_set_height(w, h)
+          end
+        end
+        return
+      end
+
+      -- User typed a DIFFERENT count (e.g., 2<leader>t while inside terminal 1)
+      local target_buf = terminals[count]
+      local target_win = nil
+      if target_buf and vim.api.nvim_buf_is_valid(target_buf) then
+        for _, win in ipairs(vim.api.nvim_list_wins()) do
+          if vim.api.nvim_win_get_buf(win) == target_buf then
+            target_win = win
+            break
+          end
+        end
+      end
+
+      if target_win then
+        -- Target terminal is already open elsewhere: focus it, then close current window
+        vim.api.nvim_set_current_win(target_win)
+        vim.cmd("startinsert")
+        vim.api.nvim_win_close(current_win, true)
+        return
+      else
+        -- Target terminal is not open: REUSE current_win! Zero flicker, zero re-rendering!
+        if target_buf and vim.api.nvim_buf_is_valid(target_buf) then
+          vim.api.nvim_win_set_buf(current_win, target_buf)
+        else
+          vim.api.nvim_win_call(current_win, function()
+            vim.cmd("terminal")
+          end)
+          target_buf = vim.api.nvim_win_get_buf(current_win)
+          terminals[count] = target_buf
+          vim.bo[target_buf].filetype = "terminal"
+        end
+        vim.wo[current_win].winbar = " " .. count .. ": term "
+        vim.cmd("startinsert")
+        return
+      end
+    end
+  end
 
   -- Save layout and lock code window heights to prevent shifts
   local locked_wins = {}
@@ -57,7 +220,6 @@ local function toggle_terminal()
   if any_term_open then
     for _, win in ipairs(vim.api.nvim_list_wins()) do
       local buf = vim.api.nvim_win_get_buf(win)
-
       local win_ft = vim.bo[buf].filetype
       local win_bt = vim.bo[buf].buftype
       if win_bt ~= "terminal" and win_ft ~= "terminal" and win_ft ~= "sidekick" and win_ft ~= "sidekick_terminal" then
@@ -67,44 +229,6 @@ local function toggle_terminal()
     end
   else
     last_win_layout = vim.fn.winrestcmd()
-  end
-
-  -- If currently inside any terminal window (excluding Sidekick), close it immediately.
-  local current_buf = vim.api.nvim_get_current_buf()
-  local current_win = vim.api.nvim_get_current_win()
-  local ft = vim.bo[current_buf].filetype
-  if (vim.bo[current_buf].buftype == "terminal" or ft == "terminal")
-      and ft ~= "sidekick"
-      and ft ~= "sidekick_terminal"
-      and vim.b[current_buf].sidekick_cli == nil then
-    local is_floating = vim.api.nvim_win_get_config(current_win).relative ~= ""
-    if is_floating then
-      toggle_floating_terminal()
-      return
-    end
-
-    local h = vim.api.nvim_win_get_height(current_win)
-    last_term_height = h
-
-    -- Check if this is the last terminal window
-    local term_wins = get_terminal_wins()
-    vim.api.nvim_win_close(current_win, true)
-
-    -- Force remaining terminal windows to keep the current height
-    for _, w in ipairs(get_terminal_wins()) do
-      if vim.api.nvim_win_is_valid(w) then
-        vim.api.nvim_win_set_height(w, h)
-      end
-    end
-
-    -- Restore original winfixheight settings on code windows
-    for w, orig in pairs(locked_wins) do
-      if vim.api.nvim_win_is_valid(w) then
-        vim.wo[w].winfixheight = orig
-      end
-    end
-
-    return
   end
 
   -- Find if terminal #count is currently open in any window
@@ -121,29 +245,33 @@ local function toggle_terminal()
   end
 
   if term_win then
-    -- Terminal is open, just close the window (hides terminal, process stays alive)
-    local h = vim.api.nvim_win_get_height(term_win)
-    last_term_height = h
-
-    -- Check if this is the last terminal window
-    local term_wins = get_terminal_wins()
-    vim.api.nvim_win_close(term_win, true)
-
-    -- Force remaining terminal windows to keep the current height
-    for _, w in ipairs(get_terminal_wins()) do
-      if vim.api.nvim_win_is_valid(w) then
-        vim.api.nvim_win_set_height(w, h)
+    if not explicit_count or current_win == term_win then
+      -- Target terminal #count is open and either no count was specified or it's the current window: close it (toggle off)
+      local h = vim.api.nvim_win_get_height(term_win)
+      last_term_height = h
+      vim.api.nvim_win_close(term_win, true)
+      for _, w in ipairs(get_terminal_wins()) do
+        if vim.api.nvim_win_is_valid(w) then
+          vim.api.nvim_win_set_height(w, h)
+        end
       end
-    end
-
-    -- Restore original winfixheight settings on code windows
-    for w, orig in pairs(locked_wins) do
-      if vim.api.nvim_win_is_valid(w) then
-        vim.wo[w].winfixheight = orig
+      for w, orig in pairs(locked_wins) do
+        if vim.api.nvim_win_is_valid(w) then
+          vim.wo[w].winfixheight = orig
+        end
       end
+      return
+    else
+      -- Target terminal #count is open elsewhere and user specified an explicit count: focus it!
+      vim.api.nvim_set_current_win(term_win)
+      vim.cmd("startinsert")
+      for w, orig in pairs(locked_wins) do
+        if vim.api.nvim_win_is_valid(w) then
+          vim.wo[w].winfixheight = orig
+        end
+      end
+      return
     end
-
-    return
   else
     -- Terminal is closed, we want to open it.
     -- If there is already an open terminal window, inherit its current height
@@ -285,55 +413,46 @@ local function toggle_terminal()
         end)
         -- Scheduled fallback to force Sidekick to the far right and restore its width
         vim.schedule(function()
-          vim.schedule(function()
-            for _, win in ipairs(vim.api.nvim_list_wins()) do
-              local buf = vim.api.nvim_win_get_buf(win)
-              local wft = vim.bo[buf].filetype
-              if wft == "sidekick" or wft == "sidekick_terminal" or vim.b[buf].sidekick_cli ~= nil then
-                vim.api.nvim_win_call(win, function()
-                  vim.cmd("wincmd L")
-                  local width = last_sidekick_width or 45
-                  if not last_sidekick_width then
-                    pcall(function()
-                      width = require("sidekick.config").cli.win.split.width or 45
-                    end)
-                  end
-                  vim.api.nvim_win_set_width(win, width)
-                end)
-                break
-              end
+          for _, win in ipairs(vim.api.nvim_list_wins()) do
+            local buf = vim.api.nvim_win_get_buf(win)
+            local wft = vim.bo[buf].filetype
+            if wft == "sidekick" or wft == "sidekick_terminal" or vim.b[buf].sidekick_cli ~= nil then
+              vim.api.nvim_win_call(win, function()
+                vim.cmd("wincmd L")
+                local width = last_sidekick_width or 45
+                if not last_sidekick_width then
+                  pcall(function()
+                    width = require("sidekick.config").cli.win.split.width or 45
+                  end)
+                end
+                vim.api.nvim_win_set_width(win, width)
+              end)
+              break
             end
-          end)
+          end
         end)
       end
 
-      -- 7. Focus back to terminal window (deferred to run last after all sidebar layout changes and focuses settle)
-      vim.defer_fn(function()
-        if vim.api.nvim_win_is_valid(new_win) then
-          vim.api.nvim_set_current_win(new_win)
-          vim.cmd("startinsert")
-        end
+      -- 7. Focus back to terminal window
+      if vim.api.nvim_win_is_valid(new_win) then
+        vim.api.nvim_set_current_win(new_win)
+        vim.cmd("startinsert")
+      end
 
-        -- Enforce the saved height on all terminal windows before restoring equalalways
-        local h = last_term_height or math.floor(vim.o.lines * 0.3)
-        for _, w in ipairs(vim.api.nvim_list_wins()) do
-          local b = vim.api.nvim_win_get_buf(w)
-          local bft = vim.bo[b].filetype
-          local bbt = vim.bo[b].buftype
-          if (bbt == "terminal" or bft == "terminal") and bft ~= "sidekick" and bft ~= "sidekick_terminal" then
-            if vim.api.nvim_win_is_valid(w) then
-              vim.api.nvim_win_set_height(w, h)
-            end
-          end
+      -- Enforce the saved height on all terminal windows before restoring equalalways
+      local h = last_term_height or math.floor(vim.o.lines * 0.3)
+      for _, w in ipairs(get_terminal_wins()) do
+        if vim.api.nvim_win_is_valid(w) then
+          vim.api.nvim_win_set_height(w, h)
         end
+      end
 
-        -- Restore original winfixheight settings on code windows
-        for w, orig in pairs(locked_wins) do
-          if vim.api.nvim_win_is_valid(w) then
-            vim.wo[w].winfixheight = orig
-          end
+      -- Restore original winfixheight settings on code windows
+      for w, orig in pairs(locked_wins) do
+        if vim.api.nvim_win_is_valid(w) then
+          vim.wo[w].winfixheight = orig
         end
-      end, 50)
+      end
     end)
   end
 end
@@ -522,6 +641,13 @@ return {
           },
         },
         sources = {
+          git_status = { focus = "list" },
+          git_branches = { focus = "list" },
+          git_log = { focus = "list" },
+          git_log_line = { focus = "list" },
+          git_stash = { focus = "list" },
+          gh_pr = { focus = "list" },
+          gh_issue = { focus = "list" },
           explorer = {
             hidden = true,
             jump = { close = true },
@@ -625,8 +751,9 @@ return {
       -- Terminal keymaps
       { "<leader>t",         toggle_terminal,                               desc = "Toggle Terminal" },
       { "<C-\\>",            toggle_terminal,                               desc = "Toggle Terminal",          mode = { "n", "t" } },
-      { "<leader><leader>t", toggle_floating_terminal,                      desc = "Toggle Floating Terminal", mode = { "n", "t" } },
+      { "<leader><leader>t", toggle_floating_terminal,                      desc = "Toggle Floating Terminal", mode = "n" },
       { "0<leader>t",        toggle_floating_terminal,                      desc = "Toggle Floating Terminal", mode = { "n" } },
+      { "<leader>ft",        list_terminals,                                desc = "Find Active Terminals" },
 
       -- Notifier keymaps
       { "<leader>nh",        function() Snacks.notifier.show_history() end, desc = "Notification History" },

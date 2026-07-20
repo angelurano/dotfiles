@@ -101,7 +101,23 @@ return {
 
       -- Check for Node.js or Bun executable availability, or if we are on a Nix system (since it can be loaded dynamically)
       if vim.fn.executable("node") == 1 or vim.fn.executable("bun") == 1 or has_nix then
-        servers.ts_ls = {}  -- TypeScript / JavaScript
+        local mason_tsdk = vim.fn.stdpath("data") ..
+            "/mason/packages/typescript-language-server/node_modules/typescript/lib"
+        local fs = vim.uv or vim.loop
+        local has_mason_tsdk = fs.fs_stat(mason_tsdk) ~= nil
+
+        servers.ts_ls = {
+          init_options = {
+            hostInfo = "neovim",
+            typescript = {
+              tsdk = has_mason_tsdk and mason_tsdk or nil,
+            },
+          },
+          root_dir = function(filename, bufnr)
+            local util = require("lspconfig.util")
+            return util.root_pattern("tsconfig.json", "jsconfig.json", "package.json", ".git")(filename)
+          end,
+        }
         servers.eslint = {} -- ESLint for JavaScript / TypeScript
       end
 
@@ -212,6 +228,7 @@ return {
       if vim.fn.executable("node") == 1 or vim.fn.executable("bun") == 1 then
         formatters.javascript = { "prettier" }
         formatters.typescript = { "prettier" }
+        formatters.astro = { "prettier" }
       end
       return {
         formatters_by_ft = formatters,

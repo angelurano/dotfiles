@@ -711,6 +711,7 @@ return {
         preset = {
           header = [[ ]],
           keys = {
+            { icon = "󰙅 ", key = "e", desc = "File Explorer", action = ":lua Snacks.dashboard.pick('explorer')" },
             { icon = "󰋚 ", key = "y", desc = "Yazi File Manager", action = ":Yazi" },
             { icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
             { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },

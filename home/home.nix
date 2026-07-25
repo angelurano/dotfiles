@@ -1,8 +1,4 @@
-{
-  pkgs,
-  antigravity-cli,
-  ...
-}:
+{ pkgs, ... }:
 {
   xdg.enable = true;
   home.preferXdgDirectories = true;
@@ -29,8 +25,6 @@
     yazi
     wsl-open
 
-    antigravity-cli
-
     oh-my-posh
     oh-my-zsh
 
@@ -43,6 +37,8 @@
 
     nil
     nixfmt
+
+    llm-pkgs.antigravity-cli
   ];
 
   home.sessionVariables = {

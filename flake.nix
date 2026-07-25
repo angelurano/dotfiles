@@ -9,8 +9,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    antigravity-nix = {
-      url = "github:jacopone/antigravity-nix/7fd0df73b864c2e385f625df06545c5b3868f057";
+    llm-agents = {
+      url = "github:numtide/llm-agents.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -27,13 +27,20 @@
       # self,
       nixpkgs,
       home-manager,
-      antigravity-nix,
+      llm-agents,
       nix-index-database,
       ...
     }:
     let
       system = "x86_64-linux";
-      pkgs = import nixpkgs { inherit system; };
+      pkgs = import nixpkgs {
+        inherit system;
+        overlays = [
+          (final: prev: {
+            llm-pkgs = llm-agents.packages.${system};
+          })
+        ];
+      };
 
       hm = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
@@ -54,12 +61,6 @@
           ./home/nvim.nix
           ./home/node.nix
         ];
-
-        # Optionally use extraSpecialArgs
-        # to pass through arguments to home.nix
-        extraSpecialArgs = {
-          antigravity-cli = antigravity-nix.packages.${system}.google-antigravity-cli;
-        };
       };
 
     in

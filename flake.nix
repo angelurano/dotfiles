@@ -4,6 +4,8 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
 
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -18,8 +20,6 @@
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    # nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
   };
 
   outputs =
@@ -27,16 +27,25 @@
       # self,
       nixpkgs,
       home-manager,
+      nixpkgs-unstable,
       llm-agents,
       nix-index-database,
       ...
     }:
     let
       system = "x86_64-linux";
+
+      pkgs-unstable = import nixpkgs-unstable {
+        inherit system;
+        config.allowUnfree = true;
+      };
+
       pkgs = import nixpkgs {
         inherit system;
+        config.allowUnfree = true;
         overlays = [
           (final: prev: {
+            unstable = pkgs-unstable;
             llm-pkgs = llm-agents.packages.${system};
           })
         ];

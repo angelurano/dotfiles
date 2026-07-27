@@ -31,7 +31,7 @@ config.window_padding = {
 }
 
 config.use_fancy_tab_bar = false
-config.hide_tab_bar_if_only_one_tab = false
+config.hide_tab_bar_if_only_one_tab = true
 config.tab_max_width = 24
 config.colors = {
   tab_bar = {

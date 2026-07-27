@@ -38,6 +38,8 @@
     nil
     nixfmt
 
+    unstable.herdr
+
     llm-pkgs.antigravity-cli
   ];
 

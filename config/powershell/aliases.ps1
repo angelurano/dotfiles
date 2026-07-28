@@ -2,6 +2,7 @@
 Function l { eza --icons --group-directories-first --git @args }
 Function la { l -Ah @args }
 Function ll { l -lAg @args }
+Remove-Item Alias:\ls -Force -ErrorAction SilentlyContinue
 Set-Alias -Name ls -Value l
 
 # Neovim
@@ -68,6 +69,7 @@ Function Sync-Dotfiles {
         Write-Host "Enlazando: $destination -> $source" -ForegroundColor Cyan
         New-Item -ItemType Junction -Path $destination -Target $source | Out-Null
     }
+
 
     # Also link yazi config in AppData for global Windows support outside PowerShell
     $AppDataYaziConfig = "$env:APPDATA\yazi\config"

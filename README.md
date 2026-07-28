@@ -9,8 +9,10 @@ This repository declaratively manages user packages, dotfiles, development envir
 This environment is designed to bridge the gap between Windows and Linux, sharing configurations (like Neovim, Oh My Posh, and Wezterm) seamlessly:
 
 *   **Linux Environment**: WSL2 running **Debian 13 (Trixie)**, managed declaratively with **Nix (Multi-user installation)** and **Home Manager**.
+*   **Windows Host**: Modern developer environment managed via **Scoop** (including tools like *Neovim*, *Yazi*, *Python*, *fzf*, *fd*, *eza*, *bat*, and *zoxide*).
 *   **Windows Terminal**: **Wezterm** (configured in [config/wezterm/wezterm.lua](config/wezterm/wezterm.lua)) utilizing *Inconsolata Nerd Font Mono* and dark gradients.
 *   **Aesthetics & Prompts**: **Oh My Posh** (configured in [config/ohmyposh/conf.toml](config/ohmyposh/conf.toml)) styled identically on both Windows and Linux.
+*   **Workspace Multiplexer (`herdr`)**: Configured and run exclusively inside **WSL2** for managing layouts and sessions (avoiding Windows host ConPTY graphics limitations).
 
 ## Linux Environment Setup & Updates
 
@@ -170,11 +172,15 @@ graph TD
     ```powershell
     cd ~/dotfiles
     ```
-4.  Manually dot-source the aliases file containing the sync utility:
+4.  Set the PowerShell execution policy to allow running local scripts:
+    ```powershell
+    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+    ```
+5.  Manually dot-source the aliases file containing the sync utility:
     ```powershell
     . .\config\powershell\aliases.ps1
     ```
-5.  Execute the sync command:
+6.  Execute the sync command:
     ```powershell
     Sync-Dotfiles
     ```

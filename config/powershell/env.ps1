@@ -10,3 +10,6 @@ $env:FZF_ALT_C_OPTS = "--height 40% --border --layout=reverse --preview ''"
 $env:YAZI_FILE_ONE = "$HOME\scoop\apps\git\current\usr\bin\file.exe"
 $env:YAZI_CONFIG_HOME = "$env:XDG_CONFIG_HOME\yazi"
 
+# Default shell for multiplexers (e.g., herdr)
+$env:SHELL = "pwsh"
+

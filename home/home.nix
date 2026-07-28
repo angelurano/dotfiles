@@ -17,6 +17,7 @@
     bat
     wget
     xh
+    jq
 
     direnv
     devenv
@@ -41,6 +42,7 @@
     unstable.herdr
 
     llm-pkgs.antigravity-cli
+    llm-pkgs.opencode
   ];
 
   home.sessionVariables = {

@@ -434,9 +434,19 @@ function toggle_terminal(target_count)
       end
 
       -- 7. Focus back to terminal window
-      if vim.api.nvim_win_is_valid(new_win) then
-        vim.api.nvim_set_current_win(new_win)
-        vim.cmd("startinsert")
+      local function focus_term()
+        if vim.api.nvim_win_is_valid(new_win) then
+          vim.api.nvim_set_current_win(new_win)
+          vim.cmd("startinsert")
+        end
+      end
+
+      if reopen_explorer or reopen_sidekick then
+        vim.schedule(function()
+          vim.schedule(focus_term)
+        end)
+      else
+        focus_term()
       end
 
       -- Enforce the saved height on all terminal windows before restoring equalalways
@@ -753,7 +763,6 @@ return {
       { "<leader>t",         toggle_terminal,                               desc = "Toggle Terminal" },
       { "<C-\\>",            toggle_terminal,                               desc = "Toggle Terminal",          mode = { "n", "t" } },
       { "<leader><leader>t", toggle_floating_terminal,                      desc = "Toggle Floating Terminal", mode = "n" },
-      { "0<leader>t",        toggle_floating_terminal,                      desc = "Toggle Floating Terminal", mode = { "n" } },
       { "<leader>ft",        list_terminals,                                desc = "Find Active Terminals" },
 
       -- Notifier keymaps

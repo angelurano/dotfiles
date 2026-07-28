@@ -1,0 +1,66 @@
+[keys]
+prefix = "ctrl+b"
+
+copy_mode       = "prefix+shift+v"
+edit_scrollback = "prefix+shift+e"
+
+toggle_sidebar = "prefix+e"
+
+split_vertical   = "prefix+v"
+split_horizontal = "prefix+s"
+
+close_pane       = "prefix+q"
+close_tab        = "prefix+shift+x"
+new_tab          = ["prefix+t", "prefix+c"]
+zoom             = "prefix+z"
+
+next_tab     = ["prefix+tab", "prefix+n"]
+previous_tab = ["prefix+shift+tab", "prefix+p"]
+
+last_pane    = "prefix+space"
+
+previous_agent = "prefix+["
+next_agent     = "prefix+]"
+
+settings = "prefix+shift+s"
+
+workspace_picker         = "prefix+w"
+new_worktree             = "prefix+shift+g"
+open_notification_target = "prefix+o"
+detach                   = "prefix+shift+q"
+
+switch_tab       = "prefix+1..9"
+switch_workspace = "prefix+shift+1..9"
+
+[[keys.command]]
+key = "prefix+y"
+type = "pane"
+command = "yazi"
+description = "Yazi file manager popup"
+
+[[keys.command]]
+key = "prefix+b"
+type = "popup"
+command = "btop"
+width = "85%"
+height = "85%"
+description = "Btop system monitor popup"
+
+[worktrees]
+directory = "~/.local/share/herdr/worktrees"
+
+[ui]
+pane_gaps = false
+accent = "#CB4B16"
+show_agent_labels_on_pane_borders = true
+
+[theme]
+name = "terminal"
+auto_switch = false
+
+[ui.toast]
+delivery = "system"
+
+[experimental]
+pane_history = true
+kitty_graphics = true

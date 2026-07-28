@@ -199,14 +199,26 @@ config.keys = {
   },
 }
 
-local function is_nvim(pane)
-  if pane:get_user_vars().IS_NVIM == "true" then return true end
+local function is_multiplexed_app(pane)
+  local vars = pane:get_user_vars()
+  if vars.IS_NVIM == "true" or vars.IS_HERDR == "true" then return true end
+
+  local title = pane:get_title():lower()
+  if title:find("n?vim") or title:find("herdr") then return true end
+
   local proc = pane:get_foreground_process_name()
-  if proc and proc:lower():find("n?vim") then return true end
+  if proc then
+    local p = proc:lower()
+    if p:find("n?vim") or p:find("herdr") then return true end
+  end
 
   local info = pane:get_foreground_process_info()
   while info do
-    if (info.name or ""):lower():find("n?vim") or (info.executable or ""):lower():find("n?vim") then return true end
+    local name = (info.name or ""):lower()
+    local exe = (info.executable or ""):lower()
+    if name:find("n?vim") or exe:find("n?vim") or name:find("herdr") or exe:find("herdr") then
+      return true
+    end
     if info.ppid == 0 or info.ppid == info.pid or not wezterm.procinfo then break end
     info = wezterm.procinfo.get_info_for_pid(info.ppid)
   end
@@ -215,7 +227,7 @@ end
 
 local function move_pane(direction, key)
   return wezterm.action_callback(function(window, pane)
-    if is_nvim(pane) then
+    if is_multiplexed_app(pane) then
       window:perform_action(wezterm.action.SendKey({ key = key, mods = "CTRL" }), pane)
     else
       window:perform_action(wezterm.action.ActivatePaneDirection(direction), pane)

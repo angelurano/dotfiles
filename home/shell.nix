@@ -43,6 +43,9 @@
     enableBashIntegration = true;
     enableZshIntegration = true;
     nix-direnv.enable = true;
+    config = {
+      whitelist.prefix = [ config.home.homeDirectory ];
+    };
   };
 
   programs.fzf = {
@@ -93,6 +96,10 @@
     enableZshIntegration = true;
   };
 
+  xdg.configFile."yazi" = {
+    source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/config/yazi";
+  };
+
   programs.btop = {
     enable = true;
     settings = {
@@ -101,8 +108,8 @@
     };
   };
 
-  xdg.configFile."yazi" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/config/yazi";
+  xdg.configFile."herdr" = {
+    source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/config/herdr";
   };
 
   programs.fastfetch = {

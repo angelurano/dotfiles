@@ -1,5 +1,0 @@
-*.log
-*.sock
-session.json
-session-history.json
-sessions/

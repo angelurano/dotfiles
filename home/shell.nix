@@ -108,8 +108,12 @@
     };
   };
 
-  xdg.configFile."herdr" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/config/herdr";
+  xdg.configFile."herdr/config.toml" = {
+    source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/config/herdr/config.toml";
+  };
+
+  xdg.configFile."herdr/plugins/nav" = {
+    source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/config/herdr/plugins/nav";
   };
 
   programs.fastfetch = {

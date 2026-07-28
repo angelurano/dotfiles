@@ -235,14 +235,16 @@ vim.api.nvim_create_autocmd("User", {
     local function navigate(dir)
       return function()
         local win = vim.api.nvim_get_current_win()
-        vim.cmd.wincmd(dir) -- Attempt navigation within Neovim
+        vim.cmd.wincmd(dir)
 
-        -- If the current window remains unchanged, the edge of Neovim has been reached
         if win == vim.api.nvim_get_current_win() then
           local pane_dir = nav[dir]
           if vim.system then
-            -- Call WezTerm CLI to activate the pane in the specified direction
-            vim.system({ wezterm_cmd, "cli", "activate-pane-direction", pane_dir }, { text = true })
+            if os.getenv("HERDR_ENV") == "1" or os.getenv("HERDR_SOCKET_PATH") then
+              vim.system({ "herdr", "pane", "focus", "--direction", pane_dir:lower() }, { text = true })
+            else
+              vim.system({ wezterm_cmd, "cli", "activate-pane-direction", pane_dir }, { text = true })
+            end
           end
         end
       end
@@ -252,7 +254,7 @@ vim.api.nvim_create_autocmd("User", {
     set_user_var("IS_NVIM", "true")
 
     for key, dir in pairs(nav) do
-      vim.keymap.set({ "n", "t" }, "<C-" .. key .. ">", navigate(key), { desc = "Go to " .. dir .. " pane" })
+      vim.keymap.set({ "n", "v", "t" }, "<C-" .. key .. ">", navigate(key), { desc = "Go to " .. dir .. " pane" })
     end
 
     -- Reset the IS_NVIM user variable in WezTerm on exit

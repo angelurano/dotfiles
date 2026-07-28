@@ -144,3 +144,7 @@ zsdoc/data
 .devenv/
 .direnv/
 .pre-commit-config.yaml
+
+# Herdr Plugin Config
+config/herdr/plugins/config/
+

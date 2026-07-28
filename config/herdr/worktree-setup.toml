@@ -1,0 +1,7 @@
+# Reference: https://github.com/tdi/herdr-worktree-setup
+
+[default]
+steps = [
+  'cp "$HERDR_MAIN_REPO"/.env* . 2>/dev/null || true',
+  "direnv allow 2>/dev/null || true"
+]

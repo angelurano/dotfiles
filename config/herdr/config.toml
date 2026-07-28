@@ -17,7 +17,7 @@ new_tab          = ["prefix+t", "prefix+c"]
 zoom             = "prefix+z"
 
 next_tab     = ["prefix+tab", "prefix+n"]
-previous_tab = ["prefix+shift+tab", "prefix+p"]
+previous_tab = "prefix+shift+tab"
 
 last_pane    = "prefix+space"
 
@@ -26,8 +26,10 @@ next_agent     = ["prefix+a", "prefix+]"]
 
 settings = "prefix+shift+s"
 
+goto                     = "prefix+p"
 workspace_picker         = "prefix+w"
 new_worktree             = "prefix+shift+g"
+open_worktree            = "prefix+g"
 open_notification_target = "prefix+o"
 detach                   = "prefix+shift+q"
 

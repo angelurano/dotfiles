@@ -116,6 +116,10 @@
     source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/config/herdr/plugins/nav";
   };
 
+  xdg.configFile."herdr/plugins/config/tdi.worktree-setup/config.toml" = {
+    source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/config/herdr/worktree-setup.toml";
+  };
+
   programs.fastfetch = {
     enable = true;
     settings = {

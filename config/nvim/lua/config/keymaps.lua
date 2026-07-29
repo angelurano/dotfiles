@@ -35,6 +35,16 @@ vim.keymap.set('n', '<M-k>', go_to_last_tab, { desc = 'Go to Last Active Tab' })
 vim.keymap.set('n', '<leader>w', '<cmd>w<CR>', { desc = 'Save file' })
 vim.keymap.set('n', '<leader><Tab>', '<C-^>', { desc = 'Toggle alternate buffer' })
 
+-- Toggle window zoom (maximizes current window in a temporary tab)
+vim.keymap.set('n', '<leader>z', function()
+  if vim.fn.tabpagenr('$') > 1 and vim.t.is_zoomed then
+    vim.cmd('tabclose')
+  else
+    vim.cmd('tab split')
+    vim.t.is_zoomed = true
+  end
+end, { desc = 'Toggle Window Zoom' })
+
 -- Change panel size dynamically with Alt+h/j/k/l (absolute-directional)
 local function resize(dir)
   return function()

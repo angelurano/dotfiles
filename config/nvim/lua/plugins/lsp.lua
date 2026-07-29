@@ -70,7 +70,14 @@ return {
         ui = { border = "rounded" },
       })
 
-      -- Step B: Map of server configurations
+      -- System and OS Environment Detection
+      local has_nix = vim.fn.executable("nix") == 1
+      local is_win = vim.fn.has("win32") == 1 or vim.fn.has("win64") == 1
+      local is_linux = not is_win
+      local has_node = vim.fn.executable("node") == 1 or vim.fn.executable("bun") == 1 or has_nix
+      local has_python = vim.fn.executable("python") == 1 or vim.fn.executable("python3") == 1 or has_nix
+
+      -- Base servers map
       local servers = {
         lua_ls = {
           settings = {
@@ -80,6 +87,7 @@ return {
           },
         },
         clangd = {
+          filetypes = { "c", "cpp", "objc", "objcpp", "cuda" },
           cmd = {
             "clangd",
             "--background-index",
@@ -90,17 +98,17 @@ return {
           },
         }, -- C / C++
         marksman = {
+          filetypes = { "markdown" },
           env = {
             DOTNET_SYSTEM_GLOBALIZATION_INVARIANT = "1",
           },
-        }, -- Markdown LSP
-        -- jdtls = {},  -- Java
+        },          -- Markdown LSP
+        taplo = {}, -- TOML LSP (Rust binary)
+        biome = {}, -- JS/TS/JSON fast linter & formatter (Rust binary)
       }
 
-      local has_nix = vim.fn.executable("nix") == 1
-
-      -- Check for Node.js or Bun executable availability, or if we are on a Nix system (since it can be loaded dynamically)
-      if vim.fn.executable("node") == 1 or vim.fn.executable("bun") == 1 or has_nix then
+      -- Node.js / Bun dependent servers
+      if has_node then
         local mason_tsdk = vim.fn.stdpath("data") ..
             "/mason/packages/typescript-language-server/node_modules/typescript/lib"
         local fs = vim.uv or vim.loop
@@ -113,20 +121,39 @@ return {
               tsdk = has_mason_tsdk and mason_tsdk or nil,
             },
           },
-          root_dir = function(filename, bufnr)
+          root_dir = function(filename, _)
             local util = require("lspconfig.util")
             return util.root_pattern("tsconfig.json", "jsconfig.json", "package.json", ".git")(filename)
           end,
         }
         servers.eslint = {} -- ESLint for JavaScript / TypeScript
+        servers.yamlls = {
+          filetypes = { "yaml" },
+          settings = {
+            yaml = {
+              telemetry = { enabled = false },
+            },
+          },
+        }
+        servers.dockerls = {}
+        servers.jsonls = {}
+
+        -- Shell Scripting LSP (Linux / Unix only)
+        if is_linux then
+          servers.bashls = {
+            filetypes = { "sh", "bash", "zsh" },
+          }
+        end
       end
 
-      -- Biome handles JS/TS linting and formatting (precompiled binary, no cargo or node required)
-      servers.biome = {}
+      -- Python LSP
+      if has_python then
+        servers.basedpyright = {}
+      end
 
-      -- Check for Python executable availability, or if we are on a Nix system
-      if vim.fn.executable("python") == 1 or vim.fn.executable("python3") == 1 or has_nix then
-        servers.basedpyright = {} -- Python LSP
+      -- PowerShell LSP (Windows only)
+      if is_win then
+        servers.powershell_es = {}
       end
 
       -- Nix LSP only on Nix systems
@@ -164,6 +191,8 @@ return {
         float = { border = "rounded" },
       })
 
+      -- Cache snacks module reference once for LspAttach callback
+      local snacks_ok, snacks = pcall(require, "snacks")
 
       -- Keymaps enabled only when LSP attaches
       vim.api.nvim_create_autocmd('LspAttach', {
@@ -172,10 +201,8 @@ return {
             vim.keymap.set('n', keys, func, { buffer = event.buf, desc = desc })
           end
 
-          local ok, snacks = pcall(require, "snacks")
-
           map('gd', vim.lsp.buf.definition, 'Go to Definition')
-          if ok and snacks.picker then
+          if snacks_ok and snacks.picker then
             map('gr', function() snacks.picker.lsp_references() end, 'Go to References')
             map('gI', function() snacks.picker.lsp_implementations() end, 'Go to Implementation')
             map('<leader>ds', function() snacks.picker.lsp_symbols() end, 'Document Symbols')
@@ -206,7 +233,6 @@ return {
   -- 3. CONFORM.NVIM: Code formatter
   {
     'stevearc/conform.nvim',
-    -- event = { "BufWritePre" }, -- disabled
     cmd = { "ConformInfo" },
     keys = {
       {
@@ -217,25 +243,39 @@ return {
       },
     },
     opts = function()
+      local has_nix = vim.fn.executable("nix") == 1
+      local has_node = vim.fn.executable("node") == 1 or vim.fn.executable("bun") == 1 or has_nix
+      local has_python = vim.fn.executable("python") == 1 or vim.fn.executable("python3") == 1 or has_nix
+
       local formatters = {
         lua = { "stylua" },
-        python = { "black" },
         c = { "clang-format" },
         cpp = { "clang-format" },
         nix = { "nixfmt" },
+        sh = { "shfmt" },
+        bash = { "shfmt" },
+        zsh = { "shfmt" },
       }
+
+      -- Ruff format for Python (falls back to black if ruff is not installed)
+      if has_python then
+        formatters.python = { "ruff_format", "black", stop_after_first = true }
+      end
+
       -- Prettier requires Node.js or Bun to run
-      if vim.fn.executable("node") == 1 or vim.fn.executable("bun") == 1 then
+      if has_node then
         formatters.javascript = { "prettier" }
         formatters.typescript = { "prettier" }
         formatters.astro = { "prettier" }
       end
+
       return {
         formatters_by_ft = formatters,
       }
     end,
   },
 
+  -- 4. DIRENV: Environment auto-reloading (Devenv integration)
   {
     "direnv/direnv.vim",
     lazy = false,

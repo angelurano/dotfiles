@@ -33,6 +33,12 @@ if (Get-Command zoxide -ErrorAction SilentlyContinue) {
     Invoke-Expression (& { (zoxide init powershell --cmd z | Out-String) })
 }
 
+# FNM (Fast Node Manager)
+if (Get-Command fnm -ErrorAction SilentlyContinue) {
+    fnm env --use-on-cd | Out-String | Invoke-Expression
+}
+
+
 # Chocolatey Tab Completion (if choco is installed)
 if ($env:ChocolateyInstall) {
     $ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"

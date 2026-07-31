@@ -83,7 +83,7 @@ accent = "#CB4B16"
 show_agent_labels_on_pane_borders = true
 
 [theme]
-name = "terminal"
+name = "vesper"
 auto_switch = false
 
 [ui.toast]

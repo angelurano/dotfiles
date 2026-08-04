@@ -1,7 +1,7 @@
 { pkgs, ... }: {
   languages.javascript = {
     enable = true;
-    package = pkgs.nodejs_22;
+    package = pkgs.nodejs-slim_22;
     pnpm = {
       enable = true;
     };

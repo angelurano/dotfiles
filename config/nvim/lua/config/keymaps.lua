@@ -229,6 +229,7 @@ vim.api.nvim_create_autocmd("User", {
   pattern = "VeryLazy",
   callback = function()
     local nav = { h = "Left", j = "Down", k = "Up", l = "Right" }
+    local wincmd = { h = "h", j = "j", k = "k", l = "l" }
 
     -- Write to stdout and flush immediately for atomic transmission
     local function set_user_var(key, value)
@@ -240,21 +241,94 @@ vim.api.nvim_create_autocmd("User", {
       io.stdout:flush()
     end
 
+    local uv = vim.uv or vim.loop
+    local herdr_pane = vim.env.HERDR_PANE_ID
+    local in_herdr = herdr_pane ~= nil and herdr_pane ~= ""
+
+    local socket_path = vim.env.HERDR_SOCKET_PATH
+    if not socket_path or socket_path == "" then
+      socket_path = vim.fn.expand("~/.config/herdr/herdr.sock")
+    end
+
+    -- Write Neovim PID marker for Herdr's C navigation binary to read
+    local marker_path = nil
+    if in_herdr then
+      local cache = vim.env.XDG_CACHE_HOME
+      if not cache or cache == "" then
+        cache = vim.env.HOME .. "/.cache"
+      end
+      marker_path = cache .. "/herdr/nvim-panes/" .. herdr_pane
+      vim.fn.mkdir(vim.fn.fnamemodify(marker_path, ":h"), "p")
+      local fd = io.open(marker_path, "w")
+      if fd then
+        fd:write(tostring(uv.os_getpid()), "\n")
+        fd:close()
+      end
+    end
+
+    local function release_marker()
+      if marker_path then
+        os.remove(marker_path)
+      end
+    end
+
+    vim.api.nvim_create_autocmd("VimResume", {
+      callback = function()
+        if marker_path then
+          local fd = io.open(marker_path, "w")
+          if fd then
+            fd:write(tostring(uv.os_getpid()), "\n")
+            fd:close()
+          end
+        end
+      end,
+    })
+    vim.api.nvim_create_autocmd({ "VimSuspend", "VimLeavePre" }, { callback = release_marker })
+
+    -- Precompute JSON focus payloads for the socket
+    local focus_payloads = {}
+    if in_herdr then
+      for key, dir in pairs(nav) do
+        focus_payloads[key] = vim.json.encode({
+          id = "nvim.nav",
+          method = "pane.focus_direction",
+          params = { direction = dir:lower(), pane_id = herdr_pane },
+        }) .. "\n"
+      end
+    end
+
+    local function focus_via_socket(key)
+      local pipe = uv.new_pipe(false)
+      if not pipe then return false end
+      local reached = nil
+      pipe:connect(socket_path, function(err)
+        if err then
+          reached = false
+        else
+          pipe:write(focus_payloads[key])
+          reached = true
+        end
+      end)
+      vim.wait(150, function() return reached ~= nil end, 1)
+      pipe:close()
+      return reached == true
+    end
+
     local wezterm_cmd = vim.fn.executable("wezterm.exe") == 1 and "wezterm.exe" or "wezterm"
 
-    local function navigate(dir)
+    local function navigate(key)
       return function()
         local win = vim.api.nvim_get_current_win()
-        vim.cmd.wincmd(dir)
+        vim.cmd("wincmd " .. wincmd[key])
 
         if win == vim.api.nvim_get_current_win() then
-          local pane_dir = nav[dir]
-          if vim.system then
-            if os.getenv("HERDR_ENV") == "1" or os.getenv("HERDR_SOCKET_PATH") then
+          local pane_dir = nav[key]
+          if in_herdr then
+            if not focus_via_socket(key) then
               vim.system({ "herdr", "pane", "focus", "--direction", pane_dir:lower() }, { text = true })
-            else
-              vim.system({ wezterm_cmd, "cli", "activate-pane-direction", pane_dir }, { text = true })
             end
+          else
+            vim.system({ wezterm_cmd, "cli", "activate-pane-direction", pane_dir }, { text = true })
           end
         end
       end
@@ -270,6 +344,7 @@ vim.api.nvim_create_autocmd("User", {
     -- Reset the IS_NVIM user variable in WezTerm on exit
     vim.api.nvim_create_autocmd("VimLeave", {
       callback = function()
+        release_marker()
         if vim.g.vscode then return end
         local seq = "\027]1337;SetUserVar=IS_NVIM=\027\\"
         io.stdout:write(seq)

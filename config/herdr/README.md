@@ -6,11 +6,11 @@ Configuration and plugin setup for **Herdr**, a terminal multiplexer for coding 
 
 When bootstrapping a new machine, register the installed plugins via the Herdr CLI:
 
-### 1. Smart Navigation (`nav` - Local)
-Enables seamless `CTRL+h/j/k/l` navigation between Neovim splits and Herdr panes.
+### 1. Smart Navigation (`herdr-nvim-nav` fork)
+Enables low-latency seamless `CTRL+h/j/k/l` navigation between Neovim splits and Herdr panes:
 
 ```bash
-herdr plugin link ~/dotfiles/config/herdr/plugins/nav
+herdr plugin install angelurano/herdr-nvim-nav --ref ec047fd6d8d0269d54a34e9405af28d8aad4c8f0 --yes
 ```
 
 ### 2. Worktree Setup (`tdi.worktree-setup` - Pinned)

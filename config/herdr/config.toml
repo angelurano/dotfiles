@@ -53,25 +53,25 @@ description = "Btop system monitor popup"
 [[keys.command]]
 key = "ctrl+h"
 type = "plugin_action"
-command = "nav.left"
+command = "herdr-nvim-nav.left"
 description = "Smart navigate left"
 
 [[keys.command]]
 key = "ctrl+j"
 type = "plugin_action"
-command = "nav.down"
+command = "herdr-nvim-nav.down"
 description = "Smart navigate down"
 
 [[keys.command]]
 key = "ctrl+k"
 type = "plugin_action"
-command = "nav.up"
+command = "herdr-nvim-nav.up"
 description = "Smart navigate up"
 
 [[keys.command]]
 key = "ctrl+l"
 type = "plugin_action"
-command = "nav.right"
+command = "herdr-nvim-nav.right"
 description = "Smart navigate right"
 
 [worktrees]

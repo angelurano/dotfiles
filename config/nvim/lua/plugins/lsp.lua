@@ -197,6 +197,20 @@ return {
       -- Keymaps enabled only when LSP attaches
       vim.api.nvim_create_autocmd('LspAttach', {
         callback = function(event)
+          local bufnr = event.buf
+          local buftype = vim.bo[bufnr].buftype
+          local bufname = vim.api.nvim_buf_get_name(bufnr)
+          local is_file = buftype == "" and (bufname == "" or bufname:match("^/") or bufname:match("^[a-zA-Z]:"))
+          if not is_file then
+            local client_id = event.data.client_id
+            vim.schedule(function()
+              if vim.api.nvim_buf_is_valid(bufnr) then
+                vim.lsp.buf_detach_client(bufnr, client_id)
+              end
+            end)
+            return
+          end
+
           local map = function(keys, func, desc)
             vim.keymap.set('n', keys, func, { buffer = event.buf, desc = desc })
           end

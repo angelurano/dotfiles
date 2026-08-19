@@ -69,7 +69,8 @@ return {
             { "n", "<leader>co", actions.conflict_choose("ours"),   { desc = "Choose OURS (local)" } },
             { "n", "<leader>ct", actions.conflict_choose("theirs"), { desc = "Choose THEIRS (remote)" } },
             { "n", "<leader>cb", actions.conflict_choose("base"),   { desc = "Choose BASE" } },
-            { "n", "<leader>ca", actions.conflict_choose("all"),    { desc = "Choose ALL (keep both)" } },
+            { "n", "<leader>ca", false }, -- Disable default Diffview mapping to prevent clash with LSP Code Actions
+            { "n", "<leader>cA", actions.conflict_choose("all"),    { desc = "Choose ALL (keep both)" } },
             { "n", "<leader>cx", actions.conflict_choose("none"),   { desc = "Choose NONE" } },
             { "n", "q",          "<cmd>DiffviewClose<CR>",          { desc = "Close diffview" } },
           },

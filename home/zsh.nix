@@ -15,7 +15,7 @@
 
     enableCompletion = true;
     autosuggestion.enable = true;
-    # syntaxHighlighting.enable = true;
+    syntaxHighlighting.enable = true;
 
     history = {
       path = "${config.xdg.stateHome}/zsh/history";
@@ -38,6 +38,49 @@
     initContent = lib.mkOrder 1500 ''
       unsetopt BEEP
       eval "$(${pkgs.oh-my-posh}/bin/oh-my-posh init zsh --config ${config.xdg.configHome}/ohmyposh/conf.toml)"
+
+      command_not_found_handler() {
+        local cmd="$1"
+        shift
+
+        trap 'return 130' INT
+
+        print -P "Command '$cmd' not found"
+
+        local nix_packages=()
+        if (( $+commands[nix-locate] )); then
+          local raw_matches
+          raw_matches=$(nix-locate --minimal --no-group --type x --type s --whole-name --at-root "/bin/$cmd" 2>/dev/null)
+          if [[ -n "$raw_matches" ]]; then
+            nix_packages=(''${(f)"$(echo "$raw_matches" | sed -E 's/\.[^.]+$//' | sort -u)"})
+          fi
+        fi
+
+        if (( ''${#nix_packages[@]} > 0 )); then
+          print -P "  %F{blue}Nix (run with comma):%f"
+          print -P "    , $cmd"
+          print -P "  %F{blue}Nix Shell (Flakes):%f"
+          local count=0
+          for pkg in "''${nix_packages[@]}"; do
+            if (( count < 5 )); then
+              print -P "    nix shell nixpkgs#$pkg"
+            fi
+            (( count++ ))
+          done
+          if (( count > 5 )); then
+            print -P "    %F{242}... (and $(( count - 5 )) more packages)%f"
+          fi
+        fi
+
+        if (( $+commands[apt-cache] )); then
+          if apt-cache show "$cmd" &>/dev/null; then
+            print -P "  %F{yellow}Debian (APT):%f"
+            print -P "    sudo apt install $cmd"
+          fi
+        fi
+
+        return 127
+      }
     '';
 
     loginExtra = ''

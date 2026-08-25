@@ -1,9 +1,9 @@
 { pkgs, ... }: {
   languages.javascript = {
     enable = true;
-    bun = {
-      enable = true;
-    };
+    bun.enable = true;
+    nodejs.enable = false;
+    lsp.enable = false;
   };
 
   enterShell = ''

@@ -357,9 +357,6 @@ vim.api.nvim_create_autocmd("User", {
 
     for key, dir in pairs(nav) do
       vim.keymap.set({ "n", "v", "t" }, "<C-" .. key .. ">", navigate(key), { desc = "Go to " .. dir .. " pane" })
-      if key == "h" then
-        vim.keymap.set({ "n", "v", "t" }, "<BS>", navigate("h"), { desc = "Go to Left pane" })
-      end
     end
 
     -- Reset the IS_NVIM user variable in WezTerm on exit

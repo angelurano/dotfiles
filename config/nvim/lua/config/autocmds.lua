@@ -138,3 +138,13 @@ vim.api.nvim_create_autocmd("TermClose", {
     end
   end,
 })
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "markdown",
+  desc = "Conceal markdown escape characters and format cleanly in hover/docs",
+  callback = function()
+    vim.opt_local.conceallevel = 2
+    vim.opt_local.concealcursor = "nc"
+  end,
+})
+

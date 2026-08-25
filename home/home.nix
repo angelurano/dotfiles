@@ -19,8 +19,8 @@
     xh
     jq
 
+    unstable.devenv
     direnv
-    devenv
     hyperfine
 
     yazi

@@ -36,6 +36,7 @@
     RUSTUP_HOME = "${config.xdg.dataHome}/rustup";
     GOPATH = "${config.xdg.dataHome}/go";
     GOMODCACHE = "${config.xdg.cacheHome}/go/pkg/mod";
+    DEVENV_HOME = "${config.xdg.dataHome}/devenv";
   };
 
   programs.direnv = {

@@ -16,6 +16,9 @@
 
   git-hooks = {
     enable = true;
-    hooks.pre-commit.enable = true;
+    hooks = {
+      ruff.enable = true;
+      ruff-format.enable = true;
+    };
   };
 }

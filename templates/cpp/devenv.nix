@@ -1,8 +1,9 @@
 { pkgs, ... }: {
   languages.cplusplus.enable = true;
-  languages.c.enable = true;
   packages = [
     pkgs.compiledb
+    pkgs.valgrind
+    pkgs.gdb
   ];
 
   env.CXX = "g++";
@@ -21,8 +22,17 @@
     fi
   '';
 
-  # Run this script via 'devenv shell lsp-reload' (or 'lsp-reload' inside the shell) to generate compile_commands.json.
-  scripts.lsp-reload.exec = "compiledb -n make -B";
+  # Run via 'devenv tasks run lsp:reload' to force generate compile_commands.json.
+  tasks."lsp:reload" = {
+    exec = "if [ -f Makefile ]; then compiledb -n make -B; fi";
+    execIfModified = [
+      "Makefile"
+      "**/*.cpp"
+      "**/*.hpp"
+      "**/*.cc"
+      "**/*.h"
+    ];
+  };
 
   git-hooks = {
     enable = true;

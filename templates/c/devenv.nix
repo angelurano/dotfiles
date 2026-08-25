@@ -21,8 +21,15 @@
     fi
   '';
 
-  # Run this script via 'devenv shell lsp-reload' (or 'lsp-reload' inside the shell) to generate compile_commands.json.
-  scripts.lsp-reload.exec = "compiledb -n make -B";
+  # Run via 'devenv tasks run lsp:reload' to force generate compile_commands.json.
+  tasks."lsp:reload" = {
+    exec = "if [ -f Makefile ]; then compiledb -n make -B; fi";
+    execIfModified = [
+      "Makefile"
+      "**/*.c"
+      "**/*.h"
+    ];
+  };
 
   git-hooks = {
     enable = true;

@@ -3,37 +3,37 @@ onboarding = false
 [keys]
 prefix = "ctrl+b"
 
-copy_mode       = "prefix+shift+v"
+copy_mode = "prefix+shift+v"
 edit_scrollback = "prefix+shift+e"
 
 toggle_sidebar = "prefix+e"
 
-split_vertical   = "prefix+v"
+split_vertical = "prefix+v"
 split_horizontal = "prefix+s"
 
-close_pane       = "prefix+q"
-close_tab        = "prefix+shift+x"
-new_tab          = ["prefix+t", "prefix+c"]
-zoom             = "prefix+z"
+close_pane = "prefix+q"
+close_tab = "prefix+shift+x"
+new_tab = ["prefix+t", "prefix+c"]
+zoom = "prefix+z"
 
-next_tab     = ["prefix+tab", "prefix+n"]
+next_tab = ["prefix+tab", "prefix+n"]
 previous_tab = "prefix+shift+tab"
 
-last_pane    = "prefix+space"
+last_pane = "prefix+space"
 
 previous_agent = ["prefix+shift+a", "prefix+["]
-next_agent     = ["prefix+a", "prefix+]"]
+next_agent = ["prefix+a", "prefix+]"]
 
 settings = "prefix+shift+s"
 
-goto                     = "prefix+p"
-workspace_picker         = "prefix+w"
-new_worktree             = "prefix+shift+g"
-open_worktree            = "prefix+g"
+goto = "prefix+p"
+workspace_picker = "prefix+w"
+new_worktree = "prefix+shift+g"
+open_worktree = "prefix+g"
 open_notification_target = "prefix+o"
-detach                   = "prefix+shift+q"
+detach = "prefix+shift+q"
 
-switch_tab       = "prefix+1..9"
+switch_tab = "prefix+1..9"
 switch_workspace = ["prefix+alt+1..9"]
 
 [[keys.command]]
@@ -81,6 +81,7 @@ directory = "~/.local/share/herdr/worktrees"
 pane_gaps = false
 accent = "#CB4B16"
 show_agent_labels_on_pane_borders = true
+window_title = "herdr: {workspace}"
 
 [theme]
 name = "vesper"

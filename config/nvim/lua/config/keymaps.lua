@@ -272,7 +272,7 @@ vim.api.nvim_create_autocmd("User", {
       end
     end
 
-    vim.api.nvim_create_autocmd("VimResume", {
+    vim.api.nvim_create_autocmd({ "VimResume", "FocusGained" }, {
       callback = function()
         if marker_path then
           local fd = io.open(marker_path, "w")
@@ -300,18 +300,36 @@ vim.api.nvim_create_autocmd("User", {
     local function focus_via_socket(key)
       local pipe = uv.new_pipe(false)
       if not pipe then return false end
-      local reached = nil
+      local done = false
+      local ok = false
       pipe:connect(socket_path, function(err)
-        if err then
-          reached = false
+        if not err then
+          pipe:write(focus_payloads[key], function(write_err)
+            ok = not write_err
+            pcall(function()
+              if not pipe:is_closing() then
+                pipe:close(function()
+                  done = true
+                end)
+              else
+                done = true
+              end
+            end)
+          end)
         else
-          pipe:write(focus_payloads[key])
-          reached = true
+          pcall(function()
+            if not pipe:is_closing() then
+              pipe:close(function()
+                done = true
+              end)
+            else
+              done = true
+            end
+          end)
         end
       end)
-      vim.wait(150, function() return reached ~= nil end, 1)
-      pipe:close()
-      return reached == true
+      vim.wait(150, function() return done end, 1)
+      return ok
     end
 
     local wezterm_cmd = vim.fn.executable("wezterm.exe") == 1 and "wezterm.exe" or "wezterm"
@@ -339,6 +357,9 @@ vim.api.nvim_create_autocmd("User", {
 
     for key, dir in pairs(nav) do
       vim.keymap.set({ "n", "v", "t" }, "<C-" .. key .. ">", navigate(key), { desc = "Go to " .. dir .. " pane" })
+      if key == "h" then
+        vim.keymap.set({ "n", "v", "t" }, "<BS>", navigate("h"), { desc = "Go to Left pane" })
+      end
     end
 
     -- Reset the IS_NVIM user variable in WezTerm on exit

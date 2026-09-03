@@ -188,8 +188,9 @@
                  "${config.xdg.stateHome}/python" \
                  "${config.xdg.stateHome}/node" \
                  "${config.xdg.stateHome}/less"
-    run mkdir -p "${config.xdg.cacheHome}/npm"
-    run mkdir -p "${config.xdg.dataHome}/npm/bin"
+    run mkdir -p "${config.xdg.cacheHome}/npm" \
+                 "${config.xdg.dataHome}/npm/bin" \
+                 "${config.xdg.dataHome}/npm/lib/node_modules"
   '';
 
   xdg.configFile."wgetrc".text = ''

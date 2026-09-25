@@ -37,6 +37,7 @@
     GOPATH = "${config.xdg.dataHome}/go";
     GOMODCACHE = "${config.xdg.cacheHome}/go/pkg/mod";
     DEVENV_HOME = "${config.xdg.dataHome}/devenv";
+    GIT_PAGER = "cat";
   };
 
   programs.direnv = {

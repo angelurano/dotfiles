@@ -16,7 +16,7 @@
         defaultBranch = "main";
       };
       color.ui = "auto";
-      core.pager = "";
+      core.pager = "cat";
     };
     ignores = [
       ".direnv"

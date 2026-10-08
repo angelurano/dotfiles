@@ -18,6 +18,7 @@
     wget
     xh
     jq
+    imagemagick
 
     unstable.devenv
     direnv

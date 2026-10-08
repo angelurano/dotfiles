@@ -1,6 +1,10 @@
 { pkgs, ... }: {
   languages.python = {
     enable = true;
+    libraries = [
+      pkgs.zlib
+      pkgs.stdenv.cc.cc.lib
+    ];
     venv.enable = true;
     uv = {
       enable = true;

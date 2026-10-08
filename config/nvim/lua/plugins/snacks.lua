@@ -604,6 +604,9 @@ return {
         enabled = true,
       },
 
+      -- Bigfile detection to prevent lag on massive files
+      bigfile = { enabled = true },
+
       -- Native image renderer (disabled in WSL due to terminal bridge rendering limits)
       image = { enabled = vim.fn.has("wsl") == 0 },
 

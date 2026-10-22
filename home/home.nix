@@ -9,7 +9,7 @@
 
     neovim
 
-    fastfetch
+    # fastfetch in ./shell.nix via programs.fastfetch (using pkgs.unstable.fastfetch)
     ripgrep
     fd
     fzf

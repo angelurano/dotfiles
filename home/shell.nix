@@ -126,6 +126,7 @@
 
   programs.fastfetch = {
     enable = true;
+    package = pkgs.unstable.fastfetch;
     settings = {
       logo = {
         source = "Debian_small";
@@ -143,7 +144,11 @@
         "host"
         "os"
         "kernel"
-        "wm"
+        {
+          type = "wm";
+          key = "WM";
+          format = "{2}{?5} {5}{?}{?3} ({3}){?}";
+        }
         "shell"
         "editor"
         {

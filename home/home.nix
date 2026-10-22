@@ -4,31 +4,20 @@
   home.preferXdgDirectories = true;
 
   home.packages = with pkgs; [
-    git
-    gh
-
     neovim
 
-    # fastfetch in ./shell.nix via programs.fastfetch (using pkgs.unstable.fastfetch)
-    ripgrep
-    fd
-    fzf
+    # git and gh in ./git.nix via programs.git and programs.gh
+    # fastfetch, fzf, bat, direnv, yazi, fd, ripgrep, jq, and oh-my-posh in ./shell.nix via programs.*
+    # oh-my-zsh in ./zsh.nix via programs.zsh.oh-my-zsh
     eza
-    bat
     wget
     xh
-    jq
     imagemagick
 
     unstable.devenv
-    direnv
     hyperfine
 
-    yazi
     wsl-open
-
-    oh-my-posh
-    oh-my-zsh
 
     nodejs_24
     python314

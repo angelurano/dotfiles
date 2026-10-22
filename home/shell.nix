@@ -12,7 +12,7 @@
     la = "ls -Ah";
     ll = "ls -lAh";
     man = "BAT_THEME='Monokai Extended' batman";
-    cat = "bat";
+    cat = "bat --paging=never";
     tree = "eza --tree --icons --git --group-directories-first";
     xdg-open = "wsl-open";
   };
@@ -37,6 +37,7 @@
     GOPATH = "${config.xdg.dataHome}/go";
     GOMODCACHE = "${config.xdg.cacheHome}/go/pkg/mod";
     DEVENV_HOME = "${config.xdg.dataHome}/devenv";
+    PAGER = "cat";
     GIT_PAGER = "cat";
   };
 
@@ -96,6 +97,35 @@
     extraPackages = with pkgs.bat-extras; [
       batman
     ];
+  };
+
+  programs.fd = {
+    enable = true;
+    hidden = true;
+    ignores = [
+      ".git/"
+      ".direnv/"
+      ".devenv/"
+      "node_modules/"
+    ];
+  };
+
+  programs.ripgrep = {
+    enable = true;
+    arguments = [
+      "--smart-case"
+    ];
+  };
+
+  programs.jq = {
+    enable = true;
+  };
+
+  programs.oh-my-posh = {
+    enable = true;
+    enableBashIntegration = true;
+    enableZshIntegration = true;
+    configFile = "${config.xdg.configHome}/ohmyposh/conf.toml";
   };
 
   programs.yazi = {

@@ -37,7 +37,6 @@
 
     initContent = lib.mkOrder 1500 ''
       unsetopt BEEP
-      eval "$(${pkgs.oh-my-posh}/bin/oh-my-posh init zsh --config ${config.xdg.configHome}/ohmyposh/conf.toml)"
 
       command_not_found_handler() {
         local cmd="$1"

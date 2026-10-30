@@ -3,6 +3,10 @@ return {
     'nvim-lualine/lualine.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     lazy = false,
+    -- Do not load Lualine in virtual console TTYs (TERM=linux)
+    cond = function()
+      return vim.env.TERM ~= "linux"
+    end,
     config = function()
       local colors = {
         bg         = '#0b1015',
@@ -18,11 +22,11 @@ return {
         wez_bottom = '#331717',
       }
 
+      -- Custom theme specific to Ayu
       local ayu_lualine = {
         normal = {
           a = { fg = colors.white, bg = colors.accent, bold = true },
           b = { fg = colors.white, bg = colors.widget_bg },
-          -- c = { fg = colors.fg, bg = colors.wez_bottom },
           c = { fg = colors.fg, bg = colors.dark_bg },
         },
         insert = {
@@ -44,14 +48,21 @@ return {
         },
       }
 
+      local function get_theme()
+        if vim.g.colors_name == "ayu_dobri" or vim.g.colors_name == "ayu" then
+          return ayu_lualine
+        end
+        return "auto"
+      end
+
       require('lualine').setup({
         options = {
-          theme = ayu_lualine,
+          theme = get_theme(),
           component_separators = { left = '│', right = '│' },
           section_separators = { left = '', right = '' },
           globalstatus = true,
           disabled_filetypes = {
-            statusline = { 'snacks_dashboard', 'alpha', 'dashboard' },
+            statusline = { 'snacks_dashboard', 'alpha', 'dashboard', 'terminal', 'snacks_terminal' },
           },
         },
         sections = {
@@ -73,6 +84,17 @@ return {
           lualine_y = { 'location' },
           lualine_z = {}
         },
+      })
+
+      -- Re-evaluate Lualine theme when colorscheme changes dynamically
+      vim.api.nvim_create_autocmd("ColorScheme", {
+        callback = function()
+          require('lualine').setup({
+            options = {
+              theme = get_theme(),
+            }
+          })
+        end,
       })
     end
   }

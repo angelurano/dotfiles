@@ -771,6 +771,52 @@ return {
       -- Notifier keymaps
       { "<leader>nh",        function() Snacks.notifier.show_history() end, desc = "Notification History" },
       { "<leader>nd",        function() Snacks.notifier.hide() end,         desc = "Dismiss All Notifications" },
+
+      -- Theme selector with persistence (Find Colorschemes)
+      {
+        "<leader>fc",
+        function()
+          local theme_mgr = require("config.theme")
+          local items = theme_mgr.get_all_picker_items()
+
+          Snacks.picker({
+            title = "Colorschemes",
+            items = items,
+            format = "text",
+            preset = "vertical",
+            preview = function(ctx)
+              if not ctx.preview.state.initial_theme then
+                ctx.preview.state.initial_theme = theme_mgr.get_current()
+                ctx.preview.win:on("WinClosed", function()
+                  vim.schedule(function()
+                    if ctx.preview.state.initial_theme then
+                      theme_mgr.apply(ctx.preview.state.initial_theme)
+                    end
+                  end)
+                end, { win = true })
+              end
+
+              vim.schedule(function()
+                theme_mgr.apply(ctx.item)
+              end)
+
+              Snacks.picker.preview.file(ctx)
+            end,
+            confirm = function(picker, item)
+              picker:close()
+              if item then
+                picker.preview.state.initial_theme = nil -- Prevent reverting on close
+                vim.schedule(function()
+                  theme_mgr.apply(item)
+                  theme_mgr.save(item)
+                  vim.notify("Theme saved: " .. item.text, vim.log.levels.INFO, { title = "Colorschemes" })
+                end)
+              end
+            end,
+          })
+        end,
+        desc = "Find Colorschemes (Persistent)",
+      },
     },
     config = function(_, opts)
       require("snacks").setup(opts)

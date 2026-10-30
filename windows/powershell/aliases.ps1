@@ -2,14 +2,24 @@
 Function l { eza --icons --group-directories-first --git @args }
 Function la { l -Ah @args }
 Function ll { l -lAg @args }
+Function lA { l -lbA @args }
+Function tree { eza --tree --icons --git --group-directories-first @args }
 Remove-Item Alias:\ls -Force -ErrorAction SilentlyContinue
 Set-Alias -Name ls -Value l
+
+# Bat (modern cat alternative)
+Function cat { bat --paging=never @args }
 
 # Neovim
 function nvim {
     & "$HOME\scoop\apps\neovim\current\bin\nvim.exe" @args
 }
 Set-Alias -Name vim -Value nvim
+Set-Alias -Name vi -Value nvim
+Set-Alias -Name v -Value nvim
+
+# Herdr
+function h { herdr @args }
 
 # Yazi
 function y {
@@ -55,18 +65,33 @@ Function Sync-Dotfiles {
         New-Item -ItemType Directory -Path $ConfigDir | Out-Null 
     }
 
-    # Folders to symlink from dotfiles/config to ~/.config
-    $folders = @("nvim", "wezterm", "ohmyposh", "powershell", "winfetch", "yazi")
+    # Shared folders to symlink from dotfiles/common to ~/.config
+    $commonFolders = @("nvim", "ohmyposh", "yazi")
 
-    foreach ($folder in $folders) {
+    foreach ($folder in $commonFolders) {
         $destination = "$ConfigDir\$folder"
-        $source = "$RepoDir\config\$folder"
+        $source = "$RepoDir\common\$folder"
 
         if (Test-Path -Path $destination) { 
             Remove-Item -Recurse -Force $destination 
         }
 
-        Write-Host "Enlazando: $destination -> $source" -ForegroundColor Cyan
+        Write-Host "Enlazando (common): $destination -> $source" -ForegroundColor Cyan
+        New-Item -ItemType Junction -Path $destination -Target $source | Out-Null
+    }
+
+    # Windows-exclusive folders to symlink from dotfiles/windows to ~/.config
+    $windowsFolders = @("powershell", "wezterm", "winfetch")
+
+    foreach ($folder in $windowsFolders) {
+        $destination = "$ConfigDir\$folder"
+        $source = "$RepoDir\windows\$folder"
+
+        if (Test-Path -Path $destination) { 
+            Remove-Item -Recurse -Force $destination 
+        }
+
+        Write-Host "Enlazando (windows): $destination -> $source" -ForegroundColor Cyan
         New-Item -ItemType Junction -Path $destination -Target $source | Out-Null
     }
 
@@ -91,7 +116,7 @@ Function Sync-Dotfiles {
             New-Item -ItemType Directory -Path $profileDir | Out-Null 
         }
 
-        $repoProfilePath = "$RepoDir\config\powershell\Microsoft.PowerShell_profile.ps1"
+        $repoProfilePath = "$RepoDir\windows\powershell\Microsoft.PowerShell_profile.ps1"
         if (Test-Path -Path $repoProfilePath) {
             Copy-Item -Path $repoProfilePath -Destination $PROFILE -Force
             Write-Host "Perfil copiado de: $repoProfilePath a: $PROFILE" -ForegroundColor Green

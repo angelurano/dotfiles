@@ -145,6 +145,17 @@ zsdoc/data
 .direnv/
 .pre-commit-config.yaml
 
-# Herdr Plugin Config
-config/herdr/plugins/config/
+# Secrets, Credentials, and Runtime State Safety
+.env*
+!.envrc
+*.pem
+*.key
+*rclone.conf*
+*.log
+session.json
+session-history.json
+session-snapshots/
+plugins.json
+.plugins.lock
+common/herdr/plugins/
 

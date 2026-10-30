@@ -1,14 +1,17 @@
 return {
-  -- LAZYDEV: Configure Lua LS for Neovim config and plugin APIs
+  -- LAZYDEV: Configure Lua LS for Neovim config, plugin APIs, and Hyprland Lua stubs
   {
     "folke/lazydev.nvim",
     ft = "lua", -- Only load lazydev for Lua files
-    opts = {
-      library = {
-        -- Load luvit types for vim.uv
-        { path = "${3rd}/luv/library", words = { "vim%.uv" } },
-      },
-    },
+    opts = function(_, opts)
+      opts.library = opts.library or {}
+      -- Load luvit types for vim.uv
+      table.insert(opts.library, { path = "${3rd}/luv/library", words = { "vim%.uv" } })
+      -- Load Hyprland 0.57+ Lua stubs when available on Arch/Linux
+      if (vim.uv or vim.loop).fs_stat("/usr/share/hypr/stubs") then
+        table.insert(opts.library, { path = "/usr/share/hypr/stubs", words = { "hl%." } })
+      end
+    end,
   },
 
   -- 1. BLINK.CMP: Asynchronous completion engine
@@ -82,7 +85,7 @@ return {
         lua_ls = {
           settings = {
             Lua = {
-              diagnostics = { globals = { "vim" } }, -- Prevent global variable warnings for 'vim'
+              diagnostics = { globals = { "vim", "hl" } }, -- Prevent global variable warnings for 'vim' and Hyprland 'hl'
             },
           },
         },

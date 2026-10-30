@@ -87,9 +87,11 @@ window_title = "herdr: {workspace}"
 name = "vesper"
 auto_switch = false
 
+[terminal]
+kitty_graphics = true
+
 [ui.toast]
 delivery = "terminal"
 
 [experimental]
 pane_history = true
-kitty_graphics = true

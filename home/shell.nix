@@ -7,10 +7,15 @@
 {
   home.shellAliases = {
     sudo = "sudo ";
-    vi = "vim";
+    vi = "nvim";
+    vim = "nvim";
+    v = "nvim";
+    h = "herdr";
     ls = "eza --icons --group-directories-first --git";
+    l = "eza -blFG --icons --git --group-directories-first";
     la = "ls -Ah";
     ll = "ls -lAh";
+    lA = "eza -lbA --icons --git --group-directories-first";
     man = "BAT_THEME='Monokai Extended' batman";
     cat = "bat --paging=never";
     tree = "eza --tree --icons --git --group-directories-first";
@@ -135,7 +140,7 @@
   };
 
   xdg.configFile."yazi" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/config/yazi";
+    source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/common/yazi";
   };
 
   programs.btop = {
@@ -147,11 +152,11 @@
   };
 
   xdg.configFile."herdr/config.toml" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/config/herdr/config.toml";
+    source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/common/herdr/config.toml";
   };
 
   xdg.configFile."herdr/plugins/config/tdi.worktree-setup/config.toml" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/config/herdr/worktree-setup.toml";
+    source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/common/herdr/worktree-setup.toml";
   };
 
   programs.fastfetch = {

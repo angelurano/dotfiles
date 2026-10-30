@@ -1,0 +1,18 @@
+[user]
+	name = Angel
+	email = angelurano00@gmail.com
+[core]
+	editor = nvim
+	pager = cat
+[init]
+	defaultBranch = main
+[color]
+	ui = auto
+[alias]
+	branches = log --oneline --graph --decorate --all --color=always
+[credential "https://github.com"]
+	helper = 
+	helper = !gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !gh auth git-credential

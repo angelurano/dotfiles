@@ -6,7 +6,7 @@
 }:
 {
 
-  xdg.configFile."ohmyposh/conf.toml".source = ../config/ohmyposh/conf.toml;
+  xdg.configFile."ohmyposh/conf.toml".source = ../common/ohmyposh/conf.toml;
 
   programs.zsh = {
     enable = true;

@@ -7,7 +7,7 @@
     settings = {
       user = {
         email = "angelurano00@gmail.com";
-        name = "Miguel Angel Garcia Beltran";
+        name = "Angel";
       };
       alias = {
         branches = "log --oneline --graph --decorate --all --color=always";

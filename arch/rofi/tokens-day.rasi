@@ -1,0 +1,10 @@
+* {
+    bg:           #d1cdb7;
+    bg-surface:   #dad4bb;
+    bg-muted:     #b4af9a;
+    primary:      #57544a;
+    primary-dark: #4e4b42;
+    alert:        #cd664d;
+    text:         #3f3d36;
+    shadow-hard:  rgba(78, 75, 66, 0.88);
+}

@@ -1,0 +1,147 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 32,
+    "spacing": 0,
+    "modules-left": [
+        "custom/bar",
+        "hyprland/workspaces",
+        "hyprland/submap"
+    ],
+    "modules-center": [
+        "clock"
+    ],
+    "modules-right": [
+        "custom/theme",
+        "cpu",
+        "memory",
+        "network",
+        "bluetooth",
+        "pulseaudio",
+        "backlight",
+        "battery",
+        "tray",
+        "custom/sys"
+    ],
+    "custom/bar": {
+        "format": " ",
+        "tooltip-format": "Launcher  [SUPER + Space]",
+        "on-click": "if command -v uwsm >/dev/null 2>&1 && uwsm check is-active hyprland.desktop >/dev/null 2>&1; then rofi -show drun -run-command 'uwsm app -- {cmd}'; else rofi -show drun; fi"
+    },
+    "hyprland/workspaces": {
+        "disable-scroll": false,
+        "all-outputs": true,
+        "warp-on-scroll": false,
+        "format": " ■ {icon} ",
+        "format-icons": {
+            "1": "01",
+            "2": "02",
+            "3": "03",
+            "4": "04",
+            "5": "05",
+            "6": "06",
+            "7": "07",
+            "8": "08",
+            "9": "09",
+            "10": "10",
+            "default": "00"
+        },
+        "persistent-workspaces": {
+            "*": 5
+        }
+    },
+    "hyprland/submap": {
+        "format": " ■ {submap} [ESC] ",
+        "max-length": 24,
+        "tooltip": false
+    },
+    "clock": {
+        "format": "{:%H:%M  /  %d.%m.%Y}",
+        "tooltip-format": "<b>■ Local Time                              03</b>\n<tt><small>{calendar}</small></tt>"
+    },
+    "custom/theme": {
+        "exec": "~/.config/hypr/scripts/theme.sh status",
+        "return-type": "json",
+        "interval": "once",
+        "signal": 8,
+        "on-click": "~/.config/hypr/scripts/theme.sh toggle"
+    },
+    "cpu": {
+        "interval": 4,
+        "format": " ■ CPU {usage:02d}% ",
+        "tooltip-format": "Processor Load: {usage}%",
+        "on-click": "kitty --class floating_tui -e btop"
+    },
+    "memory": {
+        "interval": 5,
+        "format": " ■ MEM {percentage:02d}% ",
+        "tooltip-format": "Memory: {used:0.2f} / {total:0.2f} GiB ({percentage}%)\nSwap:   {swapUsed:0.2f} / {swapTotal:0.2f} GiB",
+        "on-click": "kitty --class floating_tui -e btop"
+    },
+    "network": {
+        "format-wifi": " ■ NET {signalStrength}% ",
+        "format-ethernet": " ■ NET ETH ",
+        "format-disconnected": " ■ NET OFF ",
+        "tooltip-format-wifi": "Network: {essid} ({signalStrength}%)\nAddress: {ipaddr}",
+        "tooltip-format-ethernet": "Ethernet: {ifname}\nAddress:  {ipaddr}",
+        "tooltip-format-disconnected": "Network: Disconnected",
+        "on-click": "kitty --class floating_tui -e impala"
+    },
+    "bluetooth": {
+        "format": " ■ BT {status} ",
+        "format-disabled": "",
+        "format-off": "",
+        "format-on": " ■ BT ON ",
+        "format-connected": " ■ BT {num_connections} ",
+        "tooltip-format": "Controller: {controller_alias}",
+        "tooltip-format-connected": "Controller: {controller_alias}\n\n{device_enumerate}",
+        "tooltip-format-enumerate-connected": "■ {device_alias} ({device_address})",
+        "on-click": "kitty --class floating_tui -e bluetui"
+    },
+    "pulseaudio": {
+        "format": " ■ VOL {volume:02d}% ",
+        "format-bluetooth": " ■ VOL {volume:02d}% ",
+        "format-muted": " ■ VOL MUTE ",
+        "tooltip-format": "Audio Output: {desc} ({volume}%)",
+        "on-click": "kitty --class floating_tui -e wiremix",
+        "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+    },
+    "backlight": {
+        "format": " ■ BRI {percent:02d}% ",
+        "tooltip-format": "Display Backlight: {percent}%",
+        "on-scroll-up": "brightnessctl -n2 set +5%",
+        "on-scroll-down": "brightnessctl -n2 set 5%-"
+    },
+    "battery": {
+        "interval": 5,
+        "full-at-plugged": true,
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": " ■ BAT {capacity:02d}% ",
+        "format-discharging": " ■ BAT {capacity:02d}% ",
+        "format-charging": " ■ CHG {capacity:02d}% ",
+        "format-plugged": " ■ AC {capacity:02d}% ",
+        "format-full": " ■ AC {capacity:02d}% ",
+        "format-warning": " ■ LOW {capacity:02d}% ",
+        "format-critical": " ■ CRIT {capacity:02d}% ",
+        "tooltip-format": "Power Status: {capacity}% · {timeTo}",
+        "tooltip-format-discharging": "Power Status: DISCHARGING (Battery)\nCapacity:     {capacity}%\nRemaining:    {time}\nDraw:         {power:0.1f} W",
+        "tooltip-format-charging": "Power Status: CHARGING (AC Connected)\nCapacity:     {capacity}%\nTime to Full: {time}\nInput:        {power:0.1f} W",
+        "tooltip-format-plugged": "Power Status: AC CONNECTED (External Power)\nCapacity:     {capacity}%",
+        "events": {
+            "on-discharging-warning": "notify-send -u normal 'YoRHa Power Telemetry' 'Reserva de batería baja (≤ 30%). Conecta el cargador AC.'",
+            "on-discharging-critical": "notify-send -u critical 'YoRHa Power Alert' 'BATERÍA CRÍTICA (≤ 15%). Conecta el cargador inmediatamente.'"
+        }
+    },
+    "tray": {
+        "icon-size": 14,
+        "spacing": 5
+    },
+    "custom/sys": {
+        "format": " ■ SYSTEM ",
+        "tooltip-format": "System Operations  [SUPER + Esc]",
+        "on-click": "~/.config/hypr/scripts/yorha-sysmenu.sh"
+    }
+}

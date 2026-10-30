@@ -1,0 +1,382 @@
+@import "tokens.rasi"
+
+* {
+    background-color: transparent;
+    text-color:       @text;
+    margin:           0px;
+    padding:          0px;
+    spacing:          0px;
+}
+
+/* Outer wrapper renders hard non-blurred 7px offset shadow on right & bottom */
+window {
+    location:         center;
+    anchor:           center;
+    width:            600px;
+    background-color: @shadow-hard;
+    padding:          0px 7px 7px 0px;
+    border:           0px;
+    border-radius:    0px;
+}
+
+mainbox {
+    orientation:      vertical;
+    background-color: @bg-surface;
+    border:           2px solid;
+    border-color:     @primary;
+    spacing:          0px;
+    children:         [ topnav, body-pad, footerbar ];
+}
+
+/* ── 1. NieR Top Navigation Bar (|| [■ Applications] [■ Windows] [■ Execute] ... 01) ── */
+topnav {
+    orientation:      horizontal;
+    expand:           false;
+    background-color: @bg;
+    padding:          6px 14px 0px 14px;
+    spacing:          8px;
+    border:           0px 0px 2px 0px;
+    border-color:     @primary;
+    children:         [ nav-double-bar, mode-switcher, textbox-dmenu-title, dummy-topnav, textbox-index ];
+}
+
+nav-double-bar {
+    orientation:      horizontal;
+    expand:           false;
+    spacing:          2px;
+    margin:           2px 4px 6px 0px;
+    children:         [ nav-bar-thick, nav-bar-thin ];
+}
+
+nav-bar-thick {
+    expand:           false;
+    width:            7px;
+    background-color: @primary;
+}
+
+nav-bar-thin {
+    expand:           false;
+    width:            3px;
+    background-color: @primary;
+}
+
+mode-switcher {
+    orientation:      horizontal;
+    expand:           false;
+    width:            410px;
+    spacing:          4px;
+}
+
+/* Inactive category tabs sit slightly above the bottom rule; active tab extends flush to rule */
+button {
+    padding:          5px 12px;
+    margin:           0px 0px 4px 0px;
+    background-color: @bg-muted;
+    text-color:       @primary;
+    border:           0px;
+    font:             "Noto Sans Medium 10";
+    vertical-align:   0.5;
+}
+
+button selected {
+    padding:          5px 14px 9px 14px;
+    margin:           0px;
+    background-color: @primary-dark;
+    text-color:       @bg-surface;
+    border:           2px 0px 0px 0px;
+    border-color:     @primary;
+    font:             "Noto Sans SemiBold 10";
+}
+
+/* Shown only when launched in -dmenu mode (e.g. SUPER + Esc System Menu) */
+textbox-dmenu-title {
+    enabled:          false;
+    expand:           false;
+    margin:           0px 0px 6px 0px;
+    padding:          5px 14px;
+    background-color: @primary-dark;
+    text-color:       @bg-surface;
+    font:             "Noto Sans SemiBold 10.5";
+    content:          "■ SYSTEM  ·  OPERATIONS";
+    vertical-align:   0.5;
+}
+
+dummy-topnav {
+    expand:           true;
+}
+
+textbox-index {
+    expand:           false;
+    margin:           0px 0px 6px 0px;
+    content:          "01";
+    text-color:       @primary;
+    font:             "JetBrainsMono Nerd Font Mono Medium 9.5";
+    vertical-align:   0.5;
+}
+
+/* ── 2. Inner Cockpit Body Container ── */
+body-pad {
+    orientation:      vertical;
+    expand:           true;
+    padding:          12px 16px 10px 16px;
+    spacing:          8px;
+    background-color: @bg-surface;
+    children:         [ inputbar, message, sep-top, list-row, sep-bot ];
+}
+
+/* Filter Input Strip (Compact, Non-Expanding) */
+inputbar {
+    orientation:      horizontal;
+    expand:           false;
+    background-color: @bg;
+    padding:          6px 12px;
+    spacing:          8px;
+    border:           2px 0px 2px 0px;
+    border-color:     @bg-muted;
+    children:         [ textbox-cursor, entry, num-filtered-rows, textbox-slash, num-rows ];
+}
+
+textbox-cursor {
+    expand:           false;
+    content:          "◆";
+    text-color:       @primary;
+    font:             "JetBrainsMono Nerd Font Mono 9.5";
+    vertical-align:   0.5;
+}
+
+entry {
+    expand:           true;
+    placeholder:      "Filter...";
+    placeholder-color: @primary;
+    text-color:       @text;
+    font:             "Noto Sans Medium 10.5";
+    vertical-align:   0.5;
+}
+
+num-filtered-rows,
+textbox-slash,
+num-rows {
+    expand:           false;
+    text-color:       @primary;
+    font:             "JetBrainsMono Nerd Font Mono 9";
+    vertical-align:   0.5;
+}
+
+textbox-slash {
+    content:          "/";
+    padding:          0px 3px;
+}
+
+/* Diagnostic / Contextual Message Strip */
+message {
+    expand:           false;
+    background-color: @bg;
+    border:           0px 0px 0px 4px;
+    border-color:     @primary;
+    padding:          5px 10px;
+}
+
+textbox {
+    text-color:       @primary;
+    font:             "JetBrainsMono Nerd Font Mono 9";
+}
+
+/* Dot-Line Horizontal Rules (.yorha-separator — Non-Expanding) */
+sep-top,
+sep-bot {
+    orientation:      horizontal;
+    expand:           false;
+    spacing:          6px;
+}
+
+sep-top {
+    children:         [ sep-top-line, textbox-sep-top-dot ];
+}
+
+sep-bot {
+    children:         [ sep-bot-line, textbox-sep-bot-dot ];
+}
+
+sep-top-line,
+sep-bot-line {
+    expand:           true;
+    margin:           5px 0px;
+    border:           0px 0px 2px 0px;
+    border-color:     @bg-muted;
+}
+
+textbox-sep-top-dot,
+textbox-sep-bot-dot {
+    expand:           false;
+    content:          "•";
+    text-color:       @bg-muted;
+    font:             "JetBrainsMono Nerd Font Mono 9";
+    vertical-align:   0.5;
+}
+
+/* ── 3. Asymmetric List Row (Double Vertical Bar + Fixed-Height 7-Row List) ── */
+list-row {
+    orientation:      horizontal;
+    expand:           true;
+    spacing:          12px;
+    children:         [ double-bar, listview ];
+}
+
+/* Authentic 10px + 2px gap + 4px YoRHa Double Vertical Bar */
+double-bar {
+    orientation:      horizontal;
+    expand:           false;
+    spacing:          2px;
+    children:         [ bar-thick, bar-thin ];
+}
+
+bar-thick {
+    expand:           false;
+    width:            10px;
+    background-color: @bg-muted;
+}
+
+bar-thin {
+    expand:           false;
+    width:            4px;
+    background-color: @bg-muted;
+}
+
+listview {
+    expand:           true;
+    lines:            7;
+    columns:          1;
+    fixed-height:     true;
+    dynamic:          false;
+    spacing:          3px;
+    scrollbar:        false;
+    border:           0px;
+}
+
+/* Authentic NieR .yorha-hover-borders:
+ * Outer element holds 2px top & bottom borders + 2px transparent gap;
+ * Inner element-icon + element-text hold the solid bar fill! */
+element {
+    orientation:      horizontal;
+    spacing:          0px;
+    padding:          2px 0px;
+    background-color: transparent;
+    border:           2px 0px 2px 0px;
+    border-color:     transparent;
+    border-radius:    0px;
+}
+
+element selected.normal,
+element selected.active {
+    background-color: transparent;
+    border:           2px 0px 2px 0px;
+    border-color:     @primary-dark;
+}
+
+element selected.urgent {
+    background-color: transparent;
+    border:           2px 0px 2px 0px;
+    border-color:     @alert;
+}
+
+element-icon {
+    size:             18px;
+    padding:          6px 4px 6px 10px;
+    background-color: @bg-muted;
+    vertical-align:   0.5;
+}
+
+element-text {
+    expand:           true;
+    padding:          6px 12px 6px 8px;
+    background-color: @bg-muted;
+    text-color:       @primary;
+    font:             "Noto Sans Medium 10.5";
+    vertical-align:   0.5;
+    ellipsize:        "end";
+}
+
+element-icon normal.active,
+element-icon alternate.active,
+element-text normal.active,
+element-text alternate.active {
+    background-color: @bg;
+    text-color:       @text;
+}
+
+element-icon normal.urgent,
+element-icon alternate.urgent,
+element-text normal.urgent,
+element-text alternate.urgent {
+    background-color: @alert;
+    text-color:       @bg-surface;
+}
+
+element-icon selected.normal,
+element-icon selected.active,
+element-text selected.normal,
+element-text selected.active {
+    background-color: @primary-dark;
+    text-color:       @bg-surface;
+}
+
+element-icon selected.urgent,
+element-text selected.urgent {
+    background-color: @alert;
+    text-color:       @bg-surface;
+}
+
+/* ── 4. Bottom Contextual Operator Help Bar (Non-Expanding, Zero Overflow) ── */
+footerbar {
+    orientation:      horizontal;
+    expand:           false;
+    background-color: @bg;
+    border:           2px 0px 0px 0px;
+    border-color:     @bg-muted;
+    padding:          7px 14px;
+    spacing:          10px;
+    children:         [ fbar-double, textbox-hint, textbox-keys, textbox-corner ];
+}
+
+fbar-double {
+    orientation:      horizontal;
+    expand:           false;
+    spacing:          2px;
+    children:         [ fbar-thick, fbar-thin ];
+}
+
+fbar-thick {
+    expand:           false;
+    width:            6px;
+    background-color: @primary;
+}
+
+fbar-thin {
+    expand:           false;
+    width:            2px;
+    background-color: @primary;
+}
+
+textbox-hint {
+    expand:           true;
+    content:          "Select entry.";
+    text-color:       @primary;
+    font:             "Noto Sans 9.5";
+    vertical-align:   0.5;
+}
+
+textbox-keys {
+    expand:           false;
+    content:          "[↑↓] Select   [Enter] Confirm   [Esc] Back";
+    text-color:       @text;
+    font:             "JetBrainsMono Nerd Font Mono Medium 8.5";
+    vertical-align:   0.5;
+}
+
+textbox-corner {
+    expand:           false;
+    content:          "▪";
+    text-color:       @primary-dark;
+    font:             "JetBrainsMono Nerd Font Mono 9";
+    vertical-align:   1.0;
+}

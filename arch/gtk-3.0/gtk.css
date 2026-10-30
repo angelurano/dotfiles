@@ -1,0 +1,37 @@
+* {
+    border-radius: 0px;
+    box-shadow: none;
+}
+
+window,
+dialog,
+messagedialog,
+popover,
+menu {
+    background-color: #dad4bb;
+    color: #3f3d36;
+}
+
+headerbar {
+    background-color: #4e4b42;
+    color: #dad4bb;
+    border-bottom: 2px solid #57544a;
+}
+
+button {
+    background-color: #b4af9a;
+    color: #57544a;
+    border: 1px solid #57544a;
+}
+
+button:hover,
+button:checked {
+    background-color: #57544a;
+    color: #dad4bb;
+}
+
+entry {
+    background-color: #b4af9a;
+    color: #3f3d36;
+    border: 1px solid #57544a;
+}

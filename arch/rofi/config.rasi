@@ -1,0 +1,22 @@
+configuration {
+    modes: "drun,window,run";
+    font: "Noto Sans 10.5";
+    show-icons: true;
+    drun-display-format: "■  {name}";
+    window-format: "■  [0{w}]  {c}  —  {t}";
+    disable-history: false;
+    hide-scrollbar: true;
+    display-drun: "■ Applications";
+    display-window: "■ Windows";
+    display-run: "■ Execute";
+    sidebar-mode: true;
+    terminal: "kitty";
+
+    drun {
+        scan-desktop: true;
+        parse-user: true;
+        parse-system: true;
+    }
+}
+
+@theme "yorha"

@@ -1,0 +1,30 @@
+@import "yorha.rasi"
+
+window {
+    width: 460px;
+}
+
+mode-switcher {
+    enabled: false;
+}
+
+textbox-dmenu-title {
+    enabled: true;
+}
+
+textbox-index {
+    content: "SYS";
+}
+
+listview {
+    lines:        9;
+    fixed-height: true;
+}
+
+element-text {
+    padding: 6px 14px;
+}
+
+textbox-hint {
+    content: "Authorized.";
+}

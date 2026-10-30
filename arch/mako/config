@@ -1,0 +1,59 @@
+sort=-time
+layer=overlay
+anchor=top-right
+
+font=Noto Sans 10
+width=330
+height=115
+outer-margin=10,12
+margin=8
+padding=10,14
+border-size=2
+border-radius=0
+
+# Default: DAY Mode (Parchment & Olive Charcoal)
+background-color=#dad4bbFF
+text-color=#3f3d36FF
+border-color=#57544aFF
+progress-color=over #b4af9aFF
+
+icons=1
+max-icon-size=32
+icon-border-radius=0
+markup=1
+actions=1
+history=1
+max-visible=4
+default-timeout=4500
+ignore-timeout=0
+format=<b>■ %s</b>\n<span size="9500">%b</span>
+
+[urgency=low]
+background-color=#d1cdb7FA
+text-color=#57544aFF
+border-color=#b4af9aFF
+default-timeout=3000
+
+[urgency=high]
+background-color=#4e4b42FF
+text-color=#dad4bbFF
+border-color=#cd664dFF
+default-timeout=0
+
+# NIGHT Mode Overrides (Bunker Charcoal & Bone Parchment)
+[mode=night]
+background-color=#2c2925FF
+text-color=#d1cdb7FF
+border-color=#c8c2a9FF
+progress-color=over #4e4b42FF
+
+[mode=night urgency=low]
+background-color=#242220FA
+text-color=#c8c2a9FF
+border-color=#4e4b42FF
+
+[mode=night urgency=high]
+background-color=#2c2925FF
+text-color=#dedac4FF
+border-color=#cd664dFF
+default-timeout=0

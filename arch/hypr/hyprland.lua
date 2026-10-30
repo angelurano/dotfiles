@@ -1,0 +1,6 @@
+require("lua/theme")
+require("lua/general")
+require("lua/animations")
+require("lua/autostart")
+require("lua/rules")
+require("lua/keybinds")

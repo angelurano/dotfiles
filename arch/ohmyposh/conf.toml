@@ -1,0 +1,117 @@
+version = 3
+final_space = true
+
+[upgrade]
+source = 'cdn'
+interval = '168h'
+auto = false
+notice = false
+
+[[blocks]]
+type = 'prompt'
+alignment = 'left'
+
+[[blocks.segments]]
+type = 'session'
+style = 'plain'
+foreground = 'p:bg'
+background = 'p:olive'
+background_templates = ['{{ if gt .Code 0 }}p:alert{{ end }}']
+template = '{{ if gt .Code 0 }}<p:alert,transparent>█▌</>{{ else }}<p:olive,transparent>█▌</>{{ end }} ■ {{ .UserName }}{{ if .SSHSession }}@{{ .HostName }}{{ end }} '
+
+[[blocks.segments]]
+type = 'path'
+style = 'plain'
+foreground = 'p:path_gold'
+background = 'p:surface'
+template = ' {{ .Path }} '
+
+[blocks.segments.properties]
+style = 'agnoster_short'
+max_depth = 3
+folder_icon = '‥'
+home_icon = '~'
+
+[[blocks.segments]]
+type = 'git'
+style = 'plain'
+foreground = 'p:olive_bright'
+background = 'p:surface_alt'
+foreground_templates = [
+  '{{ if or (.Working.Changed) (.Staging.Changed) }}p:amber{{ end }}',
+  '{{ if gt .Ahead 0 }}p:pod_teal{{ end }}',
+  '{{ if gt .Behind 0 }}p:alert{{ end }}',
+]
+template = '<p:border,p:surface_alt>│</>  {{ .HEAD }}{{ if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }} {{ .Working.String }}{{ end }}{{ if .Staging.Changed }} staged:{{ .Staging.String }}{{ end }} '
+
+[blocks.segments.properties]
+fetch_status = true
+branch_icon = ''
+
+[[blocks.segments]]
+type = 'executiontime'
+style = 'plain'
+foreground = 'p:parchment'
+background = 'p:surface_alt'
+template = '<p:border,p:surface_alt>│</> ◷ {{ .FormattedMs }} '
+
+[blocks.segments.properties]
+threshold = 500
+style = 'austin'
+
+[[blocks.segments]]
+type = 'root'
+style = 'plain'
+foreground = 'p:bg'
+background = 'p:alert'
+template = ' ■ ROOT '
+
+[[blocks.segments]]
+type = 'status'
+style = 'plain'
+foreground = 'p:alert'
+background = 'p:surface_alt'
+template = '<p:border,p:surface_alt>│</> ■ ERR {{ reason .Code }} '
+
+[[blocks]]
+type = 'prompt'
+alignment = 'left'
+newline = true
+
+[[blocks.segments]]
+type = 'text'
+style = 'plain'
+foreground = 'p:olive'
+foreground_templates = ['{{ if gt .Code 0 }}p:alert{{ end }}']
+template = '█▌ {{ if gt .Code 0 }}×{{ else }}◆{{ end }}'
+
+[error_line]
+foreground = 'p:alert'
+template = '<p:alert>█▌ × </>'
+
+[valid_line]
+foreground = 'p:olive'
+template = '<p:olive>█▌ ◆ </>'
+
+[transient_prompt]
+foreground = 'p:dim'
+template = '<p:dim>█▌ ▪ </>'
+
+[secondary_prompt]
+foreground = 'p:dim'
+template = '<p:dim>█▌ · </>'
+
+[palette]
+bg = '#242220'
+surface = '#2c2925'
+surface_alt = '#35322d'
+border = '#4e4b42'
+fg = '#dedac4'
+parchment = '#c8c2a9'
+path_gold = '#DFC48C'
+olive = '#8A9A7B'
+olive_bright = '#A3B394'
+amber = '#DFC48C'
+pod_teal = '#7F9A95'
+alert = '#cd664d'
+dim = '#423f38'

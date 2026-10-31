@@ -4,14 +4,14 @@
 
 local home      = os.getenv("HOME") or ""
 local state_dir = os.getenv("XDG_STATE_HOME") or (home .. "/.local/state")
-local mode      = "day"
+local mode      = "night"
 
-local f         = io.open(state_dir .. "/yorha/mode", "r")
+local f         = io.open(state_dir .. "/theme/mode", "r")
 if f then
     local raw = f:read("*l")
     f:close()
-    if raw and raw:match("night") then
-        mode = "night"
+    if raw and raw:match("day") then
+        mode = "day"
     end
 end
 

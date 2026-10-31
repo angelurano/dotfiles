@@ -27,6 +27,11 @@ apply_links() {
     if [[ -d "$CFG_DIR/rofi" && ! -L "$CFG_DIR/rofi" ]]; then
         ln -sfn "tokens-${mode}.rasi" "$CFG_DIR/rofi/tokens.rasi"
     fi
+    # Active wallpaper symlink stored strictly in XDG_STATE_HOME to keep Git clean
+    local wp_src="$CFG_DIR/hypr/wallpaper-${mode}.png"
+    if [[ -f "$wp_src" ]]; then
+        ln -sfn "$wp_src" "$STATE_DIR/wallpaper"
+    fi
 }
 
 apply_wallpaper() {
@@ -34,10 +39,9 @@ apply_wallpaper() {
     local wp="$CFG_DIR/hypr/wallpaper-${mode}.png"
     [[ -f "$wp" ]] || return 0
 
-    if pgrep -x hyprpaper >/dev/null 2>&1; then
-        hyprctl hyprpaper preload "$wp" >/dev/null 2>&1 || true
-        hyprctl hyprpaper wallpaper ",$wp" >/dev/null 2>&1 || true
-        hyprctl hyprpaper wallpaper "eDP-1,$wp" >/dev/null 2>&1 || true
+    # Single global IPC command for Hyprpaper
+    if hyprctl hyprpaper listactive >/dev/null 2>&1; then
+        hyprctl hyprpaper wallpaper ",$wp,cover" >/dev/null 2>&1 || true
     fi
 }
 
@@ -62,9 +66,9 @@ apply_runtime() {
 
     if command -v makoctl >/dev/null 2>&1 && pgrep -x mako >/dev/null 2>&1; then
         if [[ "$mode" == "night" ]]; then
-            makoctl mode -s night >/dev/null 2>&1 || true
-        else
             makoctl mode -s default >/dev/null 2>&1 || true
+        else
+            makoctl mode -s day >/dev/null 2>&1 || true
         fi
     fi
 
@@ -89,7 +93,16 @@ case "${1:-status}" in
         ;;
     init)
         mode="$(get_mode)"
-        apply_runtime "$mode"
+        # Idempotent state synchronization on startup without redundant Hyprland/Waybar reloads
+        apply_links "$mode"
+        apply_system_theme "$mode"
+        if command -v makoctl >/dev/null 2>&1 && pgrep -x mako >/dev/null 2>&1; then
+            if [[ "$mode" == "night" ]]; then
+                makoctl mode -s default >/dev/null 2>&1 || true
+            else
+                makoctl mode -s day >/dev/null 2>&1 || true
+            fi
+        fi
         ;;
     set)
         target="${2:-night}"

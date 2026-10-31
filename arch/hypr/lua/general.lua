@@ -21,8 +21,8 @@ hl.monitor({
 
 -- Fallback environment variables when Hyprland is started outside UWSM
 if not os.getenv("UWSM_FINALIZE_VARNAMES") then
-    hl.env("XCURSOR_SIZE", "24")
-    hl.env("HYPRCURSOR_SIZE", "24")
+    hl.env("XCURSOR_SIZE", "22")
+    hl.env("HYPRCURSOR_SIZE", "22")
     hl.env("QT_QPA_PLATFORM", "wayland;xcb")
     hl.env("GDK_BACKEND", "wayland,x11,*")
     hl.env("SDL_VIDEODRIVER", "wayland")

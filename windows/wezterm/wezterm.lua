@@ -146,6 +146,12 @@ config.launch_menu = {
     domain = { DomainName = "WSL:Debian" },
   },
   {
+    label = "herdr (WSL:Debian)",
+    args = { "zsh", "-l", "-c", "exec herdr" },
+    cwd = "~",
+    domain = { DomainName = "WSL:Debian" },
+  },
+  {
     label = "Command Prompt",
     args = { "cmd.exe" },
     domain = { DomainName = "local" },

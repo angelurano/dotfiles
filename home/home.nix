@@ -1,10 +1,12 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 {
   xdg.enable = true;
   home.preferXdgDirectories = true;
 
   home.packages = with pkgs; [
     neovim
+
+    kitty.terminfo
 
     # git and gh in ./git.nix via programs.git and programs.gh
     # fastfetch, fzf, bat, direnv, yazi, fd, ripgrep, jq, and oh-my-posh in ./shell.nix via programs.*
@@ -35,9 +37,17 @@
     llm-pkgs.opencode
   ];
 
+  nix.assumeXdg = true;
+
   home.sessionVariables = {
     BROWSER = "brave";
   };
+
+  home.sessionVariablesExtra = ''
+    if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
+      . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+    fi 
+  '';
 
   home.file.".ignore".text = ''
     .conda/

@@ -27,6 +27,7 @@ hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd(termPlain), { description = "Ter
 hl.bind(mainMod .. " + SHIFT + Return", hl.dsp.exec_cmd(termHerdr), { description = "Terminal Kitty + Herdr" })
 hl.bind(mainMod .. " + Q", hl.dsp.window.close(), { description = "Close active window" })
 hl.bind(mainMod .. " + Space", hl.dsp.exec_cmd(appLauncher), { description = "Applications Menu (Rofi)" })
+hl.bind(mainMod .. " + SHIFT + Space", hl.dsp.exec_cmd(appLauncher), { description = "Applications Menu (Rofi)" })
 hl.bind(mainMod .. " + D", hl.dsp.exec_cmd(appLauncher), { description = "Applications Menu (Rofi)" })
 hl.bind(mainMod .. " + Tab", hl.dsp.exec_cmd(winSwitcher), { description = "Windows Switcher (Rofi)" })
 hl.bind(mainMod .. " + Escape", hl.dsp.exec_cmd(sysMenu), { description = "System Menu (Rofi)" })

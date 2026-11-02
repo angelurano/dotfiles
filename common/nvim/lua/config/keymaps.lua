@@ -332,7 +332,8 @@ vim.api.nvim_create_autocmd("User", {
       return ok
     end
 
-    local wezterm_cmd = vim.fn.executable("wezterm.exe") == 1 and "wezterm.exe" or "wezterm"
+    local wezterm_cmd = vim.fn.executable("wezterm.exe") == 1 and "wezterm.exe"
+      or (vim.fn.executable("wezterm") == 1 and "wezterm" or nil)
 
     local function navigate(key)
       return function()
@@ -345,7 +346,7 @@ vim.api.nvim_create_autocmd("User", {
             if not focus_via_socket(key) then
               vim.system({ "herdr", "pane", "focus", "--direction", pane_dir:lower() }, { text = true })
             end
-          else
+          elseif wezterm_cmd then
             vim.system({ wezterm_cmd, "cli", "activate-pane-direction", pane_dir }, { text = true })
           end
         end

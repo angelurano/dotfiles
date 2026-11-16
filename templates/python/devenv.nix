@@ -1,6 +1,10 @@
 { pkgs, ... }: {
   languages.python = {
     enable = true;
+    lsp = {
+      enable = true;
+      package = pkgs.basedpyright;
+    };
     libraries = [
       pkgs.zlib
       pkgs.stdenv.cc.cc.lib

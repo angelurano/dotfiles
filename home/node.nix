@@ -14,6 +14,7 @@
 
   home.sessionPath = lib.mkAfter [
     "${config.xdg.dataHome}/npm/bin"
+    "${config.xdg.dataHome}/bun/bin"
   ];
 
   xdg.configFile."npm/npmrc".text = ''

@@ -21,6 +21,7 @@
 
     wsl-open
 
+    bun
     nodejs_24
     python314
 

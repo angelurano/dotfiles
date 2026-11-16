@@ -124,9 +124,9 @@ return {
               tsdk = has_mason_tsdk and mason_tsdk or nil,
             },
           },
-          root_dir = function(filename, _)
-            local util = require("lspconfig.util")
-            return util.root_pattern("tsconfig.json", "jsconfig.json", "package.json", ".git")(filename)
+          root_dir = function(bufnr, on_dir)
+            local root = vim.fs.root(bufnr, { "tsconfig.json", "jsconfig.json", "package.json", ".git" })
+            on_dir(root or vim.fn.getcwd())
           end,
         }
         servers.eslint = {} -- ESLint for JavaScript / TypeScript
@@ -173,7 +173,7 @@ return {
       -- Dynamically extract server names for Mason, excluding Nix-managed servers on Nix systems
       local ensure_installed = {}
       for _, name in ipairs(vim.tbl_keys(servers)) do
-        local is_nix_managed = has_nix and (name == "nil_ls" or name == "clangd")
+        local is_nix_managed = has_nix and (name == "nil_ls" or name == "clangd" or name == "basedpyright")
         if not is_nix_managed then
           table.insert(ensure_installed, name)
         end

@@ -7,11 +7,8 @@ return {
       return vim.fn.executable("node") == 1 or vim.fn.executable("bun") == 1
     end,
     opts = function()
-      local node_cmd = "node"
-      -- Use bun if node is missing but bun is present
-      if vim.fn.executable("node") == 0 and vim.fn.executable("bun") == 1 then
-        node_cmd = "bun"
-      end
+      -- Prefer bun if available, otherwise node
+      local node_cmd = vim.fn.executable("bun") == 1 and "bun" or "node"
       return {
         copilot_node_command = node_cmd,
         suggestion = {

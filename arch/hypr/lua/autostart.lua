@@ -25,6 +25,11 @@ hl.on("hyprland.start", function()
         T.uwsm_cmd("~/.config/hypr/scripts/yorha-display.sh init", "b")
     )
 
+    -- Start Wayland Overlay Bar (wob) listener for volume & brightness OSD
+    hl.exec_cmd(
+        T.uwsm_cmd("~/.config/hypr/scripts/yorha-osd.sh ensure", "b")
+    )
+
     -- Clipboard history watchers (cliphist)
     hl.exec_cmd(
         T.uwsm_cmd(

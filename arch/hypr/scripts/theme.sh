@@ -21,11 +21,24 @@ apply_links() {
     local mode="$1"
     printf "%s" "$mode" >| "$MODE_FILE"
 
-    if [[ -d "$CFG_DIR/waybar" && ! -L "$CFG_DIR/waybar" ]]; then
+    if [[ -d "$CFG_DIR/waybar" ]]; then
         ln -sfn "tokens-${mode}.css" "$CFG_DIR/waybar/tokens.css"
+        ln -sfn "icons-${mode}" "$CFG_DIR/waybar/icons"
     fi
     if [[ -d "$CFG_DIR/rofi" && ! -L "$CFG_DIR/rofi" ]]; then
         ln -sfn "tokens-${mode}.rasi" "$CFG_DIR/rofi/tokens.rasi"
+        ln -sfn "pointer-${mode}.png" "$CFG_DIR/rofi/pointer.png"
+        ln -sfn "vbar-${mode}.png" "$CFG_DIR/rofi/vbar.png"
+        ln -sfn "sel-border-${mode}.png" "$CFG_DIR/rofi/sel-border.png"
+    fi
+    if [[ -d "$CFG_DIR/gtk-3.0" ]]; then
+        ln -sfn "tokens-${mode}.css" "$CFG_DIR/gtk-3.0/tokens.css"
+    fi
+    if [[ -d "$CFG_DIR/gtk-4.0" ]]; then
+        ln -sfn "tokens-${mode}.css" "$CFG_DIR/gtk-4.0/tokens.css"
+    fi
+    if [[ -d "$CFG_DIR/wob" ]]; then
+        ln -sfn "wob-${mode}.ini" "$CFG_DIR/wob/wob.ini"
     fi
     # Active wallpaper symlink stored strictly in XDG_STATE_HOME to keep Git clean
     local wp_src="$CFG_DIR/hypr/wallpaper-${mode}.png"
@@ -80,15 +93,20 @@ apply_runtime() {
         pkill -RTMIN+8 -x waybar 2>/dev/null || true
         pkill -SIGUSR2 -x waybar 2>/dev/null || true
     fi
+
+    if pgrep -x wob >/dev/null 2>&1; then
+        pkill -x wob 2>/dev/null || true
+        "$CFG_DIR/hypr/scripts/yorha-osd.sh" ensure >/dev/null 2>&1 || true
+    fi
 }
 
 case "${1:-status}" in
     status)
         mode="$(get_mode)"
         if [[ "$mode" == "night" ]]; then
-            printf '{"text":" ■ NIGHT ","tooltip":"Mode: NIGHT · Bunker Charcoal (#242220)\\nClick to switch to DAY mode","class":"night"}\n'
+            printf '{"text":"NIGHT","tooltip":"Mode: NIGHT · Bunker Charcoal (#242220)\\nClick to switch to DAY mode","class":"night"}\n'
         else
-            printf '{"text":" ■ DAY ","tooltip":"Mode: DAY · Parchment &amp; Olive (#d1cdb7)\\nClick to switch to NIGHT mode","class":"day"}\n'
+            printf '{"text":"DAY","tooltip":"Mode: DAY · Parchment &amp; Olive (#d1cdb7)\\nClick to switch to NIGHT mode","class":"day"}\n'
         fi
         ;;
     init)

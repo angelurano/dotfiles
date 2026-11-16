@@ -29,6 +29,8 @@ Creating these directories before running `stow` prevents runtime state and mach
 mkdir -p \
   ~/.config/waybar \
   ~/.config/rofi \
+  ~/.config/gtk-3.0 \
+  ~/.config/gtk-4.0 \
   ~/.config/herdr/plugins/config/tdi.worktree-setup \
   ~/.config/systemd/user \
   ~/.config/btop/themes

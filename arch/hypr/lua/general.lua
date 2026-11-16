@@ -18,7 +18,12 @@ end
 hl.config({
     general = {
         gaps_in          = 7,
-        gaps_out         = 14,
+        gaps_out         = {
+            top = 14,
+            left = 7,
+            bottom = 28,
+            right = 7
+        },
         border_size      = 3,
         col              = {
             active_border   = { colors = { T.rgba.active_start, T.rgba.active_end }, angle = 45 },
@@ -29,19 +34,18 @@ hl.config({
         layout           = "dwindle",
     },
 
-    -- Strict 0px geometry + crisp 7px non-blurred hard offset shadow (bottom & right)
     decoration = {
         rounding         = 0,
         rounding_power   = 2,
         active_opacity   = 1.0,
         inactive_opacity = 1.0,
         dim_inactive     = true,
-        dim_strength     = 0.08,
+        dim_strength     = 0.12,
         shadow           = {
             enabled        = true,
             sharp          = true,
-            range          = 2,
-            offset         = { 7, 7 },
+            range          = 0,
+            offset         = { 4, 4 },
             color          = T.rgba.shadow_hard,
             color_inactive = T.rgba.shadow_inactive,
         },

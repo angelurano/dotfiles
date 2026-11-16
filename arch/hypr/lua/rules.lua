@@ -64,9 +64,9 @@ hl.window_rule({
     no_dim = true,
 })
 
--- 7. Crisp zero-animation layers for Rofi, Waybar, Mako, and Slurp selection
+-- 7. Crisp zero-animation layers for Waybar, Slurp selection, and wob OSD; Rofi & Mako slide smoothly
 hl.layer_rule({
     name    = "instant-layers",
-    match   = { namespace = "^(rofi|selection|waybar|notifications)$" },
+    match   = { namespace = "^(selection|waybar|wob)$" },
     no_anim = true,
 })

@@ -1,19 +1,19 @@
 @import "yorha.rasi"
 
 window {
-    width: 460px;
+    width: 480px;
 }
 
-mode-switcher {
+topnav {
     enabled: false;
 }
 
-textbox-dmenu-title {
-    enabled: true;
+textbox-section-title {
+    content: "SYSTEM";
 }
 
-textbox-index {
-    content: "SYS";
+textbox-section-sub {
+    content: "—  Operations";
 }
 
 listview {
@@ -21,8 +21,16 @@ listview {
     fixed-height: true;
 }
 
+element {
+    children: [ textbox-ptr, element-text ];
+}
+
+element-icon {
+    enabled: false;
+}
+
 element-text {
-    padding: 6px 14px;
+    padding: 8px 14px;
 }
 
 textbox-hint {

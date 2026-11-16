@@ -8,13 +8,13 @@
     spacing:          0px;
 }
 
-/* Outer wrapper renders hard non-blurred 7px offset shadow on right & bottom */
+/* Outer wrapper renders hard non-blurred 5px offset shadow on right & bottom */
 window {
     location:         center;
     anchor:           center;
-    width:            600px;
+    width:            640px;
     background-color: @shadow-hard;
-    padding:          0px 7px 7px 0px;
+    padding:          0px 5px 5px 0px;
     border:           0px;
     border-radius:    0px;
 }
@@ -25,7 +25,7 @@ mainbox {
     border:           2px solid;
     border-color:     @primary;
     spacing:          0px;
-    children:         [ topnav, body-pad, footerbar ];
+    children:         [ section-header, topnav, body-pad, footerbar ];
 }
 
 /* ── 1. NieR Top Navigation Bar (|| [■ Applications] [■ Windows] [■ Execute] ... 01) ── */
@@ -63,11 +63,11 @@ nav-bar-thin {
 mode-switcher {
     orientation:      horizontal;
     expand:           false;
-    width:            410px;
+    width:            430px;
     spacing:          4px;
 }
 
-/* Inactive category tabs sit slightly above the bottom rule; active tab extends flush to rule */
+/* Inactive category tabs sit slightly above the bottom rule; active tab drops flush to rule */
 button {
     padding:          5px 12px;
     margin:           0px 0px 4px 0px;
@@ -97,7 +97,7 @@ textbox-dmenu-title {
     background-color: @primary-dark;
     text-color:       @bg-surface;
     font:             "Noto Sans SemiBold 10.5";
-    content:          "■ SYSTEM  ·  OPERATIONS";
+    content:          "■  SYSTEM";
     vertical-align:   0.5;
 }
 
@@ -108,17 +108,57 @@ dummy-topnav {
 textbox-index {
     expand:           false;
     margin:           0px 0px 6px 0px;
-    content:          "01";
+    content:          "【01】";
     text-color:       @primary;
     font:             "JetBrainsMono Nerd Font Mono Medium 9.5";
     vertical-align:   0.5;
 }
 
-/* ── 2. Inner Cockpit Body Container ── */
+/* ── 2. Dark/Inverted NieR Section Header Strip ── */
+section-header {
+    orientation:      horizontal;
+    expand:           false;
+    background-color: @primary-dark;
+    border:           0px 0px 2px 0px;
+    border-color:     @primary;
+    padding:          8px 16px;
+    spacing:          8px;
+    children:         [ textbox-section-sq, textbox-section-title, textbox-section-sub, dummy-sec, num-filtered-rows, textbox-slash, num-rows ];
+}
+
+textbox-section-sq {
+    expand:           false;
+    content:          "■";
+    text-color:       @bg-surface;
+    font:             "JetBrainsMono Nerd Font 12";
+    vertical-align:   0.5;
+}
+
+textbox-section-title {
+    expand:           false;
+    content:          "APPLICATIONS";
+    text-color:       @bg-surface;
+    font:             "Noto Sans SemiBold 13";
+    vertical-align:   0.5;
+}
+
+textbox-section-sub {
+    expand:           false;
+    content:          "—  Launcher";
+    text-color:       @bg;
+    font:             "Noto Sans 10";
+    vertical-align:   0.5;
+}
+
+dummy-sec {
+    expand:           true;
+}
+
+/* ── 3. Inner Body Container ── */
 body-pad {
     orientation:      vertical;
     expand:           true;
-    padding:          12px 16px 10px 16px;
+    padding:          10px 18px 10px 18px;
     spacing:          8px;
     background-color: @bg-surface;
     children:         [ inputbar, message, sep-top, list-row, sep-bot ];
@@ -133,7 +173,7 @@ inputbar {
     spacing:          8px;
     border:           2px 0px 2px 0px;
     border-color:     @bg-muted;
-    children:         [ textbox-cursor, entry, num-filtered-rows, textbox-slash, num-rows ];
+    children:         [ textbox-cursor, entry ];
 }
 
 textbox-cursor {
@@ -157,7 +197,7 @@ num-filtered-rows,
 textbox-slash,
 num-rows {
     expand:           false;
-    text-color:       @primary;
+    text-color:       @bg;
     font:             "JetBrainsMono Nerd Font Mono 9";
     vertical-align:   0.5;
 }
@@ -181,7 +221,7 @@ textbox {
     font:             "JetBrainsMono Nerd Font Mono 9";
 }
 
-/* Dot-Line Horizontal Rules (.yorha-separator — Non-Expanding) */
+/* Dot-Line Horizontal Rules (───•) */
 sep-top,
 sep-bot {
     orientation:      horizontal;
@@ -214,32 +254,15 @@ textbox-sep-bot-dot {
     vertical-align:   0.5;
 }
 
-/* ── 3. Asymmetric List Row (Double Vertical Bar + Fixed-Height 7-Row List) ── */
+/* ── 4. Asymmetric List Row (Overlaid Double Vertical Bar + List + 3px Scrollbar) ── */
 list-row {
     orientation:      horizontal;
     expand:           true;
-    spacing:          12px;
-    children:         [ double-bar, listview ];
-}
-
-/* Authentic 10px + 2px gap + 4px YoRHa Double Vertical Bar */
-double-bar {
-    orientation:      horizontal;
-    expand:           false;
-    spacing:          2px;
-    children:         [ bar-thick, bar-thin ];
-}
-
-bar-thick {
-    expand:           false;
-    width:            10px;
-    background-color: @bg-muted;
-}
-
-bar-thin {
-    expand:           false;
-    width:            4px;
-    background-color: @bg-muted;
+    spacing:          0px;
+    padding:          4px 6px 4px 0px;
+    border:           0px 2px 2px 0px;
+    border-color:     @bg-muted;
+    children:         [ listview ];
 }
 
 listview {
@@ -248,47 +271,80 @@ listview {
     columns:          1;
     fixed-height:     true;
     dynamic:          false;
-    spacing:          3px;
-    scrollbar:        false;
+    spacing:          0px;
+    scrollbar:        true;
     border:           0px;
+    background-image: url("vbar.png", none);
 }
 
-/* Authentic NieR .yorha-hover-borders:
- * Outer element holds 2px top & bottom borders + 2px transparent gap;
- * Inner element-icon + element-text hold the solid bar fill! */
+scrollbar {
+    width:            3px;
+    handle-width:     3px;
+    border:           0px;
+    padding:          0px;
+    margin:           0px 0px 0px 10px;
+    background-color: @bg-muted;
+    handle-color:     @primary;
+}
+
+/* flick0 staggered step + left overlapping spearhead pointer + button-only selection borders */
 element {
     orientation:      horizontal;
     spacing:          0px;
-    padding:          2px 0px;
+    margin:           0px 18px 0px 0px;
+    padding:          3px 0px;
     background-color: transparent;
-    border:           2px 0px 2px 0px;
-    border-color:     transparent;
+    background-image: none;
+    border:           0px;
     border-radius:    0px;
+    children:         [ textbox-ptr, element-icon, element-text ];
+}
+
+textbox-ptr {
+    expand:           false;
+    width:            42px;
+    margin:           0px;
+    content:          "";
+    background-color: transparent;
+    background-image: none;
+}
+
+textbox-ptr selected.normal,
+textbox-ptr selected.active,
+textbox-ptr selected.urgent {
+    background-color: transparent;
+    background-image: url("pointer.png", both);
 }
 
 element selected.normal,
 element selected.active {
+    margin:           0px;
     background-color: transparent;
-    border:           2px 0px 2px 0px;
-    border-color:     @primary-dark;
+    background-image: url("sel-border.png", height);
+    border:           0px;
 }
 
 element selected.urgent {
+    margin:           0px;
     background-color: transparent;
-    border:           2px 0px 2px 0px;
-    border-color:     @alert;
+    background-image: url("sel-border.png", height);
+    border:           0px;
 }
 
+/* Square ■ badge framing multicolor app icons:
+ * outer border matches row fill so the inner @primary / @bg-surface square floats cleanly inside the row */
 element-icon {
     size:             18px;
-    padding:          6px 4px 6px 10px;
-    background-color: @bg-muted;
+    padding:          3px;
+    background-color: @primary;
+    border:           5px solid;
+    border-color:     @bg-muted;
     vertical-align:   0.5;
 }
 
 element-text {
     expand:           true;
-    padding:          6px 12px 6px 8px;
+    padding:          7px 12px 7px 6px;
     background-color: @bg-muted;
     text-color:       @primary;
     font:             "Noto Sans Medium 10.5";
@@ -297,7 +353,11 @@ element-text {
 }
 
 element-icon normal.active,
-element-icon alternate.active,
+element-icon alternate.active {
+    background-color: @primary;
+    border-color:     @bg;
+}
+
 element-text normal.active,
 element-text alternate.active {
     background-color: @bg;
@@ -305,7 +365,11 @@ element-text alternate.active {
 }
 
 element-icon normal.urgent,
-element-icon alternate.urgent,
+element-icon alternate.urgent {
+    background-color: @bg-surface;
+    border-color:     @alert;
+}
+
 element-text normal.urgent,
 element-text alternate.urgent {
     background-color: @alert;
@@ -313,20 +377,28 @@ element-text alternate.urgent {
 }
 
 element-icon selected.normal,
-element-icon selected.active,
+element-icon selected.active {
+    background-color: @bg-surface;
+    border-color:     @primary-dark;
+}
+
 element-text selected.normal,
 element-text selected.active {
     background-color: @primary-dark;
     text-color:       @bg-surface;
 }
 
-element-icon selected.urgent,
+element-icon selected.urgent {
+    background-color: @bg-surface;
+    border-color:     @alert;
+}
+
 element-text selected.urgent {
     background-color: @alert;
     text-color:       @bg-surface;
 }
 
-/* ── 4. Bottom Contextual Operator Help Bar (Non-Expanding, Zero Overflow) ── */
+/* ── 5. Bottom Contextual Operator Help Bar (With Inverted Keycaps) ── */
 footerbar {
     orientation:      horizontal;
     expand:           false;
@@ -334,8 +406,8 @@ footerbar {
     border:           2px 0px 0px 0px;
     border-color:     @bg-muted;
     padding:          7px 14px;
-    spacing:          10px;
-    children:         [ fbar-double, textbox-hint, textbox-keys, textbox-corner ];
+    spacing:          6px;
+    children:         [ fbar-double, textbox-hint, textbox-keycap-nav, textbox-lbl-nav, textbox-keycap-ok, textbox-lbl-ok, textbox-keycap-esc, textbox-lbl-esc, textbox-corner ];
 }
 
 fbar-double {
@@ -359,24 +431,46 @@ fbar-thin {
 
 textbox-hint {
     expand:           true;
+    margin:           0px 0px 0px 4px;
     content:          "Select entry.";
     text-color:       @primary;
     font:             "Noto Sans 9.5";
     vertical-align:   0.5;
 }
 
-textbox-keys {
+textbox-keycap-nav,
+textbox-keycap-ok,
+textbox-keycap-esc {
     expand:           false;
-    content:          "[↑↓] Select   [Enter] Confirm   [Esc] Back";
-    text-color:       @text;
-    font:             "JetBrainsMono Nerd Font Mono Medium 8.5";
+    background-color: @primary-dark;
+    text-color:       @bg-surface;
+    padding:          2px 5px;
+    font:             "JetBrainsMono Nerd Font Mono SemiBold 8";
     vertical-align:   0.5;
 }
 
+textbox-keycap-nav { content: "↑↓"; }
+textbox-keycap-ok  { content: "Enter"; }
+textbox-keycap-esc { content: "Esc"; }
+
+textbox-lbl-nav,
+textbox-lbl-ok,
+textbox-lbl-esc {
+    expand:           false;
+    text-color:       @text;
+    margin:           0px 6px 0px 0px;
+    font:             "Noto Sans 9";
+    vertical-align:   0.5;
+}
+
+textbox-lbl-nav { content: "Select"; }
+textbox-lbl-ok  { content: "Confirm"; }
+textbox-lbl-esc { content: "Back"; }
+
 textbox-corner {
     expand:           false;
-    content:          "▪";
+    content:          "■";
     text-color:       @primary-dark;
-    font:             "JetBrainsMono Nerd Font Mono 9";
+    font:             "JetBrainsMono Nerd Font Mono 7.5";
     vertical-align:   1.0;
 }

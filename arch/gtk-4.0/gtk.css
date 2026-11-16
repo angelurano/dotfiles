@@ -1,0 +1,129 @@
+@import "tokens.css";
+
+* {
+    border-radius: 0px;
+    box-shadow: none;
+}
+
+window,
+dialog,
+.background {
+    background-color: @bg;
+    color: @text;
+}
+
+headerbar,
+menubar,
+toolbar {
+    background-image: none;
+    background-color: @headerbar_bg_color;
+    color: @headerbar_fg_color;
+    border-bottom: 2px solid @primary;
+    box-shadow: none;
+}
+
+entry,
+textview,
+textview > text,
+listview,
+columnview,
+.view {
+    background-color: @bg_surface;
+    color: @text;
+}
+
+entry {
+    border: 1px solid @border_subtle;
+}
+
+entry:focus-within {
+    border-color: @primary;
+}
+
+button {
+    background-image: none;
+    background-color: @bg;
+    color: @text;
+    border: 1px solid @border_subtle;
+    box-shadow: none;
+}
+
+button:hover {
+    background-color: @bg_muted;
+    border-color: @primary;
+}
+
+button:checked,
+button:active,
+button.suggested-action {
+    background-color: @theme_selected_bg_color;
+    color: @theme_selected_fg_color;
+    border-color: @primary_dark;
+}
+
+button.destructive-action {
+    background-color: @destructive_bg_color;
+    color: @destructive_fg_color;
+    border-color: @alert;
+}
+
+row:selected,
+listview > row:selected,
+columnview > listview > row:selected,
+selection {
+    background-color: @theme_selected_bg_color;
+    color: @theme_selected_fg_color;
+}
+
+popover > contents,
+tooltip {
+    background-color: @bg_surface;
+    color: @text;
+    border: 2px solid @primary;
+}
+
+modelbutton:hover {
+    background-color: @theme_selected_bg_color;
+    color: @theme_selected_fg_color;
+}
+
+notebook,
+notebook > stack {
+    background-color: @bg_surface;
+    color: @text;
+}
+
+notebook > header {
+    background-color: @headerbar_bg_color;
+    border-color: @border_subtle;
+}
+
+notebook > header > tabs > tab {
+    background-image: none;
+    background-color: @headerbar_bg_color;
+    color: @text_muted;
+    border-color: @border_subtle;
+}
+
+notebook > header > tabs > tab:checked {
+    background-color: @bg_surface;
+    color: @text;
+    border-bottom: 2px solid @primary_dark;
+}
+
+separator {
+    background-color: @border_subtle;
+    min-width: 1px;
+    min-height: 1px;
+}
+
+progressbar > trough > progress,
+scale > trough > highlight {
+    background-color: @primary_dark;
+}
+
+scrollbar > range > trough > slider {
+    background-color: @text_muted;
+    min-width: 6px;
+    min-height: 6px;
+}

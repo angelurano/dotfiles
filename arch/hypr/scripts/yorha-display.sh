@@ -206,7 +206,7 @@ cmd_status() {
     fi
     desc="$(ext_field "$name" .description)"
     if [[ "$(ext_field "$name" .disabled)" == "true" ]]; then
-        printf '{"text":" ■ HDMI OFF ","class":"connected","tooltip":"Output: %s (%s)\\nLayout: laptop only\\n\\nClick: Display menu"}\n' "$name" "$desc"
+        printf '{"text":"HDMI OFF","class":"connected","tooltip":"Output: %s (%s)\\nLayout: laptop only\\n\\nClick: Display menu"}\n' "$name" "$desc"
         return 0
     fi
     mode="$(current_mode "$name")"
@@ -218,7 +218,7 @@ cmd_status() {
     local label="HDMI ${h}p"
     [[ "$mirror" != "none" ]] && label="HDMI MIRROR"
     layout="$(session_get layout right)"
-    printf '{"text":" ■ %s ","class":"connected","tooltip":"Output: %s (%s)\\nMode: %s\\nLayout: %s\\nAudio: %s\\n\\nClick: Display menu\\nRight-click: Toggle audio"}\n' \
+    printf '{"text":"%s","class":"connected","tooltip":"Output: %s (%s)\\nMode: %s\\nLayout: %s\\nAudio: %s\\n\\nClick: Display menu\\nRight-click: Toggle audio"}\n' \
         "$label" "$name" "$desc" "$mode" "$layout" "$audio"
 }
 

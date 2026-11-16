@@ -158,4 +158,11 @@ session-snapshots/
 plugins.json
 .plugins.lock
 common/herdr/plugins/
+arch/waybar/icons
+arch/gtk-3.0/tokens.css
+arch/gtk-4.0/tokens.css
+arch/rofi/pointer.png
+arch/rofi/vbar.png
+arch/rofi/sel-border.png
+arch/wob/wob.ini
 

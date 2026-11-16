@@ -33,6 +33,7 @@
     nixfmt
 
     unstable.herdr
+    unstable.herdr-core
 
     llm-pkgs.antigravity-cli
     llm-pkgs.opencode

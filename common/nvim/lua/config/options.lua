@@ -13,8 +13,12 @@ if not vim.g.vscode then
 
   -- powershell/pwsh as default shell on Windows
   if vim.fn.has("win32") == 1 then
+    local uv = vim.uv or vim.loop
+    local has_pwsh = uv.fs_lstat(vim.fn.expand("~/AppData/Local/Microsoft/WindowsApps/pwsh.exe")) ~= nil
+      or uv.fs_stat([[C:\Program Files\PowerShell\7\pwsh.exe]]) ~= nil
+      or vim.fn.executable("pwsh") == 1
     local powershell_info = {
-      shell = vim.fn.executable("pwsh") == 1 and "pwsh" or "powershell",
+      shell = has_pwsh and "pwsh" or "powershell",
       shellcmdflag =
       "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;",
       shellredir = "2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode",

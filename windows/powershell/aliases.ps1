@@ -17,6 +17,7 @@ function nvim {
 Set-Alias -Name vim -Value nvim
 Set-Alias -Name vi -Value nvim
 Set-Alias -Name v -Value nvim
+Set-Alias -Name edit -Value nvim
 
 # Herdr
 function h { herdr @args }
@@ -34,26 +35,6 @@ function y {
 
 # Environment viewer helper
 Function env { Get-ChildItem Env: }
-
-# VS Code Integration (asynchronous helper)
-$global:CodeCli = (Get-Command code.cmd -CommandType Application).Source
-function code {
-	param(
-		[Parameter(ValueFromRemainingArguments = $true)]
-		[string[]] $Args
-	)
-	if ($PSVersionTable.PSVersion -ge [Version]'7.4') {
-		Start-Process -FilePath $global:CodeCli -ArgumentList $Args
-		return
-	}
-
-	if ($Args.Count -eq 0) {
-		Start-Process -FilePath $global:CodeCli
-	}
-	else {
-		Start-Process -FilePath $global:CodeCli -ArgumentList $Args
-	}
-}
 
 # Dotfiles Symlink Synchronizer
 Function Sync-Dotfiles {

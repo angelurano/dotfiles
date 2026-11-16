@@ -51,6 +51,9 @@ return {
     "folke/sidekick.nvim",
     cmd = "Sidekick",
     enabled = function()
+      if vim.fn.has("win32") == 1 and (vim.uv or vim.loop).fs_stat(vim.fn.expand("~/AppData/Local/agy/bin/agy.exe")) ~= nil then
+        return true
+      end
       return vim.fn.executable("node") == 1
           or vim.fn.executable("bun") == 1
           or vim.fn.executable("agy") == 1

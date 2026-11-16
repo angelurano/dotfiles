@@ -2,7 +2,7 @@ return {
   {
     'nvim-lualine/lualine.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
-    lazy = false,
+    event = "VeryLazy",
     -- Do not load Lualine in virtual console TTYs (TERM=linux)
     cond = function()
       return vim.env.TERM ~= "linux"

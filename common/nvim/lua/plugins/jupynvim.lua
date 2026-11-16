@@ -1,5 +1,7 @@
 return {
   "sheng-tse/jupynvim",
+  event = { "BufReadPre *.ipynb", "BufNewFile *.ipynb" },
+  cmd = { "JupynvimOpen", "JupynvimOpenRemote", "JupynvimInstall" },
   cond = function()
     local is_win = vim.fn.has("win32") == 1 or vim.fn.has("win64") == 1
     if is_win then

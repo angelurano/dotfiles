@@ -3,6 +3,12 @@ return {
   version = "*",
   event = "VeryLazy",
   enabled = function()
+    if vim.fn.has("win32") == 1 then
+      local uv = vim.uv or vim.loop
+      if uv.fs_stat(vim.fn.expand("~/scoop/shims/yazi.exe")) ~= nil then
+        return true
+      end
+    end
     return vim.fn.executable("yazi") == 1
   end,
   dependencies = {

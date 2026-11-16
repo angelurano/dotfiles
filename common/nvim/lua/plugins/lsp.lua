@@ -297,7 +297,7 @@ return {
     "direnv/direnv.vim",
     lazy = false,
     cond = function()
-      return vim.fn.executable("direnv") == 1
+      return vim.fn.has("win32") == 0 and vim.fn.executable("direnv") == 1
     end,
     init = function()
       vim.g.direnv_silent_load = 1

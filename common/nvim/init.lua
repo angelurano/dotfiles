@@ -13,9 +13,36 @@ if not vim.g.vscode then
   require('config.better_comments').setup()
 end
 
-vim.schedule(function()
-  vim.opt.clipboard = 'unnamedplus'
-end)
+if not vim.g.vscode then
+  if vim.fn.has('win32') == 1 then
+    if not vim.env.SSH_TTY and not vim.env.SSH_CONNECTION then
+      vim.g.termfeatures = { osc52 = false }
+    end
+
+    local direct_win32yank = vim.fn.expand('~/scoop/apps/win32yank/current/win32yank.exe')
+    local exe = (vim.uv or vim.loop).fs_stat(direct_win32yank) and direct_win32yank or 'win32yank.exe'
+    vim.g.clipboard = {
+      name = 'win32yank-direct',
+      copy = {
+        ['+'] = { exe, '-i', '--crlf' },
+        ['*'] = { exe, '-i', '--crlf' },
+      },
+      paste = {
+        ['+'] = { exe, '-o', '--lf' },
+        ['*'] = { exe, '-o', '--lf' },
+      },
+      cache_enabled = 1,
+    }
+  end
+
+  vim.api.nvim_create_autocmd('User', {
+    pattern = 'VeryLazy',
+    once = true,
+    callback = function()
+      vim.opt.clipboard = 'unnamedplus'
+    end,
+  })
+end
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See https://github.com/folke/lazy.nvim for more info

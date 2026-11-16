@@ -5,6 +5,7 @@ CFG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}"
 
 options=(
     "■  Display Mode (Day / Night)"
+    "■  Displays / HDMI"
     "■  Network"
     "■  Audio"
     "■  Bluetooth"
@@ -26,6 +27,9 @@ run_tui() {
 }
 
 case "$choice" in
+    *"Displays / HDMI"*)
+        exec "$CFG_DIR/hypr/scripts/yorha-display.sh" menu
+        ;;
     *"Display Mode"*)
         exec "$CFG_DIR/hypr/scripts/theme.sh" toggle
         ;;

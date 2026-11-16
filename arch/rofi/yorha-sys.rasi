@@ -17,7 +17,7 @@ textbox-index {
 }
 
 listview {
-    lines:        9;
+    lines:        10;
     fixed-height: true;
 }
 

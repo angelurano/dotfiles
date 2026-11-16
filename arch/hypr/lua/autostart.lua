@@ -20,6 +20,11 @@ hl.on("hyprland.start", function()
         T.uwsm_cmd("~/.config/hypr/scripts/theme.sh init", "b")
     )
 
+    -- Sync external display profile, HDMI audio and Waybar indicator
+    hl.exec_cmd(
+        T.uwsm_cmd("~/.config/hypr/scripts/yorha-display.sh init", "b")
+    )
+
     -- Clipboard history watchers (cliphist)
     hl.exec_cmd(
         T.uwsm_cmd(

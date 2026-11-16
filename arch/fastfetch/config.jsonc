@@ -1,0 +1,114 @@
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "logo": {
+    "type": "builtin",
+    "source": "arch_small",
+    "color": {
+      "1": "38;2;138;154;123",
+      "2": "38;2;223;196;140"
+    },
+    "padding": {
+      "top": 1,
+      "left": 2,
+      "right": 4
+    }
+  },
+  "display": {
+    "separator": " │ ",
+    "color": {
+      "keys": "38;2;138;154;123",
+      "title": "38;2;222;218;196",
+      "output": "38;2;209;205;183",
+      "separator": "38;2;78;75;66"
+    },
+    "key": {
+      "width": 13
+    },
+    "percent": {
+      "type": 3
+    },
+    "bar": {
+      "char": {
+        "elapsed": "█",
+        "total": "░"
+      },
+      "border": {
+        "left": "[",
+        "right": "]"
+      },
+      "width": 24
+    }
+  },
+  "modules": [
+    {
+      "type": "custom",
+      "format": "\u001b[48;2;138;154;123;38;2;36;34;32;1m ■ SYSTEM TELEMETRY                     01 \u001b[0m"
+    },
+    {
+      "type": "os",
+      "key": "█▌ OS"
+    },
+    {
+      "type": "kernel",
+      "key": "█▌ Kernel"
+    },
+    {
+      "type": "wm",
+      "key": "█▌ WM"
+    },
+    {
+      "type": "shell",
+      "key": "█▌ Shell"
+    },
+    {
+      "type": "terminal",
+      "key": "█▌ Terminal"
+    },
+    {
+      "type": "uptime",
+      "key": "█▌ Uptime"
+    },
+    {
+      "type": "custom",
+      "format": "\u001b[38;2;78;75;66m───────────────────────────────────────── •\u001b[0m"
+    },
+    {
+      "type": "cpu",
+      "key": "█▌ CPU"
+    },
+    {
+      "type": "memory",
+      "key": "█▌ Memory",
+      "format": "{used} / {total} ({percentage})"
+    },
+    {
+      "type": "memory",
+      "key": "   └",
+      "format": "{percentage-bar}"
+    },
+    {
+      "type": "disk",
+      "key": "█▌ Disk (/)",
+      "format": "{size-used} / {size-total} ({size-percentage}) - {filesystem}"
+    },
+    {
+      "type": "disk",
+      "key": "   └",
+      "format": "{size-percentage-bar}"
+    },
+    {
+      "type": "battery",
+      "key": "█▌ Battery",
+      "format": "{capacity} [{status}]"
+    },
+    {
+      "type": "battery",
+      "key": "   └",
+      "format": "{capacity-bar}"
+    },
+    {
+      "type": "custom",
+      "format": "\u001b[38;2;138;154;123m█▌\u001b[0m \u001b[48;2;36;34;32;38;2;200;194;169m ■ \u001b[48;2;138;154;123;38;2;36;34;32m ■ \u001b[48;2;223;196;140;38;2;36;34;32m ■ \u001b[48;2;205;102;77;38;2;36;34;32m ■ \u001b[48;2;127;154;149;38;2;36;34;32m ■ \u001b[48;2;200;194;169;38;2;36;34;32m ■ \u001b[0m \u001b[38;2;110;106;94mGLORY TO MANKIND\u001b[0m"
+    }
+  ]
+}

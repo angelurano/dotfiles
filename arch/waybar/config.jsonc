@@ -13,6 +13,7 @@
     ],
     "modules-right": [
         "custom/theme",
+        "custom/display",
         "cpu",
         "memory",
         "network",
@@ -65,6 +66,14 @@
         "interval": "once",
         "signal": 8,
         "on-click": "~/.config/hypr/scripts/theme.sh toggle"
+    },
+    "custom/display": {
+        "exec": "~/.config/hypr/scripts/yorha-display.sh status",
+        "return-type": "json",
+        "interval": "once",
+        "signal": 9,
+        "on-click": "~/.config/hypr/scripts/yorha-display.sh menu",
+        "on-click-right": "~/.config/hypr/scripts/yorha-display.sh toggle-audio"
     },
     "cpu": {
         "interval": 4,
@@ -131,8 +140,8 @@
         "tooltip-format-charging": "Power Status: CHARGING (AC Connected)\nCapacity:     {capacity}%\nTime to Full: {time}\nInput:        {power:0.1f} W",
         "tooltip-format-plugged": "Power Status: AC CONNECTED (External Power)\nCapacity:     {capacity}%",
         "events": {
-            "on-discharging-warning": "notify-send -u normal 'YoRHa Power Telemetry' 'Reserva de batería baja (≤ 30%). Conecta el cargador AC.'",
-            "on-discharging-critical": "notify-send -u critical 'YoRHa Power Alert' 'BATERÍA CRÍTICA (≤ 15%). Conecta el cargador inmediatamente.'"
+            "on-discharging-warning": "notify-send -u normal -h string:x-canonical-private-synchronous:battery-alert 'Batería baja' 'Reserva de batería baja (≤ 30%). Conecta el cargador AC.'",
+            "on-discharging-critical": "notify-send -u critical -h string:x-canonical-private-synchronous:battery-alert 'Batería crítica' 'BATERÍA CRÍTICA (≤ 15%). Conecta el cargador inmediatamente.'"
         }
     },
     "tray": {

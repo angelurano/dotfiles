@@ -18,7 +18,7 @@ local themeToggle = "~/.config/hypr/scripts/theme.sh toggle"
 local shotArea    =
 'sh -c \'grim -g "$(slurp -b 24222055 -c 57544aff -w 2)" - | wl-copy && notify-send -a "System" "Capture Complete" "Selection copied to clipboard."\''
 local shotFull    =
-'sh -c \'mkdir -p "$HOME/downloads/screenshots"; f="$HOME/downloads/screenshots/yorha-$(date +%Y%m%d-%H%M%S).png"; grim "$f" && wl-copy < "$f" && notify-send -a "System" "Capture Saved" "Screen saved to downloads/screenshots."\''
+'sh -c \'mkdir -p "$HOME/downloads/screenshots"; f="$HOME/downloads/screenshots/screenshot-$(date +%Y%m%d-%H%M%S).png"; grim "$f" && wl-copy < "$f" && notify-send -a "System" "Capture Saved" "Screen saved to downloads/screenshots."\''
 local exitSession =
 "if command -v uwsm >/dev/null 2>&1 && uwsm check is-active hyprland.desktop >/dev/null 2>&1; then uwsm stop; else hyprctl dispatch 'hl.dsp.exit()'; fi"
 
@@ -36,6 +36,7 @@ hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager), { description = "File M
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(browserCmd), { description = "Web Browser" })
 hl.bind(mainMod .. " + V", hl.dsp.exec_cmd(clipPicker), { description = "Clipboard History" })
 hl.bind(mainMod .. " + SHIFT + M", hl.dsp.exec_cmd(exitSession), { description = "Exit Session" })
+hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("~/.config/hypr/scripts/yorha-display.sh menu"), { description = "Display / HDMI Menu" })
 
 -- --- Screenshots (grim + slurp + wl-copy) ---
 hl.bind("Print", hl.dsp.exec_cmd(shotArea), { description = "Area screenshot to clipboard" })

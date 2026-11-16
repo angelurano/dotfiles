@@ -20,7 +20,7 @@ Automates project initialization (`.env` copy, `direnv allow`, etc.) on `worktre
 herdr plugin install tdi/herdr-worktree-setup --ref 4527a11bd5444dbce34c3d4f459b49d704cc12a7 --yes
 ```
 
-> **Configuration Symlink**: Automatically managed via Home Manager on WSL2 (`home-manager switch`) and via GNU Stow on Arch Linux. On Arch + Hyprland, `arch/herdr/config.toml` takes precedence natively for the YoRHa Bunker aesthetic and low-RAM tuning without needing environment variable overrides.
+> **Configuration Symlink**: Automatically managed via Home Manager on WSL2 (`home-manager switch`) and via GNU Stow on Arch Linux. On Arch + Hyprland, `arch/herdr/config.toml` takes precedence natively for the UI palette and low-RAM tuning without needing environment variable overrides.
 >
 > Manual symlink command (`ln -sfn`):
 > ```bash

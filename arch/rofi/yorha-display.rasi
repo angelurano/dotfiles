@@ -1,0 +1,31 @@
+@import "yorha.rasi"
+
+window {
+    width: 560px;
+}
+
+mode-switcher {
+    enabled: false;
+}
+
+textbox-dmenu-title {
+    enabled: true;
+    content: "■ DISPLAY  ·  OUTPUT CONTROL";
+}
+
+textbox-index {
+    content: "DSP";
+}
+
+listview {
+    lines:        12;
+    fixed-height: true;
+}
+
+element-text {
+    padding: 6px 14px;
+}
+
+textbox-hint {
+    content: "Select output mode.";
+}

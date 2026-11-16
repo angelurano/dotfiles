@@ -4,16 +4,16 @@
 hl.workspace_rule({ workspace = "f[1]", gaps_out = 0, gaps_in = 0 })
 
 hl.window_rule({
-    name        = "yorha-no-gaps-maximized",
+    name        = "no-gaps-maximized",
     match       = { float = false, workspace = "f[1]" },
     border_size = 0,
     rounding    = 0,
     no_shadow   = true,
 })
 
--- 2. Tactical Floating TUIs (wiremix, bluetui, impala, btop, floating yazi)
+-- 2. Floating TUIs (wiremix, bluetui, impala, btop, floating yazi)
 hl.window_rule({
-    name   = "yorha-floating-tui",
+    name   = "floating-tui",
     match  = { class = "^floating_tui$" },
     float  = true,
     center = true,
@@ -22,7 +22,7 @@ hl.window_rule({
 
 -- 3. Common File / Auth Dialogs
 hl.window_rule({
-    name   = "yorha-dialogs-float",
+    name   = "dialogs-float",
     match  = { title = "^(Open File|Save File|Select a File|Choose wallpaper|Open Folder).*$" },
     float  = true,
     center = true,
@@ -50,9 +50,23 @@ hl.window_rule({
     no_focus = true,
 })
 
--- 6. Crisp zero-animation layers for Rofi, Waybar, Mako, and Slurp selection
+-- 6. Media playback & image viewing: keep full brightness when unfocused; inhibit idle on fullscreen video
+hl.window_rule({
+    name         = "vlc-playback",
+    match        = { class = "^([Vv]lc|org\\.videolan\\.VLC)$" },
+    no_dim       = true,
+    idle_inhibit = "fullscreen",
+})
+
+hl.window_rule({
+    name   = "swayimg-no-dim",
+    match  = { class = "^swayimg(_.*)?$" },
+    no_dim = true,
+})
+
+-- 7. Crisp zero-animation layers for Rofi, Waybar, Mako, and Slurp selection
 hl.layer_rule({
-    name    = "yorha-instant-layers",
+    name    = "instant-layers",
     match   = { namespace = "^(rofi|selection|waybar|notifications)$" },
     no_anim = true,
 })

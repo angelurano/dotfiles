@@ -4,20 +4,7 @@
 
 local T = _G.YoRHa
 
--- Primary internal panel + external monitor fallback
-hl.monitor({
-    output   = "eDP-1",
-    mode     = "1366x768@59.99500",
-    position = "0x0",
-    scale    = 1,
-})
-
-hl.monitor({
-    output   = "",
-    mode     = "preferred",
-    position = "auto",
-    scale    = "auto",
-})
+-- Monitor rules and hotplug handling live in lua/displays.lua
 
 -- Fallback environment variables when Hyprland is started outside UWSM
 if not os.getenv("UWSM_FINALIZE_VARNAMES") then
@@ -42,7 +29,7 @@ hl.config({
         layout           = "dwindle",
     },
 
-    -- Strict 0px YoRHa geometry + crisp 7px non-blurred hard offset shadow (bottom & right)
+    -- Strict 0px geometry + crisp 7px non-blurred hard offset shadow (bottom & right)
     decoration = {
         rounding         = 0,
         rounding_power   = 2,

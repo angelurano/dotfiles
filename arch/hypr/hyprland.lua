@@ -1,5 +1,6 @@
 require("lua/theme")
 require("lua/general")
+require("lua/displays")
 require("lua/animations")
 require("lua/autostart")
 require("lua/rules")

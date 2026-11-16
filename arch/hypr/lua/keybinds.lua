@@ -4,10 +4,10 @@ local T           = _G.YoRHa
 local mainMod     = "SUPER"
 
 -- Commands wrapped for UWSM compatibility
-local termPlain   = T.uwsm_cmd("kitty --single-instance")
-local termHerdr   = T.uwsm_cmd('kitty --single-instance -e herdr')
-local fileManager = T.uwsm_cmd("kitty --class floating_tui -e yazi")
-local sysMonitor  = T.uwsm_cmd("kitty --class floating_tui -e btop")
+local termPlain   = "kitty --single-instance"
+local termHerdr   = "kitty --single-instance -e herdr"
+local fileManager = "kitty --single-instance --class floating_tui -e yazi"
+local sysMonitor  = "kitty --single-instance --class floating_tui -e btop"
 local browserCmd  = T.uwsm_cmd(os.getenv("BROWSER") or "brave-origin")
 local appLauncher =
 'if command -v uwsm >/dev/null 2>&1 && uwsm check is-active hyprland.desktop >/dev/null 2>&1; then exec rofi -show drun -run-command "uwsm app -- {cmd}"; else exec rofi -show drun; fi'

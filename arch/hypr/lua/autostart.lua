@@ -30,6 +30,16 @@ hl.on("hyprland.start", function()
         T.uwsm_cmd("~/.config/hypr/scripts/yorha-osd.sh ensure", "b")
     )
 
+    -- Pre-warm background Kitty server so all --single-instance launches open instantly
+    hl.exec_cmd(
+        T.uwsm_cmd("sh -c 'pgrep -x kitty >/dev/null || exec kitty --single-instance --start-as=hidden'", "a")
+    )
+
+    -- Show compact floating fastfetch greeting on login (closes on any key)
+    hl.exec_cmd(
+        "sleep 0.4 && kitty --single-instance --class floating_fastfetch -e bash -c 'tput civis; echo; fastfetch; read -rsn1'"
+    )
+
     -- Clipboard history watchers (cliphist)
     hl.exec_cmd(
         T.uwsm_cmd(

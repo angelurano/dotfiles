@@ -9,10 +9,11 @@ Lightweight **Arch Linux + Hyprland** configuration deployed directly into `$XDG
 ```bash
 sudo pacman -S --needed \
   hyprland uwsm hypridle hyprpolkitagent xdg-desktop-portal-hyprland \
-  waybar rofi mako hyprpaper wl-clipboard cliphist grim slurp \
+  waybar rofi mako wob hyprpaper wl-clipboard cliphist grim slurp \
   kitty zsh fzf eza bat bat-extras fd ripgrep zoxide yazi btop fastfetch \
   impala bluetui brightnessctl playerctl stow jq \
-  poppler swayimg vlc vlc-plugin-ffmpeg vlc-plugin-freetype vlc-plugin-ass
+  poppler ffmpegthumbnailer swayimg vlc vlc-plugin-ffmpeg vlc-plugin-freetype vlc-plugin-ass \
+  earlyoom pacman-contrib udiskie udisks2 exfatprogs
 ```
 
 ---
@@ -29,6 +30,7 @@ Creating these directories before running `stow` prevents runtime state and mach
 mkdir -p \
   ~/.config/waybar \
   ~/.config/rofi \
+  ~/.config/wob \
   ~/.config/gtk-3.0 \
   ~/.config/gtk-4.0 \
   ~/.config/herdr/plugins/config/tdi.worktree-setup \
@@ -82,7 +84,7 @@ systemctl --user enable \
 | `SUPER + Q` | Close active window |
 | `SUPER + Space` / `SUPER + D` | Application launcher (`rofi -show drun`) |
 | `SUPER + Tab` | Window switcher (`rofi -show window`) |
-| `SUPER + Escape` | System menu (`Network`, `Audio`, `Bluetooth`, power actions) |
+| `SUPER + Escape` | System menu (`Network`, `Audio`, `Bluetooth`, `USB`, power actions) |
 | `CTRL + Shift + Escape` | Floating `btop` system monitor |
 | `SUPER + Shift + T` | Toggle **Day** / **Night** theme |
 | `SUPER + E` | Floating `Yazi` file manager |

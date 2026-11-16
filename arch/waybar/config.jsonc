@@ -79,13 +79,13 @@
         "interval": 4,
         "format": "{usage:02d}%",
         "tooltip-format": "Processor Load: {usage}%",
-        "on-click": "kitty --class floating_tui -e btop"
+        "on-click": "kitty --single-instance --class floating_tui -e btop"
     },
     "memory": {
         "interval": 5,
         "format": "{percentage:02d}%",
         "tooltip-format": "Memory: {used:0.2f} / {total:0.2f} GiB ({percentage}%)\nSwap:   {swapUsed:0.2f} / {swapTotal:0.2f} GiB",
-        "on-click": "kitty --class floating_tui -e btop"
+        "on-click": "kitty --single-instance --class floating_tui -e btop"
     },
     "network": {
         "format-wifi": "{signalStrength}%",
@@ -94,7 +94,7 @@
         "tooltip-format-wifi": "Network: {essid} ({signalStrength}%)\nAddress: {ipaddr}",
         "tooltip-format-ethernet": "Ethernet: {ifname}\nAddress:  {ipaddr}",
         "tooltip-format-disconnected": "Network: Disconnected",
-        "on-click": "kitty --class floating_tui -e impala"
+        "on-click": "kitty --single-instance --class floating_tui -e impala"
     },
     "bluetooth": {
         "format": "{status}",
@@ -105,14 +105,14 @@
         "tooltip-format": "Controller: {controller_alias}",
         "tooltip-format-connected": "Controller: {controller_alias}\n\n{device_enumerate}",
         "tooltip-format-enumerate-connected": "■ {device_alias} ({device_address})",
-        "on-click": "kitty --class floating_tui -e bluetui"
+        "on-click": "kitty --single-instance --class floating_tui -e bluetui"
     },
     "pulseaudio": {
         "format": "{volume:02d}%",
         "format-bluetooth": "{volume:02d}%",
         "format-muted": "MUTE",
         "tooltip-format": "Audio Output: {desc} ({volume}%)",
-        "on-click": "kitty --class floating_tui -e wiremix",
+        "on-click": "kitty --single-instance --class floating_tui -e wiremix",
         "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
     },
     "backlight": {

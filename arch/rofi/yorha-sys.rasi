@@ -17,7 +17,7 @@ textbox-section-sub {
 }
 
 listview {
-    lines:        10;
+    lines:        11;
     fixed-height: true;
 }
 

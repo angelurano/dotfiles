@@ -33,7 +33,6 @@ if [[ "$TERM" == "linux" ]]; then
 fi
 
 # --- CLI Palette (Eza / Bat / LS) ---
-export BAT_THEME="yorha"
 export EZA_COLORS="\
 di=1;38;2;138;154;123:\
 ex=1;38;2;163;179;148:\

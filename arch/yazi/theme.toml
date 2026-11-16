@@ -1,0 +1,154 @@
+[mgr]
+cwd = { fg = "#DFC48C", bold = true }
+
+# Find
+find_keyword  = { fg = "#242220", bg = "#DFC48C", bold = true }
+find_position = { fg = "#8A9A7B", bg = "reset", bold = true }
+
+# Symlink
+symlink_target = { fg = "#9E9985", italic = true }
+
+# Marker (Sharp vertical bar)
+marker_copied   = { fg = "#8A9A7B", bg = "#8A9A7B" }
+marker_cut      = { fg = "#cd664d", bg = "#cd664d" }
+marker_marked   = { fg = "#7F9A95", bg = "#7F9A95" }
+marker_selected = { fg = "#DFC48C", bg = "#DFC48C" }
+marker_symbol   = "▌"
+
+# Count badges (0px flat rectangular chips)
+count_copied   = { fg = "#242220", bg = "#8A9A7B", bold = true }
+count_cut      = { fg = "#dedac4", bg = "#cd664d", bold = true }
+count_selected = { fg = "#242220", bg = "#DFC48C", bold = true }
+
+# Border
+border_symbol = "│"
+border_style  = { fg = "#4e4b42" }
+
+[indicator]
+parent  = { fg = "#dedac4", bg = "#35322d", bold = true }
+current = { fg = "#242220", bg = "#c8c2a9", bold = true }
+preview = { bg = "#2c2925", underline = true }
+padding = { open = "█", close = "█" }
+
+[tabs]
+active   = { fg = "#242220", bg = "#8A9A7B", bold = true }
+inactive = { fg = "#c8c2a9", bg = "#2c2925" }
+sep_inner = { open = " ", close = " " }
+sep_outer = { open = "█▌", close = "" }
+
+[mode]
+normal_main = { fg = "#242220", bg = "#8A9A7B", bold = true }
+normal_alt  = { fg = "#d1cdb7", bg = "#35322d" }
+
+select_main = { fg = "#242220", bg = "#DFC48C", bold = true }
+select_alt  = { fg = "#d1cdb7", bg = "#35322d" }
+
+unset_main  = { fg = "#dedac4", bg = "#cd664d", bold = true }
+unset_alt   = { fg = "#d1cdb7", bg = "#35322d" }
+
+[status]
+overall   = { fg = "#d1cdb7", bg = "#2c2925" }
+sep_left  = { open = "█▌", close = "▌" }
+sep_right = { open = "▐", close = "▐█" }
+
+# Permissions
+perm_sep   = { fg = "#4e4b42" }
+perm_type  = { fg = "#8A9A7B", bold = true }
+perm_read  = { fg = "#DFC48C" }
+perm_write = { fg = "#cd664d" }
+perm_exec  = { fg = "#A3B394" }
+
+# Progress
+progress_label  = { fg = "#dedac4", bold = true }
+progress_normal = { fg = "#8A9A7B", bg = "#35322d" }
+progress_error  = { fg = "#cd664d", bg = "#35322d" }
+
+[which]
+cols            = 3
+mask            = { bg = "#1e1c1a" }
+cand            = { fg = "#8A9A7B", bold = true }
+rest            = { fg = "#6e6a5e" }
+desc            = { fg = "#d1cdb7" }
+separator       = " ── "
+separator_style = { fg = "#4e4b42" }
+
+[confirm]
+border     = { fg = "#c8c2a9" }
+title      = { fg = "#242220", bg = "#c8c2a9", bold = true }
+body       = { fg = "#d1cdb7" }
+list       = { fg = "#d1cdb7" }
+btn_yes    = { fg = "#242220", bg = "#8A9A7B", bold = true }
+btn_no     = { fg = "#c8c2a9", bg = "#2c2925" }
+btn_labels = [ " [Y] Confirm ", " [N] Cancel " ]
+
+[spot]
+border   = { fg = "#c8c2a9" }
+title    = { fg = "#242220", bg = "#8A9A7B", bold = true }
+tbl_col  = { fg = "#8A9A7B", bold = true }
+tbl_cell = { fg = "#d1cdb7", bg = "#2c2925" }
+
+[notify]
+title_info  = { fg = "#8A9A7B", bold = true }
+title_warn  = { fg = "#DFC48C", bold = true }
+title_error = { fg = "#cd664d", bold = true }
+
+[pick]
+border   = { fg = "#c8c2a9" }
+active   = { fg = "#242220", bg = "#c8c2a9", bold = true }
+inactive = { fg = "#d1cdb7" }
+
+[input]
+border   = { fg = "#8A9A7B" }
+title    = { fg = "#242220", bg = "#8A9A7B", bold = true }
+value    = { fg = "#dedac4" }
+selected = { fg = "#242220", bg = "#c8c2a9" }
+
+[cmp]
+border   = { fg = "#4e4b42" }
+active   = { fg = "#242220", bg = "#8A9A7B", bold = true }
+inactive = { fg = "#d1cdb7" }
+
+[tasks]
+border  = { fg = "#c8c2a9" }
+title   = { fg = "#242220", bg = "#c8c2a9", bold = true }
+hovered = { fg = "#242220", bg = "#8A9A7B", bold = true }
+
+[help]
+on      = { fg = "#8A9A7B", bold = true }
+run     = { fg = "#DFC48C" }
+desc    = { fg = "#d1cdb7" }
+hovered = { fg = "#242220", bg = "#c8c2a9", bold = true }
+footer  = { fg = "#242220", bg = "#c8c2a9", bold = true }
+
+[filetype]
+rules = [
+	# Media & Images
+	{ mime = "image/*", fg = "#DFC48C" },
+	{ mime = "{audio,video}/*", fg = "#B598A2" },
+
+	# Archives
+	{ mime = "application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}", fg = "#cd664d" },
+
+	# Documents
+	{ mime = "application/{pdf,doc,rtf,vnd.*}", fg = "#7F9A95" },
+
+	# Structured Data / Configs
+	{ mime = "application/{json,ndjson,toml,xml}", fg = "#c8c2a9" },
+
+	# Broken / Orphan Symlinks
+	{ url = "*", is = "orphan", fg = "#dedac4", bg = "#cd664d", bold = true },
+
+	# Executables
+	{ url = "*", is = "exec", fg = "#A3B394", bold = true },
+
+	# Special files
+	{ url = "*", is = "sock", fg = "#9B7E88" },
+	{ url = "*", is = "fifo", fg = "#9B7E88" },
+	{ url = "*", is = "link", fg = "#7F9A95" },
+
+	# Directories (Olive-Sage)
+	{ url = "*/", fg = "#8A9A7B", bold = true },
+
+	# Default files (Bone Parchment)
+	{ url = "*", fg = "#d1cdb7" },
+]

@@ -11,13 +11,21 @@ hl.window_rule({
     no_shadow   = true,
 })
 
--- 2. Floating TUIs (wiremix, bluetui, impala, btop, floating yazi)
+-- 2. Floating TUIs (wiremix, bluetui, impala, btop, floating yazi) & startup fastfetch
 hl.window_rule({
     name   = "floating-tui",
     match  = { class = "^floating_tui$" },
     float  = true,
     center = true,
     size   = { "monitor_w * 0.76", "monitor_h * 0.78" },
+})
+
+hl.window_rule({
+    name   = "floating-fastfetch",
+    match  = { class = "^floating_fastfetch$" },
+    float  = true,
+    center = true,
+    size   = { "monitor_w * 0.495", "monitor_h * 0.45" },
 })
 
 -- 3. Common File / Auth Dialogs

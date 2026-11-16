@@ -7,6 +7,7 @@ local mainMod     = "SUPER"
 local termPlain   = T.uwsm_cmd("kitty --single-instance")
 local termHerdr   = T.uwsm_cmd('kitty --single-instance -e herdr')
 local fileManager = T.uwsm_cmd("kitty --class floating_tui -e yazi")
+local sysMonitor  = T.uwsm_cmd("kitty --class floating_tui -e btop")
 local browserCmd  = T.uwsm_cmd(os.getenv("BROWSER") or "brave-origin")
 local appLauncher =
 'if command -v uwsm >/dev/null 2>&1 && uwsm check is-active hyprland.desktop >/dev/null 2>&1; then exec rofi -show drun -run-command "uwsm app -- {cmd}"; else exec rofi -show drun; fi'
@@ -34,6 +35,7 @@ hl.bind(mainMod .. " + Escape", hl.dsp.exec_cmd(sysMenu), { description = "Syste
 hl.bind(mainMod .. " + SHIFT + T", hl.dsp.exec_cmd(themeToggle), { description = "Toggle Day / Night Mode" })
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager), { description = "File Manager (Yazi)" })
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(browserCmd), { description = "Web Browser" })
+hl.bind("CTRL + SHIFT + Escape", hl.dsp.exec_cmd(sysMonitor), { description = "System Monitor (btop)" })
 hl.bind(mainMod .. " + V", hl.dsp.exec_cmd(clipPicker), { description = "Clipboard History" })
 hl.bind(mainMod .. " + SHIFT + M", hl.dsp.exec_cmd(exitSession), { description = "Exit Session" })
 hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("~/.config/hypr/scripts/yorha-display.sh menu"), { description = "Display / HDMI Menu" })

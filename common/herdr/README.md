@@ -10,7 +10,7 @@ When bootstrapping a new machine, register the installed plugins via the Herdr C
 Enables low-latency seamless `CTRL+h/j/k/l` navigation between Neovim splits and Herdr panes:
 
 ```bash
-herdr plugin install angelurano/herdr-nvim-nav --ref ec047fd6d8d0269d54a34e9405af28d8aad4c8f0 --yes
+herdr plugin install angelurano/herdr-nvim-nav --ref 3d236e06ec068eb0aee7a39026839ebe2a65d2c3 --yes
 ```
 
 ### 2. Worktree Setup (`tdi.worktree-setup` - Pinned)

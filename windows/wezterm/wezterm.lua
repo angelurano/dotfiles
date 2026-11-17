@@ -147,7 +147,7 @@ config.launch_menu = {
   },
   {
     label = "herdr (WSL:Debian)",
-    args = { "zsh", "-l", "-c", "exec herdr" },
+    args = { "zsh", "-l", "-i", "-c", "cd ~ && herdr" },
     cwd = "~",
     domain = { DomainName = "WSL:Debian" },
   },

@@ -38,6 +38,17 @@
     initContent = lib.mkOrder 1500 ''
       unsetopt BEEP
 
+      herdr() {
+        if [[ -t 1 && -z "$HERDR_PANE_ID" && ( $# -eq 0 || "$1" == -* || "$1" == "attach" ) ]]; then
+          printf '\033]1337;SetUserVar=IS_HERDR=dHJ1ZQ==\033\\'
+          command herdr "$@"
+          local ret=$?
+          printf '\033]1337;SetUserVar=IS_HERDR=\033\\'
+          return $ret
+        fi
+        command herdr "$@"
+      }
+
       command_not_found_handler() {
         local cmd="$1"
         shift
